@@ -1,0 +1,13 @@
+name = "Zavod"
+author = "zavod"
+version = "1.56.82"
+pack-format = "packwiz:1.1.0"
+
+[index]
+file = "index.toml"
+hash-format = "sha256"
+hash = "e26964141ccc13e809d9f953161a71a03dcd2ae70c13297800d2c66431dc2682"
+
+[versions]
+minecraft = "1.7.10"
+forge = "10.13.4.1614"

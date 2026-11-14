@@ -1,0 +1,24 @@
+{
+  "_name": "Sheep",
+  "_comment": "MODPACK. Detyonyshi (Age < 0) nichego ne roniayut.",
+  "pre_stats": [],
+  "stats": [],
+  "drops": [
+    {
+      "function": "all",
+      "_comment": "Ovtsa: v 1.7.10 net baraniny - tol'ko kosti 1-3, sherst' rodnaya",
+      "functions": [
+        {
+          "function": "if_check_nbt_Age>-1",
+          "functions": [
+            {
+              "function": "add",
+              "id": "minecraft:bone",
+              "count": "1~3"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

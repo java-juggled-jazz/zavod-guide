@@ -1,0 +1,11 @@
+#!/bin/bash
+# Бэкап мира (cron 04:30): save-off/save-all, tar, save-on; хранит 7 последних. Копию забирай с VM к себе.
+. /opt/zavod/lib.sh
+D=/srv/backups; mkdir -p "$D"
+UP=0; mc_tmux has-session -t zavod 2>/dev/null && UP=1
+[ $UP = 1 ] && { /opt/zavod/zavod-cmd save-off; /opt/zavod/zavod-cmd save-all; sleep 20; }
+F="$D/zavod-$(date +%F-%H%M).tgz"
+tar czf "$F" -C /srv/zavod world whitelist.json ops.json banned-players.json banned-ips.json server.properties 2>/dev/null
+[ $UP = 1 ] && /opt/zavod/zavod-cmd save-on
+ls -1t "$D"/zavod-*.tgz 2>/dev/null | tail -n +8 | xargs -r rm -f
+echo "бэкап: $F ($(du -h "$F" | cut -f1))"

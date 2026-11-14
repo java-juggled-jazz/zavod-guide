@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Установка и обновление сервера Zavod одной командой (docs/server-vm.md). Скрипты — с Pages, как опубликованы.
+#   curl -fsSL https://java-juggled-jazz.github.io/zavod-guide/pack/server/install.sh.txt -o install.sh
+#   sudo ACCEPT_EULA=1 ADMIN=<твой ник> bash install.sh
+set -euo pipefail
+B="${ZAVOD_SCRIPTS:-https://java-juggled-jazz.github.io/zavod-guide/pack/server}"
+FILES="setup-vm.sh run.sh lib.sh hsconf.py forge.py zavod-cmd zavod-stop zavod-backup zavod-invite zavod-kick zavod-console zavod-status zavod-panel"
+D="$(mktemp -d)"; trap 'rm -rf "$D"' EXIT
+for f in $FILES; do curl -fsSL -o "$D/$f" "$B/$f.txt"; done
+exec bash "$D/setup-vm.sh"

@@ -1,0 +1,30 @@
+#!/bin/bash
+# Пустить игрока в сеть: zavod-invite Nick [forever] -> одноразовый ключ и инструкция для него (на английском).
+# Ключ сгорает при первом входе. Без forever — ещё и через 48 ч; с forever — живёт, пока не войдут или не zavod-kick.
+set -euo pipefail
+. /opt/zavod/lib.sh
+. /opt/zavod/zavod.env
+N="${1:?zavod-invite <ник>}"
+[[ "$N" =~ ^[A-Za-z0-9_]{3,16}$ ]] || { echo "ник: 3–16 символов, латиница/цифры/_"; exit 1; }
+U="$(echo "$N" | tr 'A-Z' 'a-z')"
+PAGE="${JOIN_PAGE:-https://java-juggled-jazz.github.io/zavod-guide/pack/join.html}"
+headscale users create "$U" >/dev/null 2>&1 || true
+if [ "${2:-}" = forever ]; then EXP=87600h; LIFE="never expires until used (or until I revoke it)"; else EXP=48h; LIFE="expires in 48 h"; fi
+K="$(hs_key "$U" "$EXP")"
+H="zavod-$U"
+cat <<TXT
+------------------------- send this to $N -------------------------
+Zavod server access. What it is and what I can/can't see: $PAGE
+
+1. Install Tailscale (open-source client): https://tailscale.com/download
+2. Run ONE line (Windows: Command Prompt; macOS/Linux: terminal, add sudo):
+   tailscale up --login-server $HSURL --authkey $K --hostname $H --shields-up --accept-dns=false --accept-routes=false --exit-node= --ssh=false
+   Key: single use, $LIFE.
+3. Check it took (all four must match):  tailscale debug prefs
+   "ShieldsUp": true   "CorpDNS": false   "RouteAll": false   "ExitNodeID": ""
+4. Minecraft: Multiplayer -> Direct Connection -> $TSIP
+
+Leave any time: tailscale logout (or uninstall Tailscale).
+------------------------------------------------------------------
+Вайтлист: sudo zavod-cmd whitelist add $N
+TXT

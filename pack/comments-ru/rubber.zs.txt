@@ -1,0 +1,60 @@
+// ====================================================================================
+//                 РЕЗИНА И ЛАТЕКС
+// Латекс = липкая смола IC2 (itemHarz). Резина = вулканизированный каучук (itemRubber).
+// Цепочка: латекс + сера -> (индукционная плавильня, нагрев) -> резина. Это и есть вулканизация.
+// Прямой отжим латекса в экстракторе даёт меньше: сырой каучук без серы — плохая резина.
+// Фактис (масло + сера) — эрзац, 1 штука. Поэтому настоящую резину выгодно добывать
+// с гевеи и выводить резиновый тростник (Stickreed) на грядках IC2.
+// ====================================================================================
+
+val latex  = <IC2:itemHarz>;
+val rubber = <IC2:itemRubber>;
+
+// --- Вулканизация: 2 латекса + сера -> 3 резины ---
+mods.thermalexpansion.Smelter.addRecipe(3200, latex * 2, <Railcraft:dust:1>, rubber * 3);
+
+// --- Экстрактор IC2: латекс -> 1 резина (было 3) — задано в config/ic2/extractor.ini ---
+
+// --- Куда ещё латекс ---
+// Липкий поршень: латекс как клей
+recipes.addShapeless(<minecraft:sticky_piston>, [<minecraft:piston>, latex]);
+// Поводок: верёвка, пропитанная латексом
+recipes.addShaped(<minecraft:lead> * 2, [
+    [<minecraft:string>, <minecraft:string>, null],
+    [<minecraft:string>, latex,              null],
+    [null,               null,               <minecraft:string>]
+]);
+
+// ====================================================================================
+//                 РЕЗИНОВЫЕ УПЛОТНИТЕЛИ: всё, что держит жидкость
+// ====================================================================================
+// Бак BuildCraft: стекло на резиновой прокладке
+recipes.remove(<BuildCraft|Factory:tankBlock>);
+recipes.addShaped(<BuildCraft|Factory:tankBlock>, [
+    [<ore:blockGlass>, <ore:blockGlass>, <ore:blockGlass>],
+    [<ore:blockGlass>, rubber,           <ore:blockGlass>],
+    [<ore:blockGlass>, <ore:blockGlass>, <ore:blockGlass>]
+]);
+
+// Жидкостные кабелепроводы EnderIO (8 шт.)
+val binder = <ore:itemConduitBinder>;
+recipes.remove(<EnderIO:itemLiquidConduit:0>);
+recipes.addShaped(<EnderIO:itemLiquidConduit:0> * 8, [
+    [binder,                   binder, binder],
+    [<EnderIO:blockFusedQuartz:1>, rubber, <EnderIO:blockFusedQuartz:1>],
+    [binder,                   binder, binder]
+]);
+recipes.remove(<EnderIO:itemLiquidConduit:1>);
+recipes.addShaped(<EnderIO:itemLiquidConduit:1> * 8, [
+    [binder,                     binder, binder],
+    [<EnderIO:blockFusedQuartz>, rubber, <EnderIO:blockFusedQuartz>],
+    [binder,                     binder, binder]
+]);
+
+// Универсальная капсула IC2: оловянный корпус, смотровое окно, резиновая пробка
+recipes.remove(<IC2:itemFluidCell>);
+recipes.addShaped(<IC2:itemFluidCell>, [
+    [null,      <ore:plateTin>,   null],
+    [<ore:plateTin>, <ore:paneGlass>, <ore:plateTin>],
+    [null,      rubber,           null]
+]);

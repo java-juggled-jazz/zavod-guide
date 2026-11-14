@@ -1,0 +1,217 @@
+{
+ "version": 1,
+ "minItems": 2,
+ "maxItems": 6,
+ "contents": [
+  {
+   "weight": 10,
+   "genMin": 1,
+   "genMax": 4,
+   "item": {
+    "id": "minecraft:string",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 8,
+   "genMin": 1,
+   "genMax": 3,
+   "item": {
+    "id": "minecraft:leather",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 10,
+   "genMin": 2,
+   "genMax": 8,
+   "item": {
+    "id": "minecraft:stick",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 10,
+   "genMin": 2,
+   "genMax": 6,
+   "item": {
+    "id": "minecraft:coal",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 3,
+   "genMin": 1,
+   "genMax": 2,
+   "item": {
+    "id": "minecraft:iron_ingot",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 3,
+   "genMin": 1,
+   "genMax": 3,
+   "item": {
+    "id": "minecraft:gold_nugget",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 6,
+   "genMin": 1,
+   "genMax": 3,
+   "item": {
+    "id": "minecraft:flint",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 6,
+   "genMin": 1,
+   "genMax": 4,
+   "item": {
+    "id": "minecraft:rotten_flesh",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 6,
+   "genMin": 1,
+   "genMax": 3,
+   "item": {
+    "id": "minecraft:bone",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 5,
+   "genMin": 1,
+   "genMax": 2,
+   "item": {
+    "id": "minecraft:bowl",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 2,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "minecraft:bucket",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 5,
+   "genMin": 1,
+   "genMax": 3,
+   "item": {
+    "id": "minecraft:glass_bottle",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 8,
+   "genMin": 2,
+   "genMax": 8,
+   "item": {
+    "id": "minecraft:torch",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 4,
+   "genMin": 1,
+   "genMax": 4,
+   "item": {
+    "id": "minecraft:paper",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 4,
+   "genMin": 1,
+   "genMax": 3,
+   "item": {
+    "id": "minecraft:wool",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 6,
+   "genMin": 2,
+   "genMax": 8,
+   "item": {
+    "id": "minecraft:planks",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 1,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "minecraft:saddle",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 2,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "minecraft:lead",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 3,
+   "genMin": 1,
+   "genMax": 4,
+   "item": {
+    "id": "minecraft:brick",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 3,
+   "genMin": 1,
+   "genMax": 4,
+   "item": {
+    "id": "minecraft:clay_ball",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 4,
+   "genMin": 1,
+   "genMax": 3,
+   "item": {
+    "id": "minecraft:gunpowder",
+    "damage": 0,
+    "count": 1
+   }
+  }
+ ]
+}

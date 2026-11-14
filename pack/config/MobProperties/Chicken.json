@@ -1,0 +1,61 @@
+{
+  "_name": "Chicken",
+  "_comment": "MODPACK. Detyonyshi (Age < 0) nichego ne roniayut.",
+  "pre_stats": [],
+  "stats": [],
+  "drops": [
+    {
+      "function": "all",
+      "_comment": "Kuritsa: 1-2 myasa, 1-3 per'ev, 0-1 kost'",
+      "functions": [
+        {
+          "function": "remove",
+          "id": "minecraft:chicken"
+        },
+        {
+          "function": "remove",
+          "id": "minecraft:cooked_chicken"
+        },
+        {
+          "function": "remove",
+          "id": "minecraft:feather"
+        },
+        {
+          "function": "if_check_nbt_Age>-1",
+          "functions": [
+            {
+              "function": "if_burning",
+              "functions": [
+                {
+                  "function": "add",
+                  "id": "minecraft:cooked_chicken",
+                  "count": "1~2"
+                }
+              ]
+            },
+            {
+              "function": "!if_burning",
+              "functions": [
+                {
+                  "function": "add",
+                  "id": "minecraft:chicken",
+                  "count": "1~2"
+                }
+              ]
+            },
+            {
+              "function": "add",
+              "id": "minecraft:feather",
+              "count": "1~3"
+            },
+            {
+              "function": "add",
+              "id": "minecraft:bone",
+              "count": "0~1"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

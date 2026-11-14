@@ -1,0 +1,13 @@
+name = "Climate Control/Geographicraft"
+filename = "ClimateControl-0.8.2.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "7ac038ca929d81da3645e3a9bbc4e44e2fb5115c"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 2359685
+project-id = 76544

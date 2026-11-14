@@ -1,0 +1,55 @@
+// ====================================================================================
+// РЕФОРМА ДВИГАТЕЛЕЙ FORESTRY (поршневая био-энергетика)
+// engine: 1 торфяной, 2 биогазовый
+// ====================================================================================
+
+val enginePeat   = <Forestry:engine:1>;
+val engineBiogas = <Forestry:engine:2>;
+
+val plateBronze  = <ore:plateBronze>;
+val plateIron    = <ore:plateIron>;
+val ingotInvar   = <ore:ingotInvar>;
+val gearBronze   = <ore:gearBronze>;
+val gearInvar    = <ore:gearInvar>;
+val copperCoil   = <IC2:itemRecipePart>;           // Катушка IC2 (БЫЛО :3 — малый силовой блок)
+val piston       = <minecraft:piston>;
+val tankBC       = <BuildCraft|Factory:tankBlock>;
+val brickBlock   = <minecraft:brick_block>;
+
+recipes.remove(enginePeat);
+recipes.remove(engineBiogas);
+
+// 1. Торфяной двигатель — кирпичная топка + бронзовый редуктор
+recipes.addShaped(enginePeat, [
+    [plateBronze, piston,     plateBronze],
+    [brickBlock,  <IC2:itemTurningBlanks>.onlyWithTag({state: {l0: 4, l1: 2, l2: 4, l3: 2, l4: 4}}), brickBlock],
+    [gearBronze,  copperCoil, gearBronze]
+]);
+
+// 2. Биогазовый двигатель — герметичный инваровый корпус + баки BC
+recipes.addShaped(engineBiogas, [
+    [ingotInvar, piston,     ingotInvar],
+    [tankBC,     <IC2:itemTurningBlanks>.onlyWithTag({state: {l0: 4, l1: 2, l2: 4, l3: 2, l4: 4}}), tankBC],
+    [gearInvar,  copperCoil, gearInvar]
+]);
+
+// ------------------------------------------------------------------------------------
+// 3. ЭЛЕКТРОДВИГАТЕЛЬ (EU -> MJ): мост IC2 -> BuildCraft. Мотор IC2, катушки, оловянный корпус, схема.
+// ------------------------------------------------------------------------------------
+recipes.remove(<Forestry:engine:0>);
+recipes.addShaped(<Forestry:engine:0>, [
+    [<ore:plateTin>, <IC2:itemPartCircuit>,  <ore:plateTin>],
+    [copperCoil,     <IC2:itemRecipePart:1>, copperCoil],
+    [gearBronze,     piston,                 gearBronze]
+]);
+
+// ------------------------------------------------------------------------------------
+// 4. ЧАСОВОЙ ДВИГАТЕЛЬ: настоящий часовой механизм — бронзовые шестерни + стальная пружина.
+// Бесплатная энергия от кликов не должна быть дешевле самих часов.
+// ------------------------------------------------------------------------------------
+recipes.remove(<Forestry:engine:4>);
+recipes.addShaped(<Forestry:engine:4>, [
+    [plateBronze, <minecraft:clock>, plateBronze],
+    [gearBronze,  <ore:plateSteel>,  gearBronze],
+    [gearBronze,  piston,            gearBronze]
+]);

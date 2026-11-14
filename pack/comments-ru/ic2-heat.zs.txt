@@ -1,0 +1,199 @@
+// ====================================================================================
+// ТЕПЛОВАЯ ЛИНИЯ IC2 EXP, ДОМЕННАЯ ПЕЧЬ, ФЕРМЕНТЕР, ТРАНСФОРМАТОРЫ, ТЕЛЕПОРТЕР, КОНСЕРВАТОР
+// Правило материалов тепловой линии:
+//   сталь  - рама и всё, что держит давление снаружи;
+//   медь   - теплообменники и конденсаторы (теплопроводность);
+//   бронза - паровой тракт внутри (стойкость к пару и воде);
+//   инвар  - ТОЛЬКО зона пламени (топки тепловых генераторов);
+//   доменный кирпич Railcraft - футеровка.
+// ====================================================================================
+
+val plateSteel   = <ore:plateSteel>;
+val plateIron    = <ore:plateIron>;
+val plateBronze  = <ore:plateBronze>;
+val denseSteel   = <IC2:itemDensePlates:5>;
+val denseCopper  = <IC2:itemDensePlates:0>;
+val denseBronze  = <IC2:itemDensePlates:2>;
+val denseLead    = <IC2:itemDensePlates:6>;
+val ingotInvar   = <ore:ingotInvar>;
+val elSteel      = <EnderIO:itemAlloy>;                 // электротехническая сталь = сердечник трансформатора
+
+val machineFrameIC2 = <IC2:blockMachine>;
+val advCasing    = <IC2:blockMachine:12>;
+val circuitIC2   = <IC2:itemPartCircuit>;
+val advCircuit   = <IC2:itemPartCircuitAdv>;
+val copperCoil   = <IC2:itemRecipePart>;
+val motorIC2     = <IC2:itemRecipePart:1>;
+val heatCond     = <IC2:itemRecipePart:5>;              // теплопроводник
+val copperBoiler = <IC2:itemRecipePart:6>;              // медный котёл
+val ironFurnace  = <IC2:blockMachine:1>;
+val reactorChamber = <IC2:blockReactorChamber>;
+val blastBrick   = <Railcraft:machine.alpha:12>;
+val tankBC       = <BuildCraft|Factory:tankBlock>;
+val fluidPipeFe  = <BuildCraft|Transport:item.buildcraftPipe.pipefluidsiron>;
+val piston       = <minecraft:piston>;
+
+val tinCable     = <IC2:itemCable:13>;
+val copperCable  = <IC2:itemCable>;
+val goldCable    = <IC2:itemCable:3>;
+val hvCable      = <IC2:itemCable:6>;
+val glassFibre   = <IC2:itemCable:9>;
+
+// ====================================================================================
+// 1. ИСТОЧНИКИ ТЕПЛА (HU)
+// ====================================================================================
+// Твердотопливный: железная топка на огнеупоре (1.28.1: ранняя ступень — без стали и инвара).
+// Вместе со Стирлингом (железная рама) — первое EU из угля: топка -> тепло -> Стирлинг -> динамо.
+recipes.remove(<IC2:blockHeatGenerator>);
+recipes.addShaped(<IC2:blockHeatGenerator>, [
+    [plateIron,  heatCond,    plateIron],
+    [plateIron,  ironFurnace, plateIron],
+    [blastBrick, blastBrick,  blastBrick]
+]);
+
+// Жидкотопливный: инваровая горелка, топливный насос (мотор), баки
+recipes.remove(<IC2:blockHeatGenerator:1>);
+recipes.addShaped(<IC2:blockHeatGenerator:1>, [
+    [ingotInvar, heatCond,   ingotInvar],
+    [tankBC,     blastBrick, tankBC],
+    [plateSteel, motorIC2,   plateSteel]
+]);
+
+// Электрический: греют катушки, которые вставляются внутрь (до 10). Корпус - сталь, теплосъём - медь.
+recipes.remove(<IC2:blockHeatGenerator:3>);
+recipes.addShaped(<IC2:blockHeatGenerator:3>, [
+    [plateSteel, copperCable,     plateSteel],
+    [heatCond,   machineFrameIC2, heatCond],
+    [plateSteel, circuitIC2,      plateSteel]
+]);
+
+// Радиоизотопный (тепло) и РИТЭГ (сразу EU): реакторная камера в свинцовой защите
+recipes.remove(<IC2:blockHeatGenerator:2>);
+recipes.addShaped(<IC2:blockHeatGenerator:2>, [
+    [denseLead,  heatCond,       denseLead],
+    [denseLead,  reactorChamber, denseLead],
+    [plateSteel, heatCond,       plateSteel]
+]);
+recipes.remove(<IC2:blockGenerator:6>);
+recipes.addShaped(<IC2:blockGenerator:6>, [
+    [denseLead,  copperCoil,     denseLead],
+    [denseLead,  reactorChamber, denseLead],
+    [plateSteel, <zavod:plate_monel>, plateSteel]   // термоэлементы медь — монель: ни одной движущейся детали
+]);
+
+// Жидкостный теплообменник (лава или горячий хладагент реактора -> тепло): медный пучок в стальном корпусе
+recipes.remove(<IC2:blockMachine2:12>);
+recipes.addShaped(<IC2:blockMachine2:12>, [
+    [plateSteel,  fluidPipeFe, plateSteel],
+    [denseCopper, heatCond,    denseCopper],
+    [plateSteel,  fluidPipeFe, plateSteel]
+]);
+
+// ====================================================================================
+// 2. ПАРОВОЙ ТРАКТ
+// ====================================================================================
+// Парогенератор: медный котёл в бронзовой рубашке, стальная рама
+recipes.remove(<IC2:blockMachine3>);
+recipes.addShaped(<IC2:blockMachine3>, [
+    [plateSteel,  fluidPipeFe,  plateSteel],
+    [denseBronze, copperBoiler, denseBronze],
+    [plateSteel,  heatCond,     plateSteel]
+]);
+
+// Конденсатор: медный трубный пучок, стальная рама (вентиляторы ставятся в его слоты)
+recipes.remove(<IC2:blockMachine2:15>);
+recipes.addShaped(<IC2:blockMachine2:15>, [
+    [plateSteel,  fluidPipeFe,     plateSteel],
+    [denseCopper, machineFrameIC2, denseCopper],
+    [plateSteel,  circuitIC2,      plateSteel]
+]);
+
+// ====================================================================================
+// 3. СТИРЛИНГИ (ранняя ступень, поэтому железная рама вместо стальной; внутри бронза)
+// ====================================================================================
+recipes.remove(<IC2:blockGenerator:8>);
+recipes.addShaped(<IC2:blockGenerator:8>, [
+    [plateIron, heatCond,     plateIron],
+    [piston,    motorIC2,     piston],        // Стирлинг крутит динамо (мотор IC2), а не печку-генератор
+    [plateIron, plateBronze,  plateIron]
+]);
+// Кинетический Стирлинг: коленвал IC2 3-2-3-2-3 (токарка), как в оригинале
+recipes.remove(<IC2:blockKineticGenerator:5>);
+recipes.addShaped(<IC2:blockKineticGenerator:5>, [
+    [plateIron, heatCond, plateIron],
+    [piston,    <IC2:itemTurningBlanks>.onlyWithTag({state: {l0: 3, l1: 2, l2: 3, l3: 2, l4: 3}}), piston],
+    [plateIron, machineFrameIC2, plateIron]
+]);
+
+// ====================================================================================
+// 4. ДОМЕННАЯ ПЕЧЬ IC2: сталь + огнеупор. Работает на тепле (HU) и сжатом воздухе (дутьё).
+// ====================================================================================
+recipes.remove(<IC2:blockMachine3:1>);
+recipes.addShaped(<IC2:blockMachine3:1>, [
+    [plateSteel, blastBrick,      plateSteel],
+    [blastBrick, machineFrameIC2, blastBrick],
+    [plateSteel, heatCond,        plateSteel]
+]);
+
+// ====================================================================================
+// 5. ФЕРМЕНТЕР (биомасса + тепло -> биогаз + удобрение): метантенк
+// Герметичные баки, мешалка (мотор), подогрев (теплопроводник), стальной корпус.
+// ====================================================================================
+recipes.remove(<IC2:blockMachine2:13>);
+recipes.addShaped(<IC2:blockMachine2:13>, [
+    [plateSteel, tankBC,          plateSteel],
+    [motorIC2,   machineFrameIC2, heatCond],
+    [plateSteel, tankBC,          plateSteel]
+]);
+// Сырьё: кроме биоплевел IC2 - мульча Forestry (фермы -> мульча -> консерватор -> биомасса)
+mods.ic2.Canner.addEnrichRecipe(<liquid:ic2biomass> * 1000, <liquid:water> * 1000, <Forestry:mulch> * 4);
+
+// ====================================================================================
+// 6. ТРАНСФОРМАТОРЫ: обмотки (катушки) на сердечнике из электротехнической стали EnderIO
+// Каждый следующий - из предыдущего. БЫЛО: LV из досок, HV с аккумулятором внутри.
+// ====================================================================================
+recipes.remove(<IC2:blockElectric:3>);
+recipes.addShaped(<IC2:blockElectric:3>, [
+    [elSteel,    tinCable, elSteel],
+    [copperCoil, elSteel,  copperCoil],
+    [elSteel,    tinCable, elSteel]
+]);
+recipes.remove(<IC2:blockElectric:4>);
+recipes.addShaped(<IC2:blockElectric:4>, [
+    [elSteel,    copperCable,         elSteel],
+    [copperCoil, <IC2:blockElectric:3>, copperCoil],
+    [elSteel,    copperCable,         elSteel]
+]);
+recipes.remove(<IC2:blockElectric:5>);
+recipes.addShaped(<IC2:blockElectric:5>, [
+    [elSteel,    goldCable,           elSteel],
+    [copperCoil, <IC2:blockElectric:4>, copperCoil],
+    [elSteel,    circuitIC2,          elSteel]
+]);
+recipes.remove(<IC2:blockElectric:6>);
+recipes.addShaped(<IC2:blockElectric:6>, [
+    [elSteel,    hvCable,             elSteel],
+    [copperCoil, <IC2:blockElectric:5>, copperCoil],
+    [elSteel,    advCircuit,          elSteel]
+]);
+
+// ====================================================================================
+// 7. ТЕЛЕПОРТЕР: поздняя игра. Иридиевая пластина вместо алмаза.
+// Он же деталь пассивного якоря Railcraft (railcraft.zs).
+// ====================================================================================
+recipes.remove(<IC2:blockMachine2>);
+recipes.addShaped(<IC2:blockMachine2>, [
+    [advCircuit, <IC2:itemFreq>,        advCircuit],
+    [glassFibre, advCasing,             glassFibre],
+    [advCircuit, <IC2:itemPartIridium>, advCircuit]
+]);
+
+// ====================================================================================
+// ПАРОГЕНЕРАТОР АЭС (Zavod 1.30): горячий хладагент жидкостного реактора IC2 -> пар Railcraft (второй контур).
+// Трубчатый теплообменник: медные теплопроводники в стальном корпусе, вход-выход — железные жидкостные трубы BC.
+// ====================================================================================
+recipes.addShaped(<zavod:steam_generator>, [
+    [plateSteel,  heatCond, plateSteel],
+    [fluidPipeFe, tankBC,   fluidPipeFe],
+    [plateSteel,  heatCond, plateSteel]
+]);

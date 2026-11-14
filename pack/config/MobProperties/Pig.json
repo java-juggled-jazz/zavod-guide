@@ -1,0 +1,52 @@
+{
+  "_name": "Pig",
+  "_comment": "MODPACK. Detyonyshi (Age < 0) nichego ne roniayut.",
+  "pre_stats": [],
+  "stats": [],
+  "drops": [
+    {
+      "function": "all",
+      "_comment": "Svin'ya: 3-5 svininy, 1-3 kosti (bylo 1-3)",
+      "functions": [
+        {
+          "function": "remove",
+          "id": "minecraft:porkchop"
+        },
+        {
+          "function": "remove",
+          "id": "minecraft:cooked_porkchop"
+        },
+        {
+          "function": "if_check_nbt_Age>-1",
+          "functions": [
+            {
+              "function": "if_burning",
+              "functions": [
+                {
+                  "function": "add",
+                  "id": "minecraft:cooked_porkchop",
+                  "count": "3~5"
+                }
+              ]
+            },
+            {
+              "function": "!if_burning",
+              "functions": [
+                {
+                  "function": "add",
+                  "id": "minecraft:porkchop",
+                  "count": "3~5"
+                }
+              ]
+            },
+            {
+              "function": "add",
+              "id": "minecraft:bone",
+              "count": "1~3"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

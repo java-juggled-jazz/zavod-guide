@@ -1,0 +1,9 @@
+// Zavod 1.56.52 (A17): neytral'naya forma - spetsnaz. Tekstury i lang - v flans_modern_weapons_pack (tam byl tol'ko zhilet).
+Name Spetsnaz Pants
+ShortName spetsnazPants
+ItemID 23883
+Icon SpetsnazPants
+Colour 255 255 255
+Type Legs
+Defence 0.1
+ArmourTexture Spetsnaz

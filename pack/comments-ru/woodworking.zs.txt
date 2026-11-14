@@ -1,0 +1,111 @@
+// ====================================================================================
+// ДЕРЕВООБРАБОТКА: РУКАМИ ПЛОХО, СТАНКОМ ХОРОШО
+// ПОЧЕМУ: топором из бревна 4 доски - это сказка. Ручной распил - половина в стружку.
+// ТЕПЕРЬ: вручную бревно -> 2 доски, 2 доски -> 2 палки.
+//   Пилорама TE: бревно -> 6 досок + опилки (её рецепты строятся из исходных, проверь в NEI).
+//   Блокорезка IC2: бревно -> 8 досок (тонкий пропил), 2 доски -> 6 палок (config/ic2/block_cutter.ini).
+// Опилки: древесная масса для бумаги и бездымный порох (нитроцеллюлоза).
+// Деревья Extra Trees - после jar Binnie.
+// ====================================================================================
+
+val sawdust = <ThermalExpansion:material:512>;
+
+// --- Ванильные доски: 2 с бревна ---
+recipes.remove(<minecraft:planks:*>);
+recipes.addShapeless(<minecraft:planks:0> * 2, [<minecraft:log:0>]);
+recipes.addShapeless(<minecraft:planks:1> * 2, [<minecraft:log:1>]);
+recipes.addShapeless(<minecraft:planks:2> * 2, [<minecraft:log:2>]);
+recipes.addShapeless(<minecraft:planks:3> * 2, [<minecraft:log:3>]);
+recipes.addShapeless(<minecraft:planks:4> * 2, [<minecraft:log2:0>]);
+recipes.addShapeless(<minecraft:planks:5> * 2, [<minecraft:log2:1>]);
+
+// --- Палки: 2 доски -> 2 палки (было 4) ---
+recipes.remove(<minecraft:stick>);
+recipes.addShaped(<minecraft:stick> * 2, [[<ore:plankWood>], [<ore:plankWood>]]);
+
+// ====================================================================================
+// ОПИЛКИ
+// ====================================================================================
+// Древесная масса Forestry (-> бумага, картон): опилки, разваренные в воде
+mods.forestry.Carpenter.addRecipe(<Forestry:woodPulp> * 2, [
+    [sawdust, sawdust]
+], <liquid:water> * 250, 20);
+// Бездымный порох (нитроцеллюлоза): богатую целлюлозой стружку нитруют смесью кислот.
+// Азотная кислота - из селитры, серная - из серы. Нитроцеллюлозу желатинируют спиртом (пироксилиновый порох),
+// поэтому нужен биоэтанол (БЫЛО: вода).
+// Нитрование идёт только с охлаждением (ледяная баня), иначе реакция уходит вразнос: 1 лёд расходуется.
+// Лёд любой: натуральный (шёлковое касание) или из Glacial Precipitator TE.
+// Сильнее дымного пороха Railcraft (2 селитры + сера + уголь -> 2): здесь те же 2 селитры дают 4 пороха.
+// ТЕПЕРЬ: две стадии и свой предмет (zavod:powder_smokeless), а не ванильный порох - бездымный идёт только в патроны.
+// 1) нитрование (плотник, лёд, вода на промывку) -> 4 нитроцеллюлозы; 2) желатинизация спиртом -> 4 бездымного пороха.
+mods.forestry.Carpenter.addRecipe(<zavod:nitrocellulose> * 4, [
+    [sawdust, sawdust,         sawdust],
+    [null,    <minecraft:ice>, null]
+], <liquid:nitricacid> * 500, 60);
+mods.forestry.Carpenter.addRecipe(<zavod:powder_smokeless> * 4, [
+    [<zavod:nitrocellulose>, <zavod:nitrocellulose>],
+    [<zavod:nitrocellulose>, <zavod:nitrocellulose>]
+], <liquid:bioethanol> * 250, 40);
+
+// --- (В КОНЦЕ ФАЙЛА: если ID Forestry не совпадут, упадёт только этот блок) Доски Forestry (тип дерева = метаданные 0..28, обычные и огнестойкие): 2 с бревна ---
+recipes.remove(<Forestry:planks:*>);
+recipes.remove(<Forestry:planksFireproof:*>);
+recipes.addShapeless(<Forestry:planks:0> * 2, [<Forestry:logs:0>]);
+recipes.addShapeless(<Forestry:planks:1> * 2, [<Forestry:logs:1>]);
+recipes.addShapeless(<Forestry:planks:2> * 2, [<Forestry:logs:2>]);
+recipes.addShapeless(<Forestry:planks:3> * 2, [<Forestry:logs:3>]);
+recipes.addShapeless(<Forestry:planks:4> * 2, [<Forestry:logs:4>]);
+recipes.addShapeless(<Forestry:planks:5> * 2, [<Forestry:logs:5>]);
+recipes.addShapeless(<Forestry:planks:6> * 2, [<Forestry:logs:6>]);
+recipes.addShapeless(<Forestry:planks:7> * 2, [<Forestry:logs:7>]);
+recipes.addShapeless(<Forestry:planks:8> * 2, [<Forestry:logs:8>]);
+recipes.addShapeless(<Forestry:planks:9> * 2, [<Forestry:logs:9>]);
+recipes.addShapeless(<Forestry:planks:10> * 2, [<Forestry:logs:10>]);
+recipes.addShapeless(<Forestry:planks:11> * 2, [<Forestry:logs:11>]);
+recipes.addShapeless(<Forestry:planks:12> * 2, [<Forestry:logs:12>]);
+recipes.addShapeless(<Forestry:planks:13> * 2, [<Forestry:logs:13>]);
+recipes.addShapeless(<Forestry:planks:14> * 2, [<Forestry:logs:14>]);
+recipes.addShapeless(<Forestry:planks:15> * 2, [<Forestry:logs:15>]);
+recipes.addShapeless(<Forestry:planks:16> * 2, [<Forestry:logs:16>]);
+recipes.addShapeless(<Forestry:planks:17> * 2, [<Forestry:logs:17>]);
+recipes.addShapeless(<Forestry:planks:18> * 2, [<Forestry:logs:18>]);
+recipes.addShapeless(<Forestry:planks:19> * 2, [<Forestry:logs:19>]);
+recipes.addShapeless(<Forestry:planks:20> * 2, [<Forestry:logs:20>]);
+recipes.addShapeless(<Forestry:planks:21> * 2, [<Forestry:logs:21>]);
+recipes.addShapeless(<Forestry:planks:22> * 2, [<Forestry:logs:22>]);
+recipes.addShapeless(<Forestry:planks:23> * 2, [<Forestry:logs:23>]);
+recipes.addShapeless(<Forestry:planks:24> * 2, [<Forestry:logs:24>]);
+recipes.addShapeless(<Forestry:planks:25> * 2, [<Forestry:logs:25>]);
+recipes.addShapeless(<Forestry:planks:26> * 2, [<Forestry:logs:26>]);
+recipes.addShapeless(<Forestry:planks:27> * 2, [<Forestry:logs:27>]);
+recipes.addShapeless(<Forestry:planks:28> * 2, [<Forestry:logs:28>]);
+recipes.addShapeless(<Forestry:planksFireproof:0> * 2, [<Forestry:logsFireproof:0>]);
+recipes.addShapeless(<Forestry:planksFireproof:1> * 2, [<Forestry:logsFireproof:1>]);
+recipes.addShapeless(<Forestry:planksFireproof:2> * 2, [<Forestry:logsFireproof:2>]);
+recipes.addShapeless(<Forestry:planksFireproof:3> * 2, [<Forestry:logsFireproof:3>]);
+recipes.addShapeless(<Forestry:planksFireproof:4> * 2, [<Forestry:logsFireproof:4>]);
+recipes.addShapeless(<Forestry:planksFireproof:5> * 2, [<Forestry:logsFireproof:5>]);
+recipes.addShapeless(<Forestry:planksFireproof:6> * 2, [<Forestry:logsFireproof:6>]);
+recipes.addShapeless(<Forestry:planksFireproof:7> * 2, [<Forestry:logsFireproof:7>]);
+recipes.addShapeless(<Forestry:planksFireproof:8> * 2, [<Forestry:logsFireproof:8>]);
+recipes.addShapeless(<Forestry:planksFireproof:9> * 2, [<Forestry:logsFireproof:9>]);
+recipes.addShapeless(<Forestry:planksFireproof:10> * 2, [<Forestry:logsFireproof:10>]);
+recipes.addShapeless(<Forestry:planksFireproof:11> * 2, [<Forestry:logsFireproof:11>]);
+recipes.addShapeless(<Forestry:planksFireproof:12> * 2, [<Forestry:logsFireproof:12>]);
+recipes.addShapeless(<Forestry:planksFireproof:13> * 2, [<Forestry:logsFireproof:13>]);
+recipes.addShapeless(<Forestry:planksFireproof:14> * 2, [<Forestry:logsFireproof:14>]);
+recipes.addShapeless(<Forestry:planksFireproof:15> * 2, [<Forestry:logsFireproof:15>]);
+recipes.addShapeless(<Forestry:planksFireproof:16> * 2, [<Forestry:logsFireproof:16>]);
+recipes.addShapeless(<Forestry:planksFireproof:17> * 2, [<Forestry:logsFireproof:17>]);
+recipes.addShapeless(<Forestry:planksFireproof:18> * 2, [<Forestry:logsFireproof:18>]);
+recipes.addShapeless(<Forestry:planksFireproof:19> * 2, [<Forestry:logsFireproof:19>]);
+recipes.addShapeless(<Forestry:planksFireproof:20> * 2, [<Forestry:logsFireproof:20>]);
+recipes.addShapeless(<Forestry:planksFireproof:21> * 2, [<Forestry:logsFireproof:21>]);
+recipes.addShapeless(<Forestry:planksFireproof:22> * 2, [<Forestry:logsFireproof:22>]);
+recipes.addShapeless(<Forestry:planksFireproof:23> * 2, [<Forestry:logsFireproof:23>]);
+recipes.addShapeless(<Forestry:planksFireproof:24> * 2, [<Forestry:logsFireproof:24>]);
+recipes.addShapeless(<Forestry:planksFireproof:25> * 2, [<Forestry:logsFireproof:25>]);
+recipes.addShapeless(<Forestry:planksFireproof:26> * 2, [<Forestry:logsFireproof:26>]);
+recipes.addShapeless(<Forestry:planksFireproof:27> * 2, [<Forestry:logsFireproof:27>]);
+recipes.addShapeless(<Forestry:planksFireproof:28> * 2, [<Forestry:logsFireproof:28>]);
+

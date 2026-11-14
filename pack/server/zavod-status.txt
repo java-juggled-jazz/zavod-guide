@@ -1,0 +1,82 @@
+#!/usr/bin/env python3
+"""Данные для панели (docs/server-vm.md «Панель»). Запускается от root через sudo, только эти режимы:
+  zavod-status json              состояние: сервис, игроки Headscale, вайтлист, онлайн, бэкапы, хвост лога
+  zavod-status backup NAME       бэкап в stdout (для скачивания)
+"""
+import json, os, re, subprocess, sys, time
+
+DIR, BK = "/srv/zavod", "/srv/backups"
+
+
+def run(*a, timeout=20):
+    try:
+        return subprocess.run(a, capture_output=True, text=True, timeout=timeout).stdout
+    except Exception:
+        return ""
+
+
+def tail(path, n):
+    try:
+        with open(path, "rb") as f:
+            f.seek(0, 2)
+            f.seek(max(0, f.tell() - 64 * 1024))
+            return f.read().decode("utf-8", "replace").splitlines()[-n:]
+    except OSError:
+        return []
+
+
+def online(active):
+    if not active:
+        return None
+    subprocess.run(["/opt/zavod/zavod-cmd", "list"], capture_output=True, timeout=10)
+    time.sleep(1.0)
+    lines = tail(f"{DIR}/logs/latest.log", 40)
+    for i in range(len(lines) - 1, -1, -1):
+        m = re.search(r"There are (\d+)/(\d+) players online", lines[i])
+        if m:
+            names = lines[i + 1].split("]: ", 1)[-1] if i + 1 < len(lines) and "]: " in lines[i + 1] else ""
+            return {"count": int(m.group(1)), "max": int(m.group(2)),
+                    "names": [x.strip() for x in names.split(",") if x.strip() and "There are" not in names]}
+    return None
+
+
+def status():
+    active = run("systemctl", "is-active", "zavod").strip() == "active"
+    users = {u.get("id"): u.get("name") for u in json.loads(run("headscale", "users", "list", "-o", "json") or "[]") or []}
+    nodes = json.loads(run("headscale", "nodes", "list", "-o", "json") or "[]") or []
+    players = {}
+    for n in nodes:
+        name = (n.get("user") or {}).get("name") or users.get((n.get("user") or {}).get("id"), "?")
+        if name == "zavod-server":
+            continue
+        ls = n.get("last_seen") or {}
+        players.setdefault(name, []).append({
+            "id": n.get("id"), "host": n.get("given_name") or n.get("name"), "online": bool(n.get("online")),
+            "ip": (n.get("ip_addresses") or [""])[0],
+            "last_seen": ls.get("seconds") if isinstance(ls, dict) else ls})
+    for name in users.values():
+        if name != "zavod-server":
+            players.setdefault(name, [])
+    try:
+        wl = [e.get("name") for e in json.load(open(f"{DIR}/whitelist.json"))]
+    except (OSError, ValueError):
+        wl = []
+    try:
+        bks = sorted(((f, os.path.getsize(f"{BK}/{f}")) for f in os.listdir(BK) if re.fullmatch(r"zavod-[0-9-]+\.tgz", f)), reverse=True)
+    except OSError:
+        bks = []
+    return {"active": active, "since": run("systemctl", "show", "zavod", "-p", "ActiveEnterTimestamp", "--value").strip(),
+            "players": players, "whitelist": wl, "online": online(active),
+            "backups": [{"name": f, "size": s} for f, s in bks], "log": tail(f"{DIR}/logs/latest.log", 60)}
+
+
+if __name__ == "__main__":
+    a = sys.argv[1:]
+    if a == ["json"]:
+        json.dump(status(), sys.stdout)
+    elif len(a) == 2 and a[0] == "backup" and re.fullmatch(r"zavod-[0-9-]+\.tgz", a[1]):
+        with open(f"{BK}/{a[1]}", "rb") as f:
+            while chunk := f.read(1 << 20):
+                sys.stdout.buffer.write(chunk)
+    else:
+        sys.exit(__doc__)

@@ -1,0 +1,92 @@
+// ====================================================================================
+//                    ЕДИНЫЙ СТАНДАРТ ШЕСТЕРЁН И ВТУЛОК
+// ПОЧЕМУ: шестерня — это не "4 слитка вокруг палки". Это венец из проката на втулке-подшипнике.
+// ТЕПЕРЬ: любая металлическая шестерня = 4 пластины + втулка Railcraft + кузнечный молот.
+//         Нет пластин у металла (инвар) — слитки + молот.
+// Втулка (Tin Bushing, part.gear:3) — из оловянных пластин. Она же идёт в колёсные пары вагонеток.
+// Деревянной шестерни нет (вырезана в global.zs) — каменная собирается на втулке.
+// ====================================================================================
+
+val hammer   = <IC2:itemToolForgeHammer>.anyDamage();
+val bushing  = <Railcraft:part.gear:3>;
+
+val plateTin    = <ore:plateTin>;
+val plateIron   = <ore:plateIron>;
+val plateSteel  = <ore:plateSteel>;
+val plateCopper = <ore:plateCopper>;
+val plateBronze = <ore:plateBronze>;
+val plateGold   = <ore:plateGold>;
+val plateLead   = <ore:plateLead>;
+val ingotInvar  = <ore:ingotInvar>;
+val cobble      = <ore:cobblestone>;
+
+// --- Втулка: 4 оловянные пластины -> 4 втулки ---
+recipes.remove(bushing);
+// Вручную 4 пластины -> 1 втулка. На токарной оправке (заготовка 2-2-2-2-2, не расходуется) -> 4 втулки.
+recipes.addShaped(bushing, [[plateTin, plateTin], [plateTin, plateTin]]);
+recipes.addShaped(bushing * 4, [[null, plateTin, null], [plateTin, <IC2:itemTurningBlanks>.onlyWithTag({state: {l0: 2, l1: 2, l2: 2, l3: 2, l4: 2}}).reuse(), plateTin], [null, plateTin, null]]);
+// Металлоформовщик (экструзия): блок олова -> труба -> 9 втулок. Основной путь, как только есть EU.
+// Ручной крафт 4 -> 1 нужен только чтобы собрать сам металлоформовщик (2 стальные шестерни = 2 втулки).
+mods.ic2.MetalFormer.addExtrudingRecipe(bushing * 9, <ore:blockTin>);
+
+// --- Каменная шестерня BC (нужна гаечному ключу, автоверстаку, насосу-скважине, воронке, движку на красном камне) ---
+// БЫЛО: делалась из деревянной, которую мы вырезали -> вся линейка BC-шестерён и Redstone Engine умерли.
+recipes.remove(<BuildCraft|Core:stoneGearItem>);
+recipes.addShaped(<BuildCraft|Core:stoneGearItem>, [[null, cobble, null], [cobble, bushing, cobble], [null, cobble, null]]);
+
+// --- Металлические шестерни: [молот, пластина, -] / [пластина, втулка, пластина] / [-, пластина, -] ---
+// Железные
+recipes.remove(<BuildCraft|Core:ironGearItem>);
+recipes.addShaped(<BuildCraft|Core:ironGearItem>, [[hammer, plateIron, null], [plateIron, bushing, plateIron], [null, plateIron, null]]);
+recipes.remove(<Railcraft:part.gear:1>);
+recipes.addShaped(<Railcraft:part.gear:1>,        [[hammer, plateIron, null], [plateIron, bushing, plateIron], [null, plateIron, null]]);
+
+// Стальная (Railcraft, она же <ore:gearSteel>)
+recipes.remove(<Railcraft:part.gear:2>);
+recipes.addShaped(<Railcraft:part.gear:2>, [[hammer, plateSteel, null], [plateSteel, bushing, plateSteel], [null, plateSteel, null]]);
+
+// Золотые
+recipes.remove(<BuildCraft|Core:goldGearItem>);
+recipes.addShaped(<BuildCraft|Core:goldGearItem>,       [[hammer, plateGold, null], [plateGold, bushing, plateGold], [null, plateGold, null]]);
+recipes.remove(<ThermalFoundation:material:13>);
+recipes.addShaped(<ThermalFoundation:material:13>,      [[hammer, plateGold, null], [plateGold, bushing, plateGold], [null, plateGold, null]]);
+
+// Медные (TF и Forestry)
+recipes.remove(<ThermalFoundation:material:128>);
+recipes.addShaped(<ThermalFoundation:material:128>, [[hammer, plateCopper, null], [plateCopper, bushing, plateCopper], [null, plateCopper, null]]);
+recipes.remove(<Forestry:gearCopper>);
+recipes.addShaped(<Forestry:gearCopper>,            [[hammer, plateCopper, null], [plateCopper, bushing, plateCopper], [null, plateCopper, null]]);
+
+// Бронзовые (TF и Forestry)
+recipes.remove(<ThermalFoundation:material:137>);
+recipes.addShaped(<ThermalFoundation:material:137>, [[hammer, plateBronze, null], [plateBronze, bushing, plateBronze], [null, plateBronze, null]]);
+recipes.remove(<Forestry:gearBronze>);
+recipes.addShaped(<Forestry:gearBronze>,            [[hammer, plateBronze, null], [plateBronze, bushing, plateBronze], [null, plateBronze, null]]);
+
+// Свинцовая (TF)
+recipes.remove(<ThermalFoundation:material:131>);
+recipes.addShaped(<ThermalFoundation:material:131>, [[hammer, plateLead, null], [plateLead, bushing, plateLead], [null, plateLead, null]]);
+
+// Инваровая (TF) — пластин инвара в сборке нет, куём из слитков
+recipes.remove(<ThermalFoundation:material:136>);
+recipes.addShaped(<ThermalFoundation:material:136>, [[hammer, ingotInvar, null], [ingotInvar, bushing, ingotInvar], [null, ingotInvar, null]]);
+
+// ОЛОВЯННЫХ ШЕСТЕРЁН БОЛЬШЕ НЕТ: олово срежет зубья на первом обороте.
+// Везде, где модам нужна "оловянная шестерня" (мультиферма Forestry: редуктор, люк, клапан;
+// дождевик; рамка машины TE и т.д.), теперь подходит БРОНЗОВАЯ — бронза держит высокие обороты
+// и даёт низкое трение. Делаем это через словарь: бронзовые шестерни добавлены в <ore:gearTin>,
+// а крафт самих оловянных шестерён (TF и Forestry) удалён.
+recipes.remove(<Forestry:gearTin>);
+<ore:gearTin>.add(<ThermalFoundation:material:137>);
+<ore:gearTin>.add(<Forestry:gearBronze>);
+// Сами оловянные шестерни из словаря убираем — завалявшиеся старые больше никуда не подходят
+<ore:gearTin>.remove(<Forestry:gearTin>);
+<ore:gearTin>.remove(<ThermalFoundation:material:129>);
+
+// --- Движок на красном камне BC (нужен помпе BC): каменные шестерни вместо деревянных ---
+recipes.remove(<BuildCraft|Core:engineBlock:0>);
+recipes.addShaped(<BuildCraft|Core:engineBlock:0>, [
+    [<ore:plankWood>,  <ore:plankWood>,  <ore:plankWood>],
+    [null,             <ore:blockGlass>, null],
+    [<ore:gearStone>,  <minecraft:piston>, <ore:gearStone>]
+]);

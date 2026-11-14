@@ -1,0 +1,8 @@
+name = "NEIIntegration_MC1.7.10_1.1.0-fixed"
+filename = "NEIIntegration_MC1.7.10_1.1.0-fixed.jar"
+side = "both"
+
+[download]
+url = "https://java-juggled-jazz.github.io/zavod-guide/pack/files/mods/NEIIntegration_MC1.7.10_1.1.0-fixed.jar"
+hash-format = "sha256"
+hash = "a0d14e50f14428f48ec042c3c2f27a29f719b993d9116b0cf7aa185813a4790e"

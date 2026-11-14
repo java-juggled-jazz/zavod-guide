@@ -1,0 +1,118 @@
+{
+    "limestone_beds": {
+        "template": {
+            "type": "uniform",
+            "generator": "plate",
+            "height": 2,
+            "sizeVariance": 4
+        },
+        "block": [
+            {
+                "name": "zavod:limestone"
+            }
+        ],
+        "material": [
+            {
+                "name": "minecraft:stone"
+            },
+            {
+                "name": "minecraft:dirt"
+            },
+            {
+                "name": "minecraft:gravel"
+            }
+        ],
+        "clusterSize": 8,
+        "numClusters": 2,
+        "chunkChance": 3,
+        "minHeight": 52,
+        "maxHeight": 66,
+        "retrogen": true,
+        "biomeRestriction": "whitelist",
+        "biomes": [
+            {
+                "type": "dictionary",
+                "entry": "PLAINS"
+            },
+            {
+                "type": "dictionary",
+                "entry": "HILLS"
+            },
+            {
+                "type": "dictionary",
+                "entry": "BEACH"
+            },
+            {
+                "type": "dictionary",
+                "entry": "FOREST"
+            },
+            {
+                "type": "dictionary",
+                "entry": "RIVER"
+            }
+        ],
+        "dimensionRestriction": "whitelist",
+        "dimensions": [
+            0
+        ],
+        "__reason__": "Известняк и мел (A13). ПОЧЕМУ: осадочная порода древних морей лежит пластами под равнинами, холмами и по берегам (меловые обрывы); мел был в рецептах, но в мире его не найти. ТЕПЕРЬ: линзы радиусом 4-7 блоков, толщиной 5, на высоте 52-66 (под дёрном, выходит на склонах и берегах), по 2 в каждом третьем чанке равнин, холмов, лесов, берегов и рек. Заменяет камень, землю и гравий. Ретроген включён."
+    },
+    "limestone_rare": {
+        "template": {
+            "type": "uniform",
+            "generator": "plate",
+            "height": 2,
+            "sizeVariance": 3
+        },
+        "block": [
+            {
+                "name": "zavod:limestone"
+            }
+        ],
+        "material": [
+            {
+                "name": "minecraft:stone"
+            },
+            {
+                "name": "minecraft:dirt"
+            },
+            {
+                "name": "minecraft:gravel"
+            }
+        ],
+        "clusterSize": 6,
+        "numClusters": 1,
+        "chunkChance": 12,
+        "minHeight": 52,
+        "maxHeight": 66,
+        "retrogen": true,
+        "biomeRestriction": "blacklist",
+        "biomes": [
+            {
+                "type": "dictionary",
+                "entry": "PLAINS"
+            },
+            {
+                "type": "dictionary",
+                "entry": "HILLS"
+            },
+            {
+                "type": "dictionary",
+                "entry": "BEACH"
+            },
+            {
+                "type": "dictionary",
+                "entry": "FOREST"
+            },
+            {
+                "type": "dictionary",
+                "entry": "RIVER"
+            }
+        ],
+        "dimensionRestriction": "whitelist",
+        "dimensions": [
+            0
+        ],
+        "__reason__": "Известняк вне осадочных равнин (горы, пустыни, тайга, океан): одна линза радиусом 3-5 примерно на 12 чанков - найти можно, но строить на нём производство лучше там, где пластов много."
+    }
+}

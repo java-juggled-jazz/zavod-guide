@@ -1,0 +1,348 @@
+// ====================================================================================
+//                 БАЛАНС КОКСОВЫХ ПЕЧЕЙ RAILCRAFT
+// В railcraft.cfg НЕТ настроек времени коксования и выхода креозота — файл railcraft.json
+// Railcraft просто не читает. Меняем рецепты через ModTweaker.
+// По умолчанию в Railcraft 9.x: уголь -> кокс за 1800 тиков (90 с) + 500 mB креозота;
+// бревно -> древесный уголь за 1800 тиков + 250 mB.
+// ====================================================================================
+
+val creosote = <liquid:creosote>;
+
+// Каменный уголь -> кокс: 1800 тиков (90 с), креозот 500 -> 250 mB (ценный дозированный продукт)
+mods.railcraft.CokeOven.removeRecipe(<Railcraft:fuel.coke>);
+mods.railcraft.CokeOven.addRecipe(<minecraft:coal>, true, false, <Railcraft:fuel.coke>, creosote * 250, 1800);
+
+// Угольный блок -> блок кокса (x9 по времени и креозоту, как в оригинале)
+mods.railcraft.CokeOven.removeRecipe(<Railcraft:cube:0>);
+mods.railcraft.CokeOven.addRecipe(<minecraft:coal_block>, false, false, <Railcraft:cube:0>, creosote * 2250, 5400);
+
+// Бревно -> древесный уголь: креозот 250 -> 125 mB (у древесины меньше смолы)
+mods.railcraft.CokeOven.removeRecipe(<minecraft:coal:1>);
+for log in <ore:logWood>.items {
+    mods.railcraft.CokeOven.addRecipe(log, false, false, <minecraft:coal:1>, creosote * 125, 1800);
+}
+
+// ====================================================================================
+//                 ПАРОВЫЕ ДВИГАТЕЛИ RAILCRAFT — МАТРИЦА МЕТАЛЛОВ
+// machine.beta: 7 любительский, 8 коммерческий, 9 промышленный
+// ====================================================================================
+val glass       = <ore:blockGlassColorless>;
+val piston      = <minecraft:piston>;
+val plateBronze = <ore:plateBronze>;
+val plateSteel  = <ore:plateSteel>;
+val denseSteel  = <IC2:itemDensePlates:5>;
+val gearBronze  = <ore:gearBronze>;
+val gearSteel   = <ore:gearSteel>;
+val gearInvar   = <ore:gearInvar>;
+val tankWall    = <Railcraft:machine.beta:0>;   // стенка железного бака
+val fusedQuartz = <EnderIO:blockFusedQuartz>;
+
+// Любительский: БЫЛО — золотые шестерни и самородки (золото в паровой машине?).
+// ТЕПЕРЬ — бронзовый век: бронзовый цилиндр + бронзовый редуктор.
+recipes.remove(<Railcraft:machine.beta:7>);
+recipes.addShaped(<Railcraft:machine.beta:7>, [
+    [plateBronze, plateBronze, plateBronze],
+    [null,        glass,       null],
+    [gearBronze,  piston,      gearBronze]
+]);
+
+// Коммерческий: стальной цилиндр, паровая рубашка из стенок бака, бронзовый редуктор (обороты)
+recipes.remove(<Railcraft:machine.beta:8>);
+recipes.addShaped(<Railcraft:machine.beta:8>, [
+    [plateSteel, glass,      plateSteel],
+    [tankWall,   <IC2:itemTurningBlanks>.onlyWithTag({state: {l0: 4, l1: 2, l2: 4, l3: 2, l4: 4}}), tankWall],
+    [gearBronze, piston,     gearBronze]
+]);
+// Переплавка коммерческого двигателя в домне давала 12 стали — теперь это был бы дюп стали. Убираем.
+// (удаляет рецепты домны с выходом от 12 стали — такой рецепт ровно один)
+mods.railcraft.BlastFurnace.removeRecipe(<Railcraft:ingot> * 12);
+
+// Промышленный: плотная сталь, инваровая термостойкая кинематика, стальной привод, кварцевое смотровое окно
+recipes.remove(<Railcraft:machine.beta:9>);
+recipes.addShaped(<Railcraft:machine.beta:9>, [
+    [denseSteel, fusedQuartz, denseSteel],
+    [gearInvar,  <IC2:itemTurningBlanks>.onlyWithTag({state: {l0: 4, l1: 2, l2: 4, l3: 2, l4: 4}}), gearInvar],
+    [gearSteel,  piston,      gearSteel]
+]);
+
+// ====================================================================================
+//                 ПАРОВАЯ ТУРБИНА RAILCRAFT (корпус, 3 шт. за крафт)
+// Снаружи — стальная рама (блоки стали по углам), внутри — стальные редукторы,
+// стальной вал IC2 и генераторные катушки IC2. Лопатки и ротор делаются отдельно (лопатки — в global.zs).
+// ====================================================================================
+val steelBlock = <ore:blockSteel>;
+val steelShaft = <IC2:itemRecipePart:12>;
+val copperCoil = <IC2:itemRecipePart>;
+val motorIC2   = <IC2:itemRecipePart:1>;
+val circuitIC2 = <IC2:itemPartCircuit>;
+val advCircuit = <IC2:itemPartCircuitAdv>;
+val plateIron  = <ore:plateIron>;
+val tankBC     = <BuildCraft|Factory:tankBlock>;
+val bushing    = <Railcraft:part.gear:3>;
+val denseLead  = <IC2:itemDensePlates:6>;
+val chipQuartz = <BuildCraft|Silicon:redstoneChipset:5>;
+
+recipes.remove(<Railcraft:machine.alpha:1>);
+recipes.addShaped(<Railcraft:machine.alpha:1> * 3, [
+    [steelBlock, gearSteel,  steelBlock],
+    [copperCoil, steelShaft, copperCoil],
+    [steelBlock, gearSteel,  steelBlock]
+]);
+
+// ====================================================================================
+//                 ПАРОВАЯ ПЕЧЬ — ВЫРЕЗАНА
+// Своих рецептов у неё нет (только рецепты обычной печи), а "камера с паром на 120 градусов"
+// как плавильная печь — нелепость. Убираем крафт.
+// ====================================================================================
+recipes.remove(<Railcraft:machine.alpha:3>);
+
+// ====================================================================================
+//                 КОКСОВАЯ ПЕЧЬ: ШАМОТНЫЙ КИРПИЧ
+// Огнеупор = обожжённая глина + шамот (гравий как заполнитель) + кварцевый песок.
+// Дешёвый "кирпич + песок" и вариант из песчаного кирпича вырезаны.
+// ====================================================================================
+recipes.remove(<Railcraft:machine.alpha:7>);
+recipes.addShaped(<Railcraft:machine.alpha:7>, [
+    [<minecraft:brick>,     <minecraft:sand>,   <minecraft:brick>],
+    [<minecraft:clay_ball>, <minecraft:gravel>, <minecraft:clay_ball>],
+    [<minecraft:brick>,     <minecraft:sand>,   <minecraft:brick>]
+]);
+
+// ====================================================================================
+//                 ТОПКИ КОТЛОВ
+// ====================================================================================
+// Твердотопливная: кирпичная кладка + колосниковая решётка (железные прутья) + железная обшивка
+recipes.remove(<Railcraft:machine.beta:5>);
+recipes.addShaped(<Railcraft:machine.beta:5>, [
+    [plateIron,                <minecraft:brick_block>, plateIron],
+    [<minecraft:iron_bars>,    <minecraft:fire_charge>, <minecraft:iron_bars>],
+    [<minecraft:brick_block>,  <minecraft:furnace>,     <minecraft:brick_block>]
+]);
+
+// Жидкотопливная: это твердотопливная топка + форсунки (жидкостные трубы BC) + топливный бак
+recipes.remove(<Railcraft:machine.beta:6>);
+recipes.addShaped(<Railcraft:machine.beta:6>, [
+    [plateSteel, tankBC,                     plateSteel],
+    [<BuildCraft|Transport:item.buildcraftPipe.pipefluidsiron>, <Railcraft:machine.beta:5>, <BuildCraft|Transport:item.buildcraftPipe.pipefluidsiron>],
+    [plateSteel, <minecraft:fire_charge>,    plateSteel]
+]);
+
+// ====================================================================================
+//                 БАК ВОДОНАПОРНОЙ БАШНИ (6 шт.)
+// Деревянная клёпка + железные обручи + резиновый уплотнитель (БЫЛО: слизь)
+// ====================================================================================
+recipes.remove(<Railcraft:machine.alpha:14>);
+recipes.addShaped(<Railcraft:machine.alpha:14> * 6, [
+    [<ore:plankWood>, <ore:plankWood>,  <ore:plankWood>],
+    [plateIron,       <ore:itemRubber>, plateIron],
+    [<ore:plankWood>, <ore:plankWood>,  <ore:plankWood>]
+]);
+
+// ====================================================================================
+//                 ПРОКАТНЫЙ СТАН
+// Прижимные поршни + бронзовый редуктор + железная станина. Остаётся ДО стали.
+// ====================================================================================
+recipes.remove(<Railcraft:machine.alpha:8>);
+recipes.addShaped(<Railcraft:machine.alpha:8>, [
+    [plateIron,  <minecraft:piston>,         plateIron],
+    [gearBronze, <minecraft:crafting_table>, gearBronze],
+    [plateIron,  <minecraft:piston>,         plateIron]
+]);
+
+// ====================================================================================
+//                 ЯКОРЯ (мировой — в lategame.zs)
+// ====================================================================================
+// Личный якорь: грузит чанки только пока игрок в сети — дешевле мирового
+recipes.remove(<Railcraft:machine.alpha:2>);
+recipes.addShaped(<Railcraft:machine.alpha:2>, [
+    [denseLead,              chipQuartz,                     denseLead],
+    [<minecraft:ender_pearl>, <EnderIO:itemBasicCapacitor:1>, <minecraft:ender_pearl>],
+    [denseLead,              motorIC2,                       denseLead]
+]);
+
+// Пассивный якорь: уровень мирового
+recipes.remove(<Railcraft:machine.alpha:13>);
+recipes.addShaped(<Railcraft:machine.alpha:13>, [
+    [denseLead,             chipQuartz,                     denseLead],
+    [<IC2:blockMachine2:0>, <EnderIO:itemBasicCapacitor:2>, <IC2:blockMachine2:0>],
+    [denseLead,             advCircuit,                     denseLead]
+]);
+
+// Страж (Sentinel): ретранслятор поля якоря
+recipes.remove(<Railcraft:machine.beta:10>);
+recipes.addShaped(<Railcraft:machine.beta:10>, [
+    [null,      chipQuartz,              null],
+    [denseLead, <minecraft:ender_pearl>, denseLead],
+    [denseLead, circuitIC2,              denseLead]
+]);
+
+// ====================================================================================
+//                 ВАГОНЕТКИ И ЛОКОМОТИВЫ: ПРОКАТ + КОЛЁСНЫЕ ПАРЫ НА ВТУЛКАХ
+// ====================================================================================
+// Вагонетка: 3 железные пластины + 2 втулки (БЫЛО: 5 слитков). Из неё собираются все грузовые вагонетки.
+recipes.remove(<minecraft:minecart>);
+recipes.addShaped(<minecraft:minecart>, [
+    [plateIron, null,      plateIron],
+    [bushing,   plateIron, bushing]
+]);
+
+// Паровоз: котёл высокого давления + топка + паровой цилиндр (коммерческий двигатель) + стальные колёсные пары.
+// removeShaped, а не remove — иначе пропадёт рецепт покраски локомотива.
+recipes.removeShaped(<Railcraft:cart.loco.steam.solid>);
+recipes.addShaped(<Railcraft:cart.loco.steam.solid>, [
+    [<Railcraft:machine.beta:4>, <Railcraft:machine.beta:4>, <Railcraft:machine.beta:5>],
+    [<Railcraft:machine.beta:8>, <Railcraft:machine.beta:4>, <Railcraft:machine.beta:5>],
+    [gearSteel,                  <minecraft:minecart>,       <minecraft:minecart>]
+]);
+
+// Электровоз: токосъёмник Railcraft + электромоторы IC2 + стальные колёсные пары
+recipes.removeShaped(<Railcraft:cart.loco.electric>);
+recipes.addShaped(<Railcraft:cart.loco.electric>, [
+    [<minecraft:redstone_lamp>, circuitIC2,                    plateSteel],
+    [motorIC2,                  <Railcraft:machine.epsilon:0>, motorIC2],
+    [gearSteel,                 <minecraft:minecart>,          gearSteel]
+]);
+
+// ====================================================================================
+//                 АВТОМАТИКА RAILCRAFT: КОРМЛЕНИЕ, ТОРГОВЛЯ, ДЫМОГЕНЕРАТОР
+// ====================================================================================
+// Станция кормления: дозатор-воронка + схема управления
+recipes.remove(<Railcraft:machine.alpha:11>);
+recipes.addShaped(<Railcraft:machine.alpha:11>, [
+    [<ore:plankWood>, <minecraft:golden_carrot>, <ore:plankWood>],
+    [<ore:plankWood>, <minecraft:hopper>,        <ore:plankWood>],
+    [plateIron,       circuitIC2,                plateIron]
+]);
+
+// Торговая станция: логика сделок на золотом чипсете BC + продвинутая схема
+recipes.remove(<Railcraft:machine.alpha:6>);
+recipes.addShaped(<Railcraft:machine.alpha:6>, [
+    [plateSteel,            <BuildCraft|Silicon:redstoneChipset:2>, plateSteel],
+    [<minecraft:emerald>,   <minecraft:chest>,                      <minecraft:emerald>],
+    [plateSteel,            advCircuit,                             plateSteel]
+]);
+
+// Дымогенератор: топка с колосником и дымоходом, включается редстоуном
+recipes.remove(<Railcraft:machine.alpha:5>);
+recipes.addShaped(<Railcraft:machine.alpha:5>, [
+    [plateIron,               <minecraft:iron_bars>,   plateIron],
+    [<minecraft:brick_block>, <minecraft:fire_charge>, <minecraft:brick_block>],
+    [plateIron,               <minecraft:redstone>,    plateIron]
+]);
+
+// ====================================================================================
+// ШПАЛЫ, ПРОПИТАННЫЕ МЕДНЫМ КУПОРОСОМ (метод Бушери) - второй путь, без креозота
+// Медь + сера (серная кислота) + вода = раствор сульфата меди. 6 полублоков -> 2 шпалы.
+// Креозотовые остаются как в Railcraft: верстак (3 полублока + креозот) и плотник (750 mB).
+// ====================================================================================
+mods.forestry.Carpenter.addRecipe(<Railcraft:part.tie> * 2, [
+    [<ore:slabWood>,   <ore:slabWood>,   <ore:slabWood>],
+    [<ore:slabWood>,   <ore:slabWood>,   <ore:slabWood>],
+    [<ore:dustCopper>, <ore:dustSulfur>, null]
+], <liquid:water> * 1000, 40);
+
+// ====================================================================================
+// МОНТИРОВКИ: резиновая рукоять вместо половины краски (обычная - железо, усиленная - сталь)
+// ====================================================================================
+recipes.remove(<Railcraft:tool.crowbar>);
+recipes.addShaped(<Railcraft:tool.crowbar>, [
+    [null,            <ore:dyeRed>,    <ore:ingotIron>],
+    [<ore:itemRubber>, <ore:ingotIron>, <ore:dyeRed>],
+    [<ore:ingotIron>, <ore:itemRubber>, null]
+]);
+recipes.remove(<Railcraft:tool.crowbar.reinforced>);
+recipes.addShaped(<Railcraft:tool.crowbar.reinforced>, [
+    [null,            <ore:dyeRed>,     <ore:ingotSteel>],
+    [<ore:itemRubber>, <ore:ingotSteel>, <ore:dyeRed>],
+    [<ore:ingotSteel>, <ore:itemRubber>, null]
+]);
+
+// ====================================================================================
+// RAILCRAFT ПОД МЕТАЛЛУРГИЮ И ЭЛЕКТРОНИКУ (в конце файла: при неверном ID упадёт только этот блок)
+// Арматура - только сталь. Схемы сигнализации - на ламповых схемах IC2. Головки бура - на токарных коронках.
+// Огненный камень вырезан. Рельсы и так делаются только прокатным станом (кроме деревянных).
+// ====================================================================================
+val boreCrown    = (<IC2:itemTurningBlanks>.onlyWithTag({state: {l0: 4, l1: 4, l2: 3, l3: 2, l4: 1}}) | <IC2:itemTurningBlanks>.onlyWithTag({state: {l0: 1, l1: 2, l2: 3, l3: 4, l4: 4}}));   // burovaya koronka 4-4-3-2-1
+val boreCrownDia = (<IC2:itemTurningBlanks>.onlyWithTag({state: {l0: 4, l1: 3, l2: 2, l3: 1, l4: 1}}) | <IC2:itemTurningBlanks>.onlyWithTag({state: {l0: 1, l1: 1, l2: 2, l3: 3, l4: 4}}));   // almaznaya koronka 4-3-2-1-1
+
+// Armatura: tol'ko stal'
+mods.railcraft.Rolling.removeRecipe(<Railcraft:part.rebar>);
+mods.railcraft.Rolling.addShaped(<Railcraft:part.rebar> * 8, [
+    [null,             null,             <ore:ingotSteel>],
+    [null,             <ore:ingotSteel>, null],
+    [<ore:ingotSteel>, null,             null]
+]);
+
+// Skhemy signalizatsii: lampovaya skhema IC2 + rele (povtoritel') + rezinovaya izolyatsiya; tsvet shersti - tip skhemy
+recipes.remove(<Railcraft:part.circuit:*>);
+mods.forestry.Carpenter.addRecipe(<Railcraft:part.circuit:0>, [
+    [null,                  <minecraft:repeater>,  <minecraft:wool:14>],
+    [<ore:itemRubber>,      <IC2:itemPartCircuit>, <ore:ingotTin>],
+    [<minecraft:wool:14>,   <ore:dustRedstone>,    null]
+], <liquid:seedoil> * 100, 40);
+mods.forestry.Carpenter.addRecipe(<Railcraft:part.circuit:1>, [
+    [null,                  <minecraft:repeater>,  <minecraft:wool:13>],
+    [<ore:itemRubber>,      <IC2:itemPartCircuit>, <ore:ingotTin>],
+    [<minecraft:wool:13>,   <ore:dustRedstone>,    null]
+], <liquid:seedoil> * 100, 40);
+mods.forestry.Carpenter.addRecipe(<Railcraft:part.circuit:2>, [
+    [null,                  <minecraft:repeater>,  <minecraft:wool:4>],
+    [<ore:itemRubber>,      <IC2:itemPartCircuit>, <ore:ingotTin>],
+    [<minecraft:wool:4>,   <ore:dustRedstone>,    null]
+], <liquid:seedoil> * 100, 40);
+
+// Golovki tunnel'nogo bura: tochyonye koronki (tokarka) vokrug bloka metalla
+recipes.remove(<Railcraft:borehead.iron>);
+recipes.addShaped(<Railcraft:borehead.iron>, [
+    [<ore:ingotSteel>, boreCrown,         <ore:ingotSteel>],
+    [boreCrown,        <ore:blockIron>,   boreCrown],
+    [<ore:ingotSteel>, boreCrown,         <ore:ingotSteel>]
+]);
+recipes.remove(<Railcraft:borehead.steel>);
+recipes.addShaped(<Railcraft:borehead.steel>, [
+    [<ore:ingotSteel>, boreCrown,         <ore:ingotSteel>],
+    [boreCrown,        <ore:blockSteel>,  boreCrown],
+    [<ore:ingotSteel>, boreCrown,         <ore:ingotSteel>]
+]);
+recipes.remove(<Railcraft:borehead.diamond>);
+recipes.addShaped(<Railcraft:borehead.diamond>, [
+    [<minecraft:diamond>, boreCrownDia,      <minecraft:diamond>],
+    [boreCrownDia,        <ore:blockSteel>,  boreCrownDia],
+    [<minecraft:diamond>, boreCrownDia,      <minecraft:diamond>]
+]);
+
+// Ognennyy kamen' (vechnoe toplivo, perezaryazhaetsya v lave) - vyrezan. Generatsiya vyklyuchena v railcraft.cfg.
+recipes.remove(<Railcraft:firestone.refined>);
+recipes.remove(<Railcraft:firestone.cut>);
+
+// Дробление кимберлита: камень бездны -> гравий + 0.8% алмаза (примерно 1 алмаз на 2 стака породы).
+mods.railcraft.RockCrusher.removeRecipe(<Railcraft:cube:6>);
+mods.railcraft.RockCrusher.addRecipe(
+    <Railcraft:cube:6>, true, false,
+    [<minecraft:gravel>, <minecraft:diamond>],
+    [1.0,                0.008]
+);
+
+// ====================================================================================
+// ПИРОЛИЗ ОРГАНИКИ (коксовая печь = пиролизная печь)
+//   опилки, мульча -> пыль древесного угля (в дымный порох) + 25 mB смолы
+//   кость -> 4 костной муки (костяной уголь/зола, фосфор) + 25 mB костяного масла (как смола)
+//   резина (переработка шин) -> технический углерод (= угольная пыль) + 100 mB пиролизной смолы
+// ПАРТИИ: ящик Forestry (9 штук, упаковка в плотнике) идёт в печь целиком. Время - как у 3 штук,
+//   а не у 9: печь греет загрузку разом. Угольный блок -> блок кокса так же (было 9 х время).
+// В конце файла: если ID ящиков Forestry не совпадут, упадёт только этот блок.
+// ====================================================================================
+mods.railcraft.CokeOven.addRecipe(<ThermalExpansion:material:512>, true, false, <Railcraft:dust:3>, creosote * 25, 600);
+mods.railcraft.CokeOven.addRecipe(<Forestry:mulch>, false, false, <Railcraft:dust:3>, creosote * 25, 600);
+mods.railcraft.CokeOven.addRecipe(<minecraft:bone>, false, false, <minecraft:dye:15> * 4, creosote * 25, 600);
+mods.railcraft.CokeOven.addRecipe(<IC2:itemRubber>, false, false, <IC2:itemDust:2>, creosote * 100, 1200);
+
+mods.railcraft.CokeOven.addRecipe(<Forestry:cratedCoal>, false, false, <Railcraft:fuel.coke> * 9, creosote * 2250, 5400);
+mods.railcraft.CokeOven.addRecipe(<Forestry:cratedWood>, false, false, <minecraft:coal:1> * 9, creosote * 1125, 5400);
+mods.railcraft.CokeOven.addRecipe(<Forestry:cratedSpruceWood>, false, false, <minecraft:coal:1> * 9, creosote * 1125, 5400);
+mods.railcraft.CokeOven.addRecipe(<Forestry:cratedBirchWood>, false, false, <minecraft:coal:1> * 9, creosote * 1125, 5400);
+mods.railcraft.CokeOven.addRecipe(<Forestry:cratedJungleWood>, false, false, <minecraft:coal:1> * 9, creosote * 1125, 5400);
+mods.railcraft.CokeOven.addRecipe(<Forestry:cratedAcaciaWood>, false, false, <minecraft:coal:1> * 9, creosote * 1125, 5400);
+mods.railcraft.CokeOven.addRecipe(<Forestry:cratedDarkOakWood>, false, false, <minecraft:coal:1> * 9, creosote * 1125, 5400);
+mods.railcraft.CokeOven.addRecipe(<Forestry:cratedMulch>, false, false, <Railcraft:dust:3> * 9, creosote * 225, 2700);
+

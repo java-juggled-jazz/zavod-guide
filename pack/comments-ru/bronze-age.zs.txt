@@ -1,0 +1,52 @@
+// ====================================================================================
+// БРОНЗОВЫЙ ВЕК: ДО ПЕРВОГО ЭЛЕКТРИЧЕСТВА
+// ПОЧЕМУ: бронза крафтилась из слитков руками (Forestry: 3 меди + олово = 4 бронзы) - сплав без огня.
+//   А до первых машин IC2 руду нельзя было даже раздробить.
+// ТЕПЕРЬ ступени:
+//   1. Кузнечный молот: руда -> дроблёная руда (1 шт., машина даст 2), слитки -> кованый вал.
+//   2. Бронза только через огонь: 3 дроблёной меди + 1 дроблёного олова -> 4 бронзовой пыли (рецепт IC2)
+//      -> печь -> бронза. Ручной сплав из слитков Forestry удалён.
+//   3. Ручной кинетический генератор IC2 (корпус + рычаг) крутит токарный станок: коленвалы, оправки,
+//      валы - без электричества. Кованые валы нужны, чтобы собрать сам станок.
+//   4. Паровая и механическая энергия (RF): любительский паровой двигатель Railcraft, торфяной двигатель
+//      Forestry, Стирлинг BC, паровое динамо TE -> пульверизатор TE, плотник, фабрикатор (лампы),
+//      прокатный стан. Изоляция кабелей - воск и бумага. Отсюда ламповые схемы -> первые машины IC2.
+// ====================================================================================
+
+val hammer = <IC2:itemToolForgeHammer>.anyDamage();
+
+// --- 1. Ручное дробление руды молотом ---
+recipes.addShapeless(<IC2:itemCrushedOre:0>, [<ore:oreIron>,   hammer]);
+recipes.addShapeless(<IC2:itemCrushedOre:1>, [<ore:oreCopper>, hammer]);
+recipes.addShapeless(<IC2:itemCrushedOre:2>, [<ore:oreGold>,   hammer]);
+recipes.addShapeless(<IC2:itemCrushedOre:3>, [<ore:oreTin>,    hammer]);
+recipes.addShapeless(<IC2:itemCrushedOre:5>, [<ore:oreSilver>, hammer]);
+recipes.addShapeless(<IC2:itemCrushedOre:6>, [<ore:oreLead>,   hammer]);
+// Никель: у IC2 нет дроблёного никеля, молот даёт сразу никелевую пыль TF
+recipes.addShapeless(<ThermalFoundation:material:36>, [<ore:oreNickel>, hammer]);
+
+// Дроблёная руда -> пыль (второй удар молотом): для ручного смешивания сплавов (инвар: 2 железной + 1 никелевая пыль)
+recipes.addShapeless(<IC2:itemDust:5>, [<IC2:itemCrushedOre:0>, hammer]);
+recipes.addShapeless(<IC2:itemDust:3>, [<IC2:itemCrushedOre:1>, hammer]);
+recipes.addShapeless(<IC2:itemDust:4>, [<IC2:itemCrushedOre:2>, hammer]);
+recipes.addShapeless(<IC2:itemDust:7>, [<IC2:itemCrushedOre:3>, hammer]);
+recipes.addShapeless(<IC2:itemDust:10>, [<IC2:itemCrushedOre:6>, hammer]);
+
+// --- Кованый вал: 3 железа под молотом (токарка даст вал из 2 железа, экструзия - из 9) ---
+recipes.addShaped(<IC2:itemRecipePart:11>, [
+    [null,   <ore:ingotIron>, null],
+    [hammer, <ore:ingotIron>, null],
+    [null,   <ore:ingotIron>, null]
+]);
+
+// --- Корпус машины TE: как выглядит - железная рама со стеклом, внутри бронзовый редуктор.
+// Железные пластины вместо слитков. БЫЛО: слитки железа, стекло и шестерня.
+recipes.remove(<ThermalExpansion:Frame>);
+recipes.addShaped(<ThermalExpansion:Frame>, [
+    [<ore:plateIron>,  <ore:blockGlass>, <ore:plateIron>],
+    [<ore:blockGlass>, <ore:gearBronze>, <ore:blockGlass>],
+    [<ore:plateIron>,  <ore:blockGlass>, <ore:plateIron>]
+]);
+
+// --- 2. Ручной сплав бронзы из слитков (Forestry) - удалён. В КОНЦЕ ФАЙЛА: при неверном ID упадёт только он. ---
+recipes.remove(<Forestry:ingotBronze>);

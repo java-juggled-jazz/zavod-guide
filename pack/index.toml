@@ -1,0 +1,736 @@
+hash-format = "sha256"
+
+[[files]]
+file = "Flan/flans_modern_weapons_pack_1.7.10_modpack.jar"
+hash = "93f00448dfbdc4a1a30004d1ee935d1dbefc3bdf309a57577b1770c6dc02591f"
+
+[[files]]
+file = "Flan/flans_world_war_two_pack_1.7.10_modpack.jar"
+hash = "b720a4ff8b5f5057322479d5ebb78e4727cf78bafb950b7d27d20ef280fb13fa"
+
+[[files]]
+file = "Flan/flans_ye_olde_pack_1.7.10_modpack.jar"
+hash = "b8dcb20ff9ce38d3911955004e42337bda95a12696f273cd375a5e88aa2435f4"
+
+[[files]]
+file = "Flan/zavod_grenades/grenades/Mk2Frag.txt"
+hash = "231c7a28772e3a2de63869ea3ae49a2d3f1e5083c8e1bf2dbbd6304b692e3d5c"
+
+[[files]]
+file = "Flan/zavod_grenades/grenades/Stielhandgranate.txt"
+hash = "cc5a4826e30b735b5b8283626ff1fca7593ca2b823fd9728650a26fcd9f817e5"
+
+[[files]]
+file = "Flan/zavod_uniform/armorFiles/SpetsnazBoots.txt"
+hash = "7ca568bafd76ced7673ce291f3f06633683efc3110d84a5909d9134bc4204d52"
+
+[[files]]
+file = "Flan/zavod_uniform/armorFiles/SpetsnazHelmet.txt"
+hash = "a2e5ba4fcdf2ce969606574143df436f61495a5759553634129b60c6b8ba9f8b"
+
+[[files]]
+file = "Flan/zavod_uniform/armorFiles/SpetsnazPants.txt"
+hash = "91c5ac7af9d8bfcf3468514cd10a6e7f00eddf09551cd8a79993d292cc9722c6"
+
+[[files]]
+file = "PLANS.txt"
+hash = "5f1f6f1aa52def94a9508bda841fd6264e84242918f69b7a860e1c89d6973d98"
+
+[[files]]
+file = "README.txt"
+hash = "790c51481c4497fde2154850e9f9b5121ed9e457688ba2a9d2606d27f3b0584f"
+
+[[files]]
+file = "comments-ru/alloys.zs.txt"
+hash = "da90113e4234421d5ea9b34e24af3ae1a4fd6d9e67b233a0d6a85e2c35b8ce50"
+
+[[files]]
+file = "comments-ru/bronze-age.zs.txt"
+hash = "54c22140949fdf71f44d4b7911a6dc2ff8da0a17d06de78a56c4b18716a8b381"
+
+[[files]]
+file = "comments-ru/buildcraft.zs.txt"
+hash = "c76519101f3de7b3d9edae3e1ba4de6134d271d74084853741bec6ccf0421311"
+
+[[files]]
+file = "comments-ru/chem.zs.txt"
+hash = "57300560dc44b3ddb14e56af73fd0dc6de6507a056693ef2dc12400f71a95ca2"
+
+[[files]]
+file = "comments-ru/cutter.zs.txt"
+hash = "7f27aa5a0352ce806858c30fe3b795bc68e1231ad6f77909951399da7202c951"
+
+[[files]]
+file = "comments-ru/electronics.zs.txt"
+hash = "225228f4a6823c72ef3658b6469660dfd68f3fe8046cb20807547afbef5b2991"
+
+[[files]]
+file = "comments-ru/energy-storage.zs.txt"
+hash = "6823b5393b093e2f67ac8063cd2800790a4a0dfa179dae8c0323e2dfb57ea4de"
+
+[[files]]
+file = "comments-ru/flans.zs.txt"
+hash = "8ffe00a8b5974d8b3ec2f5f090f57ee6747b57a495a65f5af0261b182928017e"
+
+[[files]]
+file = "comments-ru/forestry-combs.zs.txt"
+hash = "248bab7977ae8b51c80de68dac2118fd8a306330940343a944f98b774c8b2c11"
+
+[[files]]
+file = "comments-ru/forestry-engines.zs.txt"
+hash = "4e6017912bbe9ac8296a3618d3111a7e5bcf5fb235f25759a21e85dc0bb2c904"
+
+[[files]]
+file = "comments-ru/forestry-organics.zs.txt"
+hash = "586055233fc149bfad470e7a9565992bcfc5071d0aec9e236d1012c79c22cf5d"
+
+[[files]]
+file = "comments-ru/gears.zs.txt"
+hash = "aa90a4863d41736cb9e4891715b75be5b5fd6a39ccdafbc9e2a5194836261008"
+
+[[files]]
+file = "comments-ru/global.zs.txt"
+hash = "a1fada45791683dba9a65fb3df1e8d9401844dd4551ed0144333cba50acffe57"
+
+[[files]]
+file = "comments-ru/ic2-heat.zs.txt"
+hash = "0336666cacab47c9e51b9595871d39497f375cd797b9346650030a17764c0264"
+
+[[files]]
+file = "comments-ru/ic2-machines.zs.txt"
+hash = "97aead5bc407b05b279e6f2234b4bf43757d52af8807edfbb6c4a3847dfd1c78"
+
+[[files]]
+file = "comments-ru/ironchests.zs.txt"
+hash = "86090d3a7dc1b715da056b8a4309a2016c1fffaf583e1fa72d9b87604ba15f61"
+
+[[files]]
+file = "comments-ru/lategame.zs.txt"
+hash = "303bd73a6d950f1c69308752bcb90db2089d7c7d4a771486a60fee57a8944884"
+
+[[files]]
+file = "comments-ru/lathe.zs.txt"
+hash = "a605b5eb05a9afd456585a65bdbacf8dba7e73130b680303f53e033df6d35a23"
+
+[[files]]
+file = "comments-ru/logistics-pipes.zs.txt"
+hash = "ffd396941e1a5763df47a3e4a6118b60385202274f745d10c4337560fb4e3ff1"
+
+[[files]]
+file = "comments-ru/nether-free.zs.txt"
+hash = "60eb81dbb369b81425ed8a265fd4229b3bc092788efafcfa0268a06108f005f6"
+
+[[files]]
+file = "comments-ru/nuclear.zs.txt"
+hash = "804e4404f83491779d3d26da755077941337ce75e7af4060302f9999f78e7225"
+
+[[files]]
+file = "comments-ru/openblocks.zs.txt"
+hash = "76cf2ca92dc285ee3bcca83c5af976d977521abb6acd48c1713e046b0cb8a235"
+
+[[files]]
+file = "comments-ru/petrochem.zs.txt"
+hash = "467e83dcbeb1aeecb36e965ea9ee0384f7a615d2ea4b848b756565ccc7dd5039"
+
+[[files]]
+file = "comments-ru/precious.zs.txt"
+hash = "bfb52b01cbe2dbc3914eb6243a13ab140e4a06424ff4b370f641236897f77f51"
+
+[[files]]
+file = "comments-ru/railcraft.zs.txt"
+hash = "58871d97b432311f52343c473c62a33011466363c521d8b9df454c1660762b80"
+
+[[files]]
+file = "comments-ru/rubber.zs.txt"
+hash = "bdb4d1cb198b109f66f227eb5acb5faa0bf47f688fc391592a93124c0d8d67a3"
+
+[[files]]
+file = "comments-ru/transmission.zs.txt"
+hash = "e6542741c36c3f35cfd829d69868e797de8a1ef737f19bd6a7b5807e6b21595f"
+
+[[files]]
+file = "comments-ru/woodworking.zs.txt"
+hash = "7a0fd0f4de080486b1e8d8b83fb3828f769f1ec1ebdac3bd054bb2490effb8df"
+
+[[files]]
+file = "config/CustomSpawner/overworld/EntitySpawnTypes.cfg"
+hash = "2344dfaf84706dd713d207ee82904e6f25cbc79ea00e71a369ed702abea49f59"
+
+[[files]]
+file = "config/IC2.ini"
+hash = "306b4e6625e2416a043865c58e2bf45cefd124b3517b458cd8c0ebeb4c6ac840"
+
+[[files]]
+file = "config/MobProperties/CaveSpider.json"
+hash = "1b4c921e934e529070027088dadefdfd06829fe994423ca19166ca4e732bf970"
+
+[[files]]
+file = "config/MobProperties/Chicken.json"
+hash = "e29e7ff3256aadf61cedcf05b92e7f8ee0a915b75faeadfba6251711343f50a6"
+
+[[files]]
+file = "config/MobProperties/Cow.json"
+hash = "7a8879087b0e95391a64680afec9990cc16869098a88db42f2345d00ec1dfcf4"
+
+[[files]]
+file = "config/MobProperties/Creeper.json"
+hash = "fb3a741fd94ba770daf07b39677d822971d4622a942bee4031bbae2ce6f408e3"
+
+[[files]]
+file = "config/MobProperties/EntityHorse.json"
+hash = "9fefeee75d50b7b1006650875ef0cc76ffcb5a8096a1f5e04249e78d0342a406"
+
+[[files]]
+file = "config/MobProperties/MushroomCow.json"
+hash = "2ec961663af7f888ff662cb6afd68b9ab677dde1566fcf0d3c19236d626a8a0f"
+
+[[files]]
+file = "config/MobProperties/Pig.json"
+hash = "817831cd42c6bf5765539eb1b3bb91d65b3eb1bbf5a5d5101bfde4d2792f4d06"
+
+[[files]]
+file = "config/MobProperties/Sheep.json"
+hash = "6a06075d940665478453e3a4ddba3d98e33ccb774c8ba2cd59737c9b4eb01622"
+
+[[files]]
+file = "config/MobProperties/Skeleton.json"
+hash = "0cfd19ab7480d595a9a902521e9480999dd51ac7c058ef2eb96735291d7a67f1"
+
+[[files]]
+file = "config/MobProperties/Spider.json"
+hash = "9feadfc8908fc39c36c282760cfc4bf3f26ecffabd415f52e37284c4e394a28f"
+
+[[files]]
+file = "config/MobProperties/Zombie.json"
+hash = "5c9f812ec9a9c95e0d9eb17a08c6bc75960381cb5adad5bc03fed95ec1430d0f"
+
+[[files]]
+file = "config/StorageDrawers.cfg"
+hash = "df76c6f461d4bb071b696aaf179588bee61eb57754762376cc53c6539a1c2c02"
+
+[[files]]
+file = "config/TwoGraves.cfg"
+hash = "4807420f4fbb0942304786305d95c198f03d5049abef8041f9cfca7157015039"
+
+[[files]]
+file = "config/buildcraft/main.cfg"
+hash = "993e95ce97b6b50ba5b71a7250af359d779e8391a08db2c797fc87db25edf62d"
+
+[[files]]
+file = "config/climatecontrol.cfg"
+hash = "d1720c947811b24db909cc0c3cd0235ed2dd83a6651cf08e27bc91b7b74e4cbc"
+
+[[files]]
+file = "config/cofh/core/common.cfg"
+hash = "09b7ad169613234b7109b2b1a63bc1799e9c90a69f5df75a95a2b3ea357a2f44"
+
+[[files]]
+file = "config/cofh/world/Vanilla.json"
+hash = "ce47a5aab60f59485f6c76fe7c9d82e7c986fb9b785f9463dd64cf74243676c9"
+
+[[files]]
+file = "config/cofh/world/geology.json"
+hash = "5b290277876855890fa7297878a1f1be3dbf101a52283bb9dc8f1e3f4151ec67"
+
+[[files]]
+file = "config/cofh/world/zavod-bauxite.json"
+hash = "dbe5e148f07f01144dda834c4c8cf0442b6999f7638d7f38dc91b8f1b8e8fedb"
+
+[[files]]
+file = "config/cofh/world/zavod-clay.json"
+hash = "a727eb308f2f8e203e796df53a6ebd8c7eb1083b0a46f6499e9f70a82546dc63"
+
+[[files]]
+file = "config/cofh/world/zavod-limestone.json"
+hash = "f81f52205c38b029f9c142b272d29f7861bbeea8e12567b1ef41f01ec1269460"
+
+[[files]]
+file = "config/cofh/world/zavod-sulfur.json"
+hash = "0c7fdcaced9d7a0f9dc04dabb60a77f3f83cdd903ca56d02441f7130c604a34e"
+
+[[files]]
+file = "config/forestry/common.cfg"
+hash = "acb6ba29ca347423aef1418a49b257e972cb4cc060b26f6f1dee3557233c5e07"
+
+[[files]]
+file = "config/harvestcraft.cfg"
+hash = "eebb74b4e935348c392e80d11f0dd9875fe22938e11beb5d61753337697f6b5d"
+
+[[files]]
+file = "config/ic2/blast_furnace.ini"
+hash = "cae289b4eacbf2ec26c26b95b2d086306900395e70e8f3a08440a94b5e131288"
+
+[[files]]
+file = "config/ic2/block_cutter.ini"
+hash = "435866f66c46968dc384aba53d7a6503911a66d899bfe65616ffc6a7a1ccd6b3"
+
+[[files]]
+file = "config/ic2/compressor.ini"
+hash = "14e9a08f46df4f8fe9e2e67364c7aaecb833ec2a4d22a55a0a5eea3afab18586"
+
+[[files]]
+file = "config/ic2/extractor.ini"
+hash = "d62c479aee7b63fe286af6a1233966550efec770369abe2c5452da5d67093f15"
+
+[[files]]
+file = "config/ic2/macerator.ini"
+hash = "78afd4448a785200439c84e11018bd61651b940e3f7fd2204aa65db395729ff6"
+
+[[files]]
+file = "config/ic2/metal_former_extruding.ini"
+hash = "17036a88d4243db515f57f8d61cd06b7f4061b38fea2de4e6299045a4a481e30"
+
+[[files]]
+file = "config/ic2/metal_former_rolling.ini"
+hash = "49e6c831642350bdebad7544ea05f7db912576576ccf4a341b4d2c9e21cdc2dd"
+
+[[files]]
+file = "config/ic2/thermal_centrifuge.ini"
+hash = "cec5dcdacc7409431f1de276c6ea5f66ceda8cddcb790aa67534430ed5a339c7"
+
+[[files]]
+file = "config/railcraft/railcraft.cfg"
+hash = "3ab96ea703fe5da427f58c0286b050d74b9c017316f003f0cf093141417a3f70"
+
+[[files]]
+file = "config/reccomplex.cfg"
+hash = "ec9ea6d5d0b64dba8f9ba2f8a971000c5e0431ed537f3bf0c3cc571be033d24d"
+
+[[files]]
+file = "config/zavod-pams.txt"
+hash = "39b6b1063039fd1e291c4abbc62b782d600e9d26f8e7e0c851006da4f5b585ad"
+
+[[files]]
+file = "config/zavod.cfg"
+hash = "dab65ab88c3b30db43687443211c37ea8b1bc8cb5b8d71ab83fbd8e52a9c3e45"
+
+[[files]]
+file = "mods/1.7.10/bspkrscore.pw.toml"
+hash = "4f817806167f7b13e933b98928a698b9db0a8337af286d03c98ea13a8662a7b8"
+metafile = true
+
+[[files]]
+file = "mods/1.7.10/codechickenlib-1-7-10-1-1-3-141-universal.pw.toml"
+hash = "33f07d14c6b927f5fb1ddf5d4f084812d7da715c2bc23fba3ff409d508eacd27"
+metafile = true
+
+[[files]]
+file = "mods/bibliocraft.pw.toml"
+hash = "90eda7ecb3d383dd2b160501a431baed74dfae4a52a84939ac7a84b62c86d23d"
+metafile = true
+
+[[files]]
+file = "mods/buildcraft.pw.toml"
+hash = "28825657e6a5260933662ff7e9e6cf81e562dc630a382fea77b23839556897e8"
+metafile = true
+
+[[files]]
+file = "mods/climate-control-geographicraft.pw.toml"
+hash = "359e386d38cb5e49805022478990a52800b571f8a45419131a7aa98b515c2645"
+metafile = true
+
+[[files]]
+file = "mods/codechickencore.pw.toml"
+hash = "877e37dd1a4313b52e1d40d74fe9abc89658f8cf172263b0f33d0feb15db89b6"
+metafile = true
+
+[[files]]
+file = "mods/cofh-core.pw.toml"
+hash = "532832dfebefa96635d1567dbfa473795f63dd86af44e770f3a2f34d8c858193"
+metafile = true
+
+[[files]]
+file = "mods/flans-mod-1-7-10-4-10-0-fixed.pw.toml"
+hash = "115b1a2dc47ee9096d08f911a16f997e6c15aa2d67be17fc791f1963ac4a7e90"
+metafile = true
+
+[[files]]
+file = "mods/forestry.pw.toml"
+hash = "32a8dcaac73b4a1d1e754b8822300445a477851c062b8a17acd16dd1f81cda2d"
+metafile = true
+
+[[files]]
+file = "mods/guide-api.pw.toml"
+hash = "c9079e9e6bddea635fad892ec891e2f08ce56d65e797a82e0432a096a1a885a7"
+metafile = true
+
+[[files]]
+file = "mods/industrial-craft.pw.toml"
+hash = "4db4762305744be1a6cf1b1c4505ae9b9bf3dc1a4c0fd3749694da21b98c47bf"
+metafile = true
+
+[[files]]
+file = "mods/inventory-tweaks.pw.toml"
+hash = "c4230a555dd028581640c08b17340f6cc0139120512d2ae48d7ad9292ddd0289"
+metafile = true
+
+[[files]]
+file = "mods/iron-chests.pw.toml"
+hash = "3ca603eae3a6554cbff216ac0deb895aac844f6f28a16fed8bd40ce5e615f7d9"
+metafile = true
+
+[[files]]
+file = "mods/ivtoolkit.pw.toml"
+hash = "1d8ad50e19e6b029a62379e8bb82d45d520bfdc4a01ed7280b30aa7903b3dbb6"
+metafile = true
+
+[[files]]
+file = "mods/logistics-pipes.pw.toml"
+hash = "0d0e57adb88b457dadf48794635abf0894b6590dd9431225a08bee47d024aeae"
+metafile = true
+
+[[files]]
+file = "mods/minetweaker3.pw.toml"
+hash = "2cae8c5eefd42c3a845794a5252252ddc3e48dee6b4cbba6927c2a4008239770"
+metafile = true
+
+[[files]]
+file = "mods/mob-properties.pw.toml"
+hash = "37da2e6d0d0102a377b7193348d11ae0216619ab3ed52b2d0c55156fd6f527dd"
+metafile = true
+
+[[files]]
+file = "mods/modtweaker.pw.toml"
+hash = "2efe15f652487360e8673eb80d8e565218c1bddbea5f4a22ae41a2fb8da7c675"
+metafile = true
+
+[[files]]
+file = "mods/neiintegration-mc1-7-10-1-1-0-fixed.pw.toml"
+hash = "52c8ef40e4d9074b3c25e5bd381832dcb70fea6d941c8380695b74d9be2ada82"
+metafile = true
+
+[[files]]
+file = "mods/notenoughitems.pw.toml"
+hash = "920d279a70b25cad68c4f1c1992f8d4562e2d648402e2f9df013d078d62eae71"
+metafile = true
+
+[[files]]
+file = "mods/nuclear-control-2.pw.toml"
+hash = "14b19af30de430b0e957afaa5ca1684b829847fbc817c3544fbf376fd2197d7a"
+metafile = true
+
+[[files]]
+file = "mods/pams-harvestcraft-1-7-10k-fixed.pw.toml"
+hash = "a995511d1a978688d049ac8f4c519a368e32c45da0226f63213123eb9780e3b0"
+metafile = true
+
+[[files]]
+file = "mods/railcraft.pw.toml"
+hash = "5614fb3ab583f05339d85c124289c167ee3f7b761fed208a30fc7e8a3d26441a"
+metafile = true
+
+[[files]]
+file = "mods/recurrent-complex.pw.toml"
+hash = "b907441954d596b550d0ba69b1cdae9381d8a527d8ad2a85ba638748802f770a"
+metafile = true
+
+[[files]]
+file = "mods/server-properties-for-lan.pw.toml"
+hash = "5b19bfab3658b9ffc5f2ed3b1264fb75114a48faff1884f83181063abedbc8d0"
+metafile = true
+
+[[files]]
+file = "mods/storage-drawers.pw.toml"
+hash = "74f55c146b49ee61c6d6f9bb035618d936c34c54caeabecbafac6db990822e79"
+metafile = true
+
+[[files]]
+file = "mods/treecapitator.pw.toml"
+hash = "548becfe83371f2af2a3eb0918ac4f8a19e82a3f16c316ed11382b6caa807440"
+metafile = true
+
+[[files]]
+file = "mods/twograves-mod-1-7-10.pw.toml"
+hash = "f3e6ca595fe5650f2ae84bb1dc229970763a828c6187686e3b3e3a9584bc2563"
+metafile = true
+
+[[files]]
+file = "mods/waila.pw.toml"
+hash = "1ce389a8d9488dd7d37490c1498d10412b7430b18cc0faa28f47afc9cf896b57"
+metafile = true
+
+[[files]]
+file = "mods/xaeros-minimap-fair-play-edition.pw.toml"
+hash = "01a54c98ef76dca6ce9cc6d7b0211155850c90825613e52f84e890140a207549"
+metafile = true
+
+[[files]]
+file = "mods/zavod-1-56-82.pw.toml"
+hash = "88e40cc5081326d0f75eb5821f94df857ec4b31b51e739017436db0a7f0ae817"
+metafile = true
+
+[[files]]
+file = "scripts/alloys.zs"
+hash = "42d174b6acf56055ff4fb7fb2b704c020b30b43ea2986da605197658c254a2b4"
+
+[[files]]
+file = "scripts/bronze-age.zs"
+hash = "d64333f68f7f241d14081710ea80012e48a5097a5c0f668842a64cf946ee5ef4"
+
+[[files]]
+file = "scripts/buildcraft.zs"
+hash = "4f7ce149007541225d0f8d24f39bb7be93f202ec20ebd7ebb532f4dad074cfda"
+
+[[files]]
+file = "scripts/chem.zs"
+hash = "94be02522ea70f074a8568dbce1b4dfe334810b5e00a7f6cb2475f0d256a8761"
+
+[[files]]
+file = "scripts/cutter.zs"
+hash = "c5adf835b27f594712f884172310d341bf00e58f7859224646891410944af7e1"
+
+[[files]]
+file = "scripts/electronics.zs"
+hash = "a0d5cab20f710ad7d3971c4db0eeb66b7a9aaf8985763728499ce455d5e9e2f0"
+
+[[files]]
+file = "scripts/energy-storage.zs"
+hash = "c894948b7039364eb2ccb66f0086d558ec5a5f38da4f2d553968f32a5a3fc7fe"
+
+[[files]]
+file = "scripts/explosives.zs"
+hash = "ccd6fd68be71581a309a9e852adf6d75de2a4f3d4deafdfd968e9d4ffb5436bd"
+
+[[files]]
+file = "scripts/flans.zs"
+hash = "1725b74a97a585051282d8fbf210329e66d22eb5b52af1ef6ca581e03d311918"
+
+[[files]]
+file = "scripts/forestry-combs.zs"
+hash = "10efb8126a707cedfbca8ee6aab2fc46fc9855292a5feaf629f6c77e4c1cb721"
+
+[[files]]
+file = "scripts/forestry-engines.zs"
+hash = "3ef999ae0de93f6721903b5df27540346833dd0639c83390c11e18db38d937dc"
+
+[[files]]
+file = "scripts/forestry-organics.zs"
+hash = "a93e2c05cb2fe26d1a72e7f7016b55e780c98abe3f992acfb1c9c941c2621951"
+
+[[files]]
+file = "scripts/gears.zs"
+hash = "8c18d3b7cc9d6707d5484cc1d4ba2c2c6b5fcf03590b61f2adf99f2cc546ecf9"
+
+[[files]]
+file = "scripts/global.zs"
+hash = "8d033e9fda4a4f517c16bb14e5d28cfe040bdb6f832773a4c2aee7a0b9afb3cd"
+
+[[files]]
+file = "scripts/harvestcraft.zs"
+hash = "0feda1d53c24191bab0de74773c40507cf0c38f457a203dcb11794f1cbda5c58"
+
+[[files]]
+file = "scripts/ic2-armor.zs"
+hash = "3955beab2b7c475b4722b4f2f4718896c5414c4026952700a6af1c999ecd6708"
+
+[[files]]
+file = "scripts/ic2-heat.zs"
+hash = "60c2598c3f53778456f153c623b9883eb338b83c6ebfdb6462fc6b2f753b1717"
+
+[[files]]
+file = "scripts/ic2-machines.zs"
+hash = "4fab5f93aeaa7baaf3acd3d62d6bdd6bc5b25dbf03ae0aa4c7f899f4fa6d97c9"
+
+[[files]]
+file = "scripts/ironchests.zs"
+hash = "1b2545a0f3017f5aeff0b25390d7ef466d4c2e764094832ad926e73deaa3db00"
+
+[[files]]
+file = "scripts/lategame.zs"
+hash = "dcd24e45a694522d74d3aac7711c65bec506d8da3df51931160fa8ac05898661"
+
+[[files]]
+file = "scripts/lathe.zs"
+hash = "938eeb1a0834c3070e94270ba38efd84ccf95c3f136450a5a47f5d4d872d8065"
+
+[[files]]
+file = "scripts/lime.zs"
+hash = "2093787c33bebe2a76a5e716a5a2e637cbf7034e3661f556ee5b9f0e43032039"
+
+[[files]]
+file = "scripts/logistics-pipes.zs"
+hash = "cdcde0c10282b8a9b33ef0220e25069ef29c9ff23c96d4ef19d34ad50f603535"
+
+[[files]]
+file = "scripts/loot.zs"
+hash = "f088f0b5132064fc9bb373c818804c17d233029e42c8287104ff32cc931f19e8"
+
+[[files]]
+file = "scripts/metals.zs"
+hash = "3ad97f5914dba3d07254a9f1fa91c428d76673b06816c731a30ff09eebe486b7"
+
+[[files]]
+file = "scripts/nei-hide.zs"
+hash = "0bbb14040a6c24a6861c4b414b1f703ea3f12cefc3ae2003c3cc1ab22523e3d3"
+
+[[files]]
+file = "scripts/nether-free.zs"
+hash = "f8a2ed8bd45ab774f2a5f7dc8b14aee5e5bacbd68ee59144a1641bcc80cd050b"
+
+[[files]]
+file = "scripts/nuclear.zs"
+hash = "f2656a7df97f2cef061e17d5e4bc5550d24087edc869a7f166253148a7928bc0"
+
+[[files]]
+file = "scripts/oil.zs"
+hash = "b73159203c73bb937a1980da2ee2d2b1a9a8aa18e07f0ea21c2dd4ecbbef3dcf"
+
+[[files]]
+file = "scripts/petrochem.zs"
+hash = "db5bb47991b1a853c4e27bc3f49b54396563e08fe9e9c4878252dcaa0bc3b299"
+
+[[files]]
+file = "scripts/potash.zs"
+hash = "5e5c0581b5db6fb080ba43295c424fe63eb6fa9078b6cb4d53dc9de48cb4b769"
+
+[[files]]
+file = "scripts/precious.zs"
+hash = "199f43e6de755f067ce0061d6592b6e1781177c4e0c01e51d2208bd6526944f0"
+
+[[files]]
+file = "scripts/pyrolysis.zs"
+hash = "15b5234ddd9acf4da50ef06c3099d3b8e83af223db18e6251ebd35b5ee715bdc"
+
+[[files]]
+file = "scripts/railcraft.zs"
+hash = "2c377e604dc68274afa8652edee5a5c41349559ca969111c5abfee7ec697af73"
+
+[[files]]
+file = "scripts/rubber.zs"
+hash = "03010d8bdeff817b6d065102d6c9b28d1f0d6b9f5b716497d28cc858db58b429"
+
+[[files]]
+file = "scripts/satellites.zs"
+hash = "dc4f35ea95e67aa0903fd6d990a57541c169831356960a58522403135c1888d3"
+
+[[files]]
+file = "scripts/storage.zs"
+hash = "76b650d578699d00480fdaabc454de79f367f7fcb7b0beb650e7da05fda56334"
+
+[[files]]
+file = "scripts/storagedrawers.zs"
+hash = "b58422ed0277daddc6f6c6209ef7df86a9ae3ad6720909a88eeb6c44db65b8fe"
+
+[[files]]
+file = "scripts/transmission.zs"
+hash = "8ba18174c1aded6dc78bc62effe44355632af0369bcf367ef39c483ed1d7ae26"
+
+[[files]]
+file = "scripts/water.zs"
+hash = "1eb175640aeefbb87a766a4c94df3ac74cc28dd6d3f29c9b6ce4523c1e0a69d0"
+
+[[files]]
+file = "scripts/woodchem.zs"
+hash = "5afdecc96297cdcabb6326199866ab1a094e3572ac5325b2287f3fe6db1fa34f"
+
+[[files]]
+file = "scripts/woodworking.zs"
+hash = "016cd4020a83263ce93011181eb1c851d98eb20ea82be17968075d2e7b540ac2"
+
+[[files]]
+file = "scripts/zavod-machines.zs"
+hash = "a59a5c725b346b6b32aac55d841546e828634ea7e7c88a9d180410121e8bb49d"
+
+[[files]]
+file = "scripts/zavod-version.zs"
+hash = "4664299e6538bed14caf91643e70cd7c522fa0cbd221e0acfb21fb4919016228"
+
+[[files]]
+file = "structures/active/AbandonedChest.rcig"
+hash = "fbc954402806c5911d98f5c35ad4a47beeff5de0515fee8c3b951160af72d582"
+
+[[files]]
+file = "structures/active/DesertFort.rcst"
+hash = "02e3ae66fe223d91fe1c81f8eedebcb924abe2035069f3538325aabdb9151858"
+
+[[files]]
+file = "structures/active/FireShrine.rcig"
+hash = "c63daeae6e1c8a7c499b00bee3caa7454af6e774084f4b23f89e0fa71ec732fc"
+
+[[files]]
+file = "structures/active/MesoStorageChest.rcig"
+hash = "3c49381906af4fa407a6cd49cf7a3382c8e3d718cf4053e647e82b0504bc9ef8"
+
+[[files]]
+file = "structures/active/PirateChest.rcig"
+hash = "ddfebd70e92424c4fca130515d930ada0a46c331a354f5ea3103027fb6c01a95"
+
+[[files]]
+file = "structures/active/PyramidChest.rcig"
+hash = "3c49381906af4fa407a6cd49cf7a3382c8e3d718cf4053e647e82b0504bc9ef8"
+
+[[files]]
+file = "structures/active/PyramidGraveGoodsCheap.rcig"
+hash = "77c7180c0d5acb74e2ca41aae28009cc861a6603590b8e125e7ff5b63eb54aae"
+
+[[files]]
+file = "structures/active/SmallFortRuins.rcst"
+hash = "702d69fbdc3324168850ae59e6caafd150ad6029ef4af30b5b11f3e7f6a1d57d"
+
+[[files]]
+file = "structures/active/TribalChest.rcig"
+hash = "e17dbc8818e5c5d5b2e9ab8c79671271ec5b364e8c97b60fc41a75dfc37c4158"
+
+[[files]]
+file = "structures/active/VillageGuardTower.rcig"
+hash = "63ca8ccf6ab9647b16df1e414fd636678f936334f5264a070b4d012707047727"
+
+[[files]]
+file = "structures/active/ZavodAssaultFort.rcst"
+hash = "59d816e00b7adc779d69ffa26d95f0a43faa1ed9e23ae94ad5e27c11b7f2eb83"
+
+[[files]]
+file = "structures/active/ZavodFortAmmo.rcig"
+hash = "89474b91dee3d06e8448853fa1bfee2fe5c3600acc771e0028f6189bd912a1f4"
+
+[[files]]
+file = "structures/active/ZavodFortArchive.rcig"
+hash = "fe6fdda51360fd888d1157180d0ef2178d2895be058c10605151646973f542db"
+
+[[files]]
+file = "structures/active/ZavodFortArmory.rcig"
+hash = "685ca647ddc3675adb77cb7f630d999ae287408bef525722f74665858c98cb5a"
+
+[[files]]
+file = "structures/active/ZavodFortBarracks.rcig"
+hash = "9590a1f990c0dfd95fb6b77cb8119c34bd73c0cef0e96b22831704556c73348f"
+
+[[files]]
+file = "structures/active/ZavodFortChest.rcig"
+hash = "7b78e86b13a0d09f4fb8bfdc20dbad92bd09aa6211b45d31426acbcd44b0d24a"
+
+[[files]]
+file = "structures/active/ZavodFortMedbay.rcig"
+hash = "76a1b0f0f4208bd32e4702bf469869574d5f7e4d268b2e8800e127895e49081e"
+
+[[files]]
+file = "structures/active/ZavodFortMess.rcig"
+hash = "60de33d446c78ba0f4eabb7cd90f6ed66a36c7476f50402085d859a9cbfa28e3"
+
+[[files]]
+file = "structures/active/ZavodFortStore.rcig"
+hash = "647791ea1725a90e83071639e41f5c55be376f8c07539e44c15006752147cb42"
+
+[[files]]
+file = "structures/active/ZavodOutpostCheckpoint.rcst"
+hash = "5f06d49c3d18d7b2676141d4b707045d9060cee7113143362b0d1e3247ae9d0c"
+
+[[files]]
+file = "structures/active/ZavodOutpostStrongpoint.rcst"
+hash = "686245d125d39f187917d0a9e0c46953bcb9439bdb478f25e746a483457b85aa"
+
+[[files]]
+file = "structures/active/ZavodTrophy.rcig"
+hash = "31be65950c762b0dcebd2360a4944194a3d2e87b3570a78f7cbc20a88f62be72"
+
+[[files]]
+file = "zavod-1.48.0.jar"
+hash = "209d9c581859c940417da93dd85befdb0195ed60d1b66f6a2d5734d74415e97b"
+
+[[files]]
+file = "zavod-guide-en.txt"
+hash = "960e9b9ed0aa015a68ff1eea2f76c9154e8cbc07b1ab8e617f930cf9d1c65ba3"
+
+[[files]]
+file = "zavod-guide.txt"
+hash = "6c490c76bd09f31df1b40e53b1f5e6ed9299a13b8e5e3fcbc6483366b74cfc52"

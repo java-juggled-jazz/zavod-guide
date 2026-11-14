@@ -1,0 +1,18 @@
+#!/bin/bash
+# Выгнать игрока из сети целиком: zavod-kick Nick (устройства и пользователь Headscale) + убрать из вайтлиста.
+. /opt/zavod/lib.sh
+N="${1:?zavod-kick <ник>}"
+[[ "$N" =~ ^[A-Za-z0-9_]{3,16}$ ]] || { echo "ник: 3–16 символов, латиница/цифры/_"; exit 1; }
+U="$(echo "$N" | tr 'A-Z' 'a-z')"
+[ "$U" != zavod-server ] || { echo "это сам сервер"; exit 1; }
+for id in $(headscale nodes list -o json 2>/dev/null | python3 -c "
+import json,sys
+for n in json.load(sys.stdin) or []:
+    if (n.get('user') or {}).get('name')==sys.argv[1]: print(n['id'])" "$U"); do
+  headscale nodes delete --identifier "$id" --force >/dev/null && echo "устройство $id удалено"
+done
+UID_="$(hs_uid "$U")"
+headscale users destroy --name "$U" --force >/dev/null 2>&1 || headscale users destroy --identifier "$UID_" --force >/dev/null 2>&1 \
+  || headscale users destroy "$U" --force >/dev/null 2>&1 || echo "!! пользователь $U не удалён — headscale users list"
+/opt/zavod/zavod-cmd whitelist remove "$N" 2>/dev/null; /opt/zavod/zavod-cmd kick "$N" 2>/dev/null
+echo "$N выгнан"

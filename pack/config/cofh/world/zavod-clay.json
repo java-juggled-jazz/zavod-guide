@@ -1,0 +1,126 @@
+{
+    "clay_beds": {
+        "template": {
+            "type": "uniform",
+            "generator": "plate",
+            "height": 2,
+            "sizeVariance": 3,
+            "slim": true
+        },
+        "block": [
+            {
+                "name": "minecraft:clay"
+            }
+        ],
+        "material": [
+            {
+                "name": "minecraft:dirt"
+            },
+            {
+                "name": "minecraft:sand"
+            },
+            {
+                "name": "minecraft:gravel"
+            },
+            {
+                "name": "minecraft:stone"
+            }
+        ],
+        "clusterSize": 5,
+        "numClusters": 1,
+        "chunkChance": 3,
+        "minHeight": 56,
+        "maxHeight": 68,
+        "retrogen": true,
+        "biomeRestriction": "whitelist",
+        "biomes": [
+            {
+                "type": "dictionary",
+                "entry": "RIVER"
+            },
+            {
+                "type": "dictionary",
+                "entry": "SWAMP"
+            },
+            {
+                "type": "dictionary",
+                "entry": "BEACH"
+            },
+            {
+                "type": "dictionary",
+                "entry": "PLAINS"
+            },
+            {
+                "type": "dictionary",
+                "entry": "FOREST"
+            }
+        ],
+        "dimensionRestriction": "whitelist",
+        "dimensions": [
+            0
+        ],
+        "__reason__": "Аллювиальная и озёрная глина (1.56.69, было: линза 2-4 толщиной 2 на высоте 52-64 в каждом 4-м чанке - почти всё под водой). ПОЧЕМУ: глина лежит пластами в поймах, низинах, на болотах и под лесной подстилкой; глины мало, а на ней кирпич всех печей. ТЕПЕРЬ: одна линза радиусом 5-7 блоков, толщиной 2, на высоте 56-68 (под дёрном равнин и лесов, выходит на берегах и дне рек), примерно в каждом третьем чанке рек, болот, пляжей, равнин и лесов. Заменяет землю, песок, гравий и камень. Ретроген включён (уже сгенерированное не убирает)."
+    },
+    "clay_rare": {
+        "template": {
+            "type": "uniform",
+            "generator": "plate",
+            "height": 1,
+            "sizeVariance": 2,
+            "slim": true
+        },
+        "block": [
+            {
+                "name": "minecraft:clay"
+            }
+        ],
+        "material": [
+            {
+                "name": "minecraft:dirt"
+            },
+            {
+                "name": "minecraft:sand"
+            },
+            {
+                "name": "minecraft:gravel"
+            },
+            {
+                "name": "minecraft:stone"
+            }
+        ],
+        "clusterSize": 4,
+        "numClusters": 1,
+        "chunkChance": 16,
+        "minHeight": 56,
+        "maxHeight": 68,
+        "retrogen": true,
+        "biomeRestriction": "blacklist",
+        "biomes": [
+            {
+                "type": "dictionary",
+                "entry": "RIVER"
+            },
+            {
+                "type": "dictionary",
+                "entry": "SWAMP"
+            },
+            {
+                "type": "dictionary",
+                "entry": "BEACH"
+            },
+            {
+                "type": "dictionary",
+                "entry": "PLAINS"
+            },
+            {
+                "type": "dictionary",
+                "entry": "FOREST"
+            }
+        ],
+        "dimensionRestriction": "whitelist",
+        "dimensions": [
+            0
+        ],
+        "__reason__": "Глина вне пойм (горы, тайга, пустыня, саванна): одна тонкая линза радиусом 4-5 примерно на 16 чанков. Запасной путь без карьера - отмучивание в бочке (вода + земля -> глина за полсуток)."
+    }
+}

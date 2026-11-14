@@ -1,0 +1,20 @@
+# Общие функции zavod-* (docs/server-vm.md). Headscale CLI меняется от версии к версии — пробуем оба варианта.
+hs_uid() {  # id пользователя Headscale по имени
+  headscale users list -o json 2>/dev/null | python3 -c "
+import json,sys
+u=[x for x in (json.load(sys.stdin) or []) if x.get('name')==sys.argv[1]]
+print(u[0]['id'] if u else '')" "$1"
+}
+hs_key() {  # одноразовый ключ входа: hs_key USER EXPIRATION
+  local u k
+  for u in "$(hs_uid "$1")" "$1"; do
+    [ -n "$u" ] || continue
+    k="$(headscale preauthkeys create --user "$u" --expiration "$2" -o json 2>/dev/null \
+         | python3 -c "import json,sys; print(json.load(sys.stdin)['key'])" 2>/dev/null)" && [ -n "$k" ] && { echo "$k"; return 0; }
+  done
+  echo "не смог создать ключ для $1 (headscale preauthkeys create)" >&2; return 1
+}
+SOCK=/run/zavod/tmux.sock  # RuntimeDirectory сервиса: снаружи песочницы виден, /tmp у сервиса свой
+mc_tmux() {  # tmux сервера от имени mc
+  if [ "$(id -un)" = mc ]; then tmux -S "$SOCK" "$@"; else runuser -u mc -- tmux -S "$SOCK" "$@"; fi
+}

@@ -1,0 +1,63 @@
+#!/usr/bin/env python3
+"""Правка config.yaml Headscale без yaml-библиотеки: hsconf.py FILE key=val parent.key=val ?parent.key=val ...
+
+Ключ верхнего уровня или parent.child (один уровень вложенности). Нет ключа — дописывается (с «?» — пропускается).
+Значения: true/false/числа как есть, остальное — строкой в кавычках. Пример конфига у Headscale меняется от версии
+к версии, поэтому правим только нужные строки, остальное — как в пакете.
+"""
+import json, re, sys
+
+
+def fmt(v):
+    return v if v in ("true", "false") or re.fullmatch(r"-?\d+", v) else json.dumps(v)
+
+
+def apply(text, key, val, optional=False):
+    lines = text.split("\n")
+    if "." not in key:
+        for i, l in enumerate(lines):
+            if re.match(rf"^{re.escape(key)}:", l):
+                lines[i] = f"{key}: {fmt(val)}"
+                return "\n".join(lines)
+        return text if optional else text.rstrip("\n") + f"\n{key}: {fmt(val)}\n"
+    parent, child = key.split(".", 1)
+    start = next((i for i, l in enumerate(lines) if re.match(rf"^{re.escape(parent)}:\s*(#.*)?$", l)), None)
+    if start is None:
+        return text if optional else text.rstrip("\n") + f"\n{parent}:\n  {child}: {fmt(val)}\n"
+    end = next((i for i in range(start + 1, len(lines)) if lines[i] and not lines[i][0].isspace() and not lines[i].startswith("#")), len(lines))
+    for i in range(start + 1, end):
+        m = re.match(rf"^(\s+){re.escape(child)}:", lines[i])
+        if m and len(m.group(1)) <= 2:
+            lines[i] = f"{m.group(1)}{child}: {fmt(val)}"
+            return "\n".join(lines)
+    if optional:
+        return text
+    lines.insert(start + 1, f"  {child}: {fmt(val)}")
+    return "\n".join(lines)
+
+
+def main(path, pairs):
+    t = open(path).read()
+    for p in pairs:
+        opt = p.startswith("?")
+        k, v = p.lstrip("?").split("=", 1)
+        t = apply(t, k, v, opt)
+    open(path, "w").write(t)
+
+
+if __name__ == "__main__":
+    if sys.argv[1:2] == ["--selftest"]:
+        src = "server_url: http://127.0.0.1:8080\nlisten_addr: 127.0.0.1:8080\npolicy:\n  mode: file\n  path: \"\"\ndns:\n  magic_dns: true\n  nameservers:\n    global:\n      - 1.1.1.1\n  base_domain: example.com\nlog:\n  level: info\n"
+        t = src
+        for p in ["server_url=https://a.sslip.io", "policy.path=/etc/headscale/acl.hujson", "dns.magic_dns=false",
+                  "dns.base_domain=zavod.internal", "?dns.override_local_dns=false", "tls_letsencrypt_hostname=a.sslip.io", "derp.urls=x"]:
+            k, v = p.lstrip("?").split("=", 1)
+            t = apply(t, k, v, p.startswith("?"))
+        assert 'server_url: "https://a.sslip.io"' in t and '  path: "/etc/headscale/acl.hujson"' in t, t
+        assert "  magic_dns: false" in t and '  base_domain: "zavod.internal"' in t and "override_local_dns" not in t, t
+        assert 'tls_letsencrypt_hostname: "a.sslip.io"' in t and "derp:\n  urls:" in t and "      - 1.1.1.1" in t, t
+        print("hsconf selftest OK")
+    elif len(sys.argv) >= 3:
+        main(sys.argv[1], sys.argv[2:])
+    else:
+        sys.exit(__doc__)

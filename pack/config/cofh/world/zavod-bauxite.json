@@ -1,0 +1,85 @@
+{
+    "bauxite_laterite": {
+        "template": {
+            "type": "uniform",
+            "generator": "plate",
+            "height": 1,
+            "slim": true,
+            "sizeVariance": 3
+        },
+        "block": [
+            {
+                "name": "zavod:ore_bauxite"
+            }
+        ],
+        "material": [
+            {
+                "name": "minecraft:dirt"
+            },
+            {
+                "name": "minecraft:stone"
+            },
+            {
+                "name": "minecraft:sand"
+            },
+            {
+                "name": "minecraft:hardened_clay"
+            },
+            {
+                "name": "minecraft:stained_hardened_clay"
+            }
+        ],
+        "clusterSize": 6,
+        "numClusters": 1,
+        "chunkChance": 3,
+        "minHeight": 56,
+        "maxHeight": 72,
+        "retrogen": true,
+        "biomeRestriction": "whitelist",
+        "biomes": [
+            {
+                "type": "dictionary",
+                "entry": "JUNGLE"
+            },
+            {
+                "type": "dictionary",
+                "entry": "SAVANNA"
+            },
+            {
+                "type": "dictionary",
+                "entry": "MESA"
+            }
+        ],
+        "dimensionRestriction": "blacklist",
+        "dimensions": [
+            -1,
+            1
+        ],
+        "__reason__": "Латеритный боксит: кора выветривания в тропиках, пласт радиусом 3-6 блоков, толщиной 2, на высоте 56-72 (под дёрном и песком), в каждом третьем чанке джунглей, саванн и плато (мезы). Ретроген: появится и в уже открытых чанках."
+    },
+    "bauxite_karst": {
+        "template": {
+            "type": "uniform",
+            "generator": "cluster"
+        },
+        "block": [
+            {
+                "name": "zavod:ore_bauxite"
+            }
+        ],
+        "material": "minecraft:stone",
+        "clusterSize": 12,
+        "numClusters": 1,
+        "chunkChance": 14,
+        "minHeight": 40,
+        "maxHeight": 72,
+        "retrogen": true,
+        "biomeRestriction": "none",
+        "dimensionRestriction": "blacklist",
+        "dimensions": [
+            -1,
+            1
+        ],
+        "__reason__": "Карстовый боксит (как у Ле-Бо во Франции, откуда и название): гнёзда по ~12 блоков в камне, в среднем одно на 14 чанков в любом биоме. Ретроген включён."
+    }
+}

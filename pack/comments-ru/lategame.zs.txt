@@ -1,0 +1,93 @@
+// ====================================================================================
+//                         ЛЕЙТГЕЙМ (исправленный)
+// ====================================================================================
+
+val ingotInvar       = <ore:ingotInvar>;
+val copperCoil       = <IC2:itemRecipePart>;       // Катушка IC2 (meta 0)
+val motorIC2         = <IC2:itemRecipePart:1>;
+val circuitIC2       = <IC2:itemPartCircuit>;
+val advCircuit       = <IC2:itemPartCircuitAdv>;
+val advMachineFrame  = <IC2:blockMachine:12>;      // Продвинутый корпус IC2
+val machineFrameTE   = <ThermalExpansion:Frame>;
+val hammer           = <IC2:itemToolForgeHammer>.anyDamage();
+val octadicCapacitor = <EnderIO:itemBasicCapacitor:2>;
+val denseLead        = <IC2:itemDensePlates:6>;
+val denseSteel       = <IC2:itemDensePlates:5>;
+val siliconChipBC    = <BuildCraft|Silicon:redstoneChipset:5>; // Кварцевый чипсет BC (БЫЛО: пустой <ore:chipRedstone>)
+
+// ====================================================================================
+// 5. ИНДУКЦИОННАЯ ПЛАВИЛЬНЯ TE — индуктор из катушек IC2
+// ====================================================================================
+recipes.remove(<ThermalExpansion:Machine:3>);
+recipes.addShaped(<ThermalExpansion:Machine:3>, [
+    [ingotInvar, <minecraft:piston>, ingotInvar],
+    [copperCoil, machineFrameTE,     copperCoil],
+    [ingotInvar, hammer,             ingotInvar]
+]);
+
+// ====================================================================================
+// 6. МИРОВОЙ ЯКОРЬ RAILCRAFT И ADVANCED MINER
+// ====================================================================================
+recipes.remove(<Railcraft:machine.alpha:0>);
+recipes.addShaped(<Railcraft:machine.alpha:0>, [
+    [denseLead,             siliconChipBC,    denseLead],
+    [<IC2:blockMachine2:0>, octadicCapacitor, <IC2:blockMachine2:0>],   // телепортеры IC2 как стабилизаторы координат
+    [denseLead,             motorIC2,         denseLead]
+]);
+
+// Advanced Miner (замена карьеру BC). Обычный Miner вырезан (ic2-machines.zs),
+// поэтому вместо двух Miner'ов — алмазный бур и буровые трубы.
+// БЫЛО: в центре стояла ПОМПА (blockMachine:8) вместо продвинутого корпуса.
+// Намагничиватель сверху: магнитный захват и подъём породы по буровому ставу
+recipes.remove(<IC2:blockMachine2:11>);
+recipes.addShaped(<IC2:blockMachine2:11>, [
+    [<ore:gearSteel>,    <IC2:blockMachine:9>,     <ore:gearSteel>],
+    [<IC2:blockMiningPipe>, advMachineFrame,       <IC2:blockMiningPipe>],
+    [advCircuit,         <IC2:itemToolDDrill:*>,   advCircuit]
+]);
+
+// ====================================================================================
+// 7. ADVANCED ALLOY: АРМИРОВАНИЕ АЭС И БУРОВЫЕ ФРЕЗЫ
+// ====================================================================================
+// Укреплённый камень (IC2:blockAlloy) — тяжёлый бетон: камень бездны (плотная глубинная порода, держит излучение)
+// на композите, связка на обсидиановой пыли (БЫЛО: обычный камень и угольная пыль)
+recipes.remove(<IC2:blockAlloy>);
+recipes.addShaped(<IC2:blockAlloy> * 4, [
+    [<Railcraft:cube:6>, <IC2:itemPartAlloy>, <Railcraft:cube:6>],
+    [<IC2:itemPartAlloy>, <ore:dustObsidian>,  <IC2:itemPartAlloy>],
+    [<Railcraft:cube:6>, <IC2:itemPartAlloy>, <Railcraft:cube:6>]
+]);
+
+// Алмазный бур. БЫЛО: <IC2:itemToolDiamondDrill> не существует -> NPE -> весь остаток lategame.zs не работал.
+// Бур в рецепте — с любым зарядом (:*).
+recipes.remove(<IC2:itemToolDDrill>);
+recipes.addShaped(<IC2:itemToolDDrill>, [
+// Коронка - токарная заготовка-конус 4-3-2-1-1, алмазы впаяны по краям.
+    [<minecraft:diamond>, (<IC2:itemTurningBlanks>.onlyWithTag({state: {l0: 4, l1: 3, l2: 2, l3: 1, l4: 1}}) | <IC2:itemTurningBlanks>.onlyWithTag({state: {l0: 1, l1: 1, l2: 2, l3: 3, l4: 4}})), <minecraft:diamond>],
+    [<IC2:itemPartAlloy>, <IC2:itemToolDrill:*>, <IC2:itemPartAlloy>],
+    [<ore:plateSteel>,    circuitIC2,           <ore:plateSteel>]
+]);
+
+// ====================================================================================
+// 8. ХЛАДАГЕНТ И КАПСУЛЫ — перенесены в ic2-machines.zs (раздел АЭС)
+// ====================================================================================
+
+// ====================================================================================
+// 9. ИРИДИЙ И КВАНТ
+// ====================================================================================
+recipes.remove(<IC2:itemArmorQuantumChestplate>);
+recipes.addShaped(<IC2:itemArmorQuantumChestplate>, [
+    [<IC2:itemPartIridium>, octadicCapacitor,                <IC2:itemPartIridium>],
+    [siliconChipBC,         <IC2:itemArmorNanoChestplate>,   siliconChipBC],
+    [denseSteel,            <IC2:itemArmorHazmatChestplate>, <zavod:blueprint_quantum>.reuse()]
+]);
+
+// Анодный шлам из никелевой пыли вырезан: богатый шлак TE идёт 5% от плавки ЛЮБОЙ руды с песком
+// в индукционной плавильне (так в TE изначально). Дальше - кислотное вскрытие (precious.zs).
+
+// Космический след: камень Края в пульверизаторе -> песок + 5% осколка иридия (1/9 руды; было 1% целой руды, ещё раньше 100% пластины).
+mods.thermalexpansion.Pulverizer.addRecipe(
+    8000, <minecraft:end_stone>,
+    <minecraft:sand>,
+    <IC2:itemShardIridium>, 5
+);

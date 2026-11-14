@@ -1,0 +1,167 @@
+{
+ "version": 1,
+ "minItems": 2,
+ "maxItems": 5,
+ "contents": [
+  {
+   "weight": 25,
+   "genMin": 2,
+   "genMax": 5,
+   "item": {
+    "id": "minecraft:bread",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 12,
+   "genMin": 1,
+   "genMax": 4,
+   "item": {
+    "id": "minecraft:cooked_beef",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 12,
+   "genMin": 1,
+   "genMax": 4,
+   "item": {
+    "id": "minecraft:cooked_porkchop",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 10,
+   "genMin": 1,
+   "genMax": 4,
+   "item": {
+    "id": "minecraft:cooked_chicken",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 8,
+   "genMin": 1,
+   "genMax": 3,
+   "item": {
+    "id": "minecraft:cooked_fished",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 12,
+   "genMin": 2,
+   "genMax": 5,
+   "item": {
+    "id": "minecraft:baked_potato",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 10,
+   "genMin": 2,
+   "genMax": 6,
+   "item": {
+    "id": "minecraft:potato",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 10,
+   "genMin": 2,
+   "genMax": 6,
+   "item": {
+    "id": "minecraft:carrot",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 10,
+   "genMin": 1,
+   "genMax": 4,
+   "item": {
+    "id": "minecraft:apple",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 4,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "minecraft:mushroom_stew",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 3,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "minecraft:pumpkin_pie",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 5,
+   "genMin": 2,
+   "genMax": 8,
+   "item": {
+    "id": "minecraft:cookie",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 5,
+   "genMin": 1,
+   "genMax": 4,
+   "item": {
+    "id": "minecraft:sugar",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 5,
+   "genMin": 2,
+   "genMax": 6,
+   "item": {
+    "id": "minecraft:wheat",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 6,
+   "genMin": 1,
+   "genMax": 3,
+   "item": {
+    "id": "minecraft:bowl",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 4,
+   "genMin": 1,
+   "genMax": 3,
+   "item": {
+    "id": "minecraft:egg",
+    "damage": 0,
+    "count": 1
+   }
+  }
+ ]
+}

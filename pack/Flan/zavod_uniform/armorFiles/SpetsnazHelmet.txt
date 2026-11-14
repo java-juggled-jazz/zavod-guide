@@ -1,0 +1,9 @@
+// Zavod 1.56.52 (A17): neytral'naya forma - spetsnaz. Tekstury i lang - v flans_modern_weapons_pack (tam byl tol'ko zhilet).
+Name Spetsnaz Helmet
+ShortName spetsnazHelmet
+ItemID 23881
+Icon SpetsnazHelmet
+Colour 255 255 255
+Type Helmet
+Defence 0.1
+ArmourTexture Spetsnaz

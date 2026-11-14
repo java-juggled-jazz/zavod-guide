@@ -1,0 +1,57 @@
+{
+ "version": 1,
+ "minItems": 1,
+ "maxItems": 1,
+ "contents": [
+  {
+   "weight": 20,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "zavod:scope_optic",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 10,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "flansmod:BAR",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 10,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "flansmod:spetsnazBody",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 10,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "minecraft:golden_apple",
+    "damage": 1,
+    "count": 1
+   }
+  },
+  {
+   "weight": 10,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "IC2:itemNightvisionGoggles",
+    "damage": 0,
+    "count": 1
+   }
+  }
+ ]
+}

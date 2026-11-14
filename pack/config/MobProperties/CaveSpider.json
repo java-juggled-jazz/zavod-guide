@@ -1,0 +1,20 @@
+{
+  "_name": "CaveSpider",
+  "_comment": "MODPACK: monstry pod ognestrel - zdorov'e +50%, uron +25%, skorost' +10-15%, radius presledovaniya +50%.",
+  "pre_stats": [],
+  "stats": [
+    {
+      "function": "modifier",
+      "attribute": "generic.maxHealth",
+      "value": 0.5,
+      "operator": 1
+    },
+    {
+      "function": "modifier",
+      "attribute": "generic.attackDamage",
+      "value": 0.25,
+      "operator": 1
+    }
+  ],
+  "drops": []
+}

@@ -1,0 +1,6 @@
+#!/bin/bash
+# Команда в консоль сервера: zavod-cmd whitelist add Nick
+. /opt/zavod/lib.sh
+[ $# -gt 0 ] || { echo "zavod-cmd <команда сервера>"; exit 1; }
+mc_tmux has-session -t zavod 2>/dev/null || { echo "сервер не запущен"; exit 1; }
+mc_tmux send-keys -t zavod -l "$*" && mc_tmux send-keys -t zavod Enter

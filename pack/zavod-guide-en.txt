@@ -1,0 +1,212 @@
+ZAVOD ENGINEER'S HANDBOOK
+
+Machine readings (state, batch, fire, shaft, tanks) - hover the machine with Waila.
+What each machine does and needs - below, by era. In game: the Engineer's Handbook (book + paper).
+
+==============================================================================
+ERA 1 - farm (before ~1850)
+==============================================================================
+
+Brick Retort
+------------
+Fired: saltpeter + 500 mB sulfuric → 350 mB nitric; salt + 500 mB sulfuric → 500 mB hydrochloric; calcium acetate + 500 mB sulfuric → 500 mB acetic acid; cinnabar (drops from redstone ore), no acid → 125 mB mercury. Ash pit: wood gives ash, coal gives coal ash; full pit - the fire goes out.
+
+Crucible Furnace
+----------------
+Charge into the load, fuel into the firebox. Any fire: 3 copper + 1 tin -> 4 bronze, 8 tin + 1 copper -> 9 babbitt. On COKE: 2 nickel + 1 copper -> 3 monel, 2 iron + 1 nickel -> 3 invar (ingots or dust), 4 steel + 1 monel -> 4 alloy steel, 2 sand + coke -> silicon, 4 iron + silicon -> 4 electrical steel, optical glass (flint + lead dust, sand + potash), insulator (clay + calcined flint), 2 slag -> 2 slag wool. Ash pit: charcoal gives ash, coal and coke give coal ash; full pit stops the fire.
+
+Leach Vat
+---------
+8 wood ash + 1000 mB water -> 1000 mB lye per minute. Boil the lye in a salt pan (fire or steam) or an evaporator -> 2 potash. No fire or steam.
+
+Salt Pan
+--------
+Water by the sea or seawater from pipes anywhere + fire or 250 mB steam -> salt. Lye from the leach vat -> 2 potash (anywhere). Ash pit below.
+
+Saltpeter Bed
+-------------
+Nitre bed: 4 organics (compost, mulch, rotten flesh, any cereal straw - wheat, barley, oats, rye, rice, corn) + 1 wood ash (or 1 potash per 4 batches) + 1000 mB water -> 1 saltpeter per day. No fire, steam or acids. Build them in rows.
+
+Wooden Barrel
+-------------
+Barrel: break it - the liquid stays inside, place it - full again. Buckets, pipes, cells.
+
+==============================================================================
+ERA 2 - steam and mechanics (~1850-1880)
+==============================================================================
+
+Artesian Well
+-------------
+Water far from rivers and the sea. Drilling: 20 m per well casing, drive - shaft (3 hp) or steam. Aquifer: swamp, jungle - 20-40 m, plains - 120, desert - 180. Then the pump: shaft 2 hp or steam; up to 18 mB/t in a wet biome, 2 in a desert. Casing in the slot - drills below the aquifer roof (up to 80 m), +25% per 20 m. Pushes water into adjacent boilers and tanks.
+
+Bessemer Converter
+------------------
+16 iron + 2 coke -> 14 steel + 2 slag per blow. Air from an adjacent blower. Shaft sections stacked on top (up to 3) - one more load each; needs one more blower each.
+
+Blowing Engine
+--------------
+Next to a converter: air blast, one blower per shaft load. Next to an IC2 blast furnace (open hearth): fills empty cells with compressed air and keeps 8 in the furnace - put empty cells into the blower.
+
+Chemical Reactor
+----------------
+Two fluids + steam: toluene+mixed acid+2 paper → 4 TNT; ammonia+nitric → ammonium nitrate; hydrogen+nitrogen (+iron dust) → ammonia; coke+water → syngas; syngas+water (+iron dust) → hydrogen, CO₂ vented; coal+water → syngas + sulfur; coke → nitrogen (producer gas); creosote/fuel → toluene; sawdust + water → wood gas; electrolyzed water cell → hydrogen; sulfuric+copper dust → copper sulfate; 4 conifer logs → rosin + turpentine; pyroligneous + wood ash or chalk → methanol + calcium acetate; 2 calcium acetate → acetone + chalk; methanol+water → formaldehyde; creosote+lye → phenol; phenol+formaldehyde → 2 bakelite; phenol+mixed acid+2 paper → 3 TNT (picric acid).
+
+Coal Bunker
+-----------
+Coal bunker (1024): coal, charcoal, coke, peat. Feeds the firebox below it; nothing below - the firebox in front of its face (Railcraft boiler: place it beside, facing the firebox). A bunker over a bunker pours down. Shift + empty hand - take a stack.
+
+Discharge Hatch
+---------------
+Right next to an excavator. Unloads through its face into a chest or a cart. Sneak+empty hand - mode.
+
+Evaporator
+----------
+Seawater + 250 mB steam -> salt + 750 mB distilled water. Up to 3 in a row facing the next: vapor heats the next one. Distilled water flows down. Lye -> 2 potash.
+
+High-Pressure Steam Engine
+--------------------------
+Steam -> shaft power, five times the small engine. Shafts run straight, turn with a gearbox, machines sit beside a pulley.
+
+Lead Chamber
+------------
+Sulfur + 500 mB steam → 400 mB sulfuric acid. Saltpeter is the catalyst, 1 per 8 batches.
+
+Lined Barrel
+------------
+Barrel: break it - the liquid stays inside, place it - full again. Buckets, pipes, cells.
+
+Mixer
+-----
+Lead-lined vat with a stirrer: mixes two liquids, no heat or pressure. Nitric + sulfuric = mixed acid, nitric + hydrochloric = aqua regia, distilled water + methanol/bioethanol = coolant. Small shaft (1 hp) or by hand: sneak + empty hand, twice slower.
+
+Oil Well
+--------
+Derrick above the wellhead, 4+ blocks in a column. Drilling: 20 m per well casing + 250 mB water, drive - shaft (6 hp) or steam. Reservoir at 150-1500 m: oil, water (dry hole) or no trap. Then it gushes by itself; when it stops - pump jack (shaft 4 hp or steam). Gas goes to a tank, full - flared.
+
+Sawmill
+-------
+Driven by a pulley. Takes logs from the chest above, puts planks and sawdust into the chest below. Log -> 5 planks, sawdust per 2 logs.
+
+Silo Outlet
+-----------
+Silo: the outlet sits in a ring of 8 walls, 3x3 layers of walls above it, the hatch in the centre of the top layer. One bulk material (ore, crushed ore, coal, coke, sand, gravel, clay, grain, seeds), load into the hatch, unload with a hopper/pipe under the outlet, comparator. 2304 per layer; height: brick 4 layers, steel 8, concrete 12.
+
+Skip Hoist Winch
+----------------
+Over the shaft, driven by a pulley. Hoist: 256 per trip from the bin into chests nearby. Sneak + empty hand - hoist/lower mode.
+
+Skip Loading Bin
+----------------
+At the shaft bottom, straight under the winch. Accepts anything: hoppers, excavator hatches, by hand.
+
+Stamp Mill
+----------
+Batch of up to 8: ore -> dust (1:1.5), cobble -> gravel, gravel -> sand + clay + flint, redstone ore -> + cinnabar (1 per 4). Driven by a pulley.
+
+Steam Autoclave
+---------------
+Under steam pressure: 2 latex + sulfur → 4 rubber; 500 mB seed oil + sulfur → 1 rubber (factice); 3 wooden slabs + 250 mB creosote → 2 ties; 3 string → 4 sterile bandages.
+
+Steam Cartridge Press
+---------------------
+Right-click with a die to change caliber. Sneak + empty hand - take cartridges. Also runs from a pulley, no steam.
+
+Steam Engine
+------------
+Steam -> shaft power. Uses steam only under load. Shafts run straight, turn with a gearbox, machines sit beside a pulley.
+
+Steam Excavator
+---------------
+Digs a 5x5 square around itself, layer by layer, to the bottom (keeps its own pillar). Boom sections on top widen it: up to 4, 13x13, x1.5 power each. Driven by a pulley. Sneak+empty hand - dig/backfill. Hatches go right next to it. Redstone - pause.
+
+Steam Hammer
+------------
+Ingot + 100 mB steam -> plate. 9 plates + 400 mB steam -> dense plate (pack forging: copper, tin, bronze, gold, iron, steel, lead). Or next to a pulley - from the shaft, no steam.
+
+Steam Pump
+----------
+Place right above water, driven by a pulley. Feeds adjacent boilers, tanks and pipes. By the sea Sneak + empty hand - fresh/seawater.
+
+Steel Barrel
+------------
+Barrel: break it - the liquid stays inside, place it - full again. Buckets, pipes, cells.
+
+Wire Drawing Mill
+-----------------
+Ingot -> bare wire (up to 4 ingots at once): copper 3, tin 3, gold 4, iron 4. Driven by a pulley next to it.
+
+Wood Distillation Retort
+------------------------
+Dry distillation: 64 logs -> 64 charcoal + 2560 mB wood gas + 1280 mB creosote + 6400 mB pyroligneous acid in 5 minutes. Sections in a row to the sides, up to 3. Kindling (not logs) only for drying the first charge, then it runs on its own gas; keeps 1000 mB of gas for itself.
+
+==============================================================================
+ERA 3 - electricity (~1880-1910)
+==============================================================================
+
+Atmospheric Column (Shukhov Furnace)
+------------------------------------
+Shukhov furnace under the column: 3-4 sections above it. 1000 mB oil + 100 mB steam -> gas 30, gasoline 200, kerosene 120, diesel 250 (4 sections only), fuel oil 350 (50 burns in the furnace). Oil into the furnace, fuel oil from it, the rest from the sections.
+
+Contact Apparatus
+-----------------
+Sulfur + 500 mB water + 100 mB steam → 500 mB sulfuric acid in 5 s. Platinum nugget catalyst, 1 per 64 batches.
+
+Design Bureau
+-------------
+Blueprints by your own engineers: prototype samples (destroyed in testing) + 8 paper + ink (ink sac / black dye), one to three days. Late blueprints need a base - the previous blueprint, not consumed. Recipes in NEI. Shift + empty hand: take the blueprint, or if none and idle, get back everything loaded.
+
+Diesel Controller (Radiator)
+----------------------------
+Controller of a 3x3 multiblock in crankcase: face outward (radiator), along the axis behind it - cylinders (1-6, 25 hp each), the head (shaft or EU generator). Behind the face layer, in the crankcase: a fuel inlet (diesel fuel; mazut - slow-running, 60% power) and exactly one exhaust. No water or gas needed. Click - status.
+
+Drive Coupling
+--------------
+Between a pulley and an IC2 lathe or a Railcraft rolling machine. Against the front of an IC2 electric kinetic generator - electric shaft drive (one motor = 10 hp). Sneak + empty hand - disengage.
+
+Electrolytic Cell
+-----------------
+Current up to 512 EU/t (HV). Aluminum (Hall-Heroult): 2 alumina + 1 coke (anode, burns) -> ingot, 50,000 EU. Refining: 8 copper dust + copper vitriol or 8 nickel dust + sulfur -> 8 ingots, 8,000 EU, anode slime (copper 40 %, nickel 60 % of a batch). Alumina: bauxite or clay + sulfuric acid -> aluminum sulfate (chem reactor) + ammonia -> alumina.
+
+Fractionating Column Section
+----------------------------
+Trays with a side draw. A pipe on a section takes the cut of its height: top to bottom gas, gasoline, kerosene, diesel.
+
+Frasch Well
+-----------
+Place above a native sulfur deposit: finds it below (3x3) down to bedrock and melts it out with steam - 1000 mB steam -> 4 sulfur per 10 s, stone is left in place. No digging.
+
+Heavy Excavator
+---------------
+9x9 square around itself, twice as fast. Boom sections on top: up to 3, 21x21, x1.5 power each. Driven by a pulley. Sneak+empty hand - dig/backfill. Hatches go right next to it. Redstone - pause.
+
+Steam Turbine Hub
+-----------------
+Controller of a 3x3 multiblock: face outward, stages along the axis behind it (1-6), then the head (shaft or LV..EV EU generator), casing all around. Behind the face layer, in the casing: at least one steam inlet hatch and exactly one exhaust hatch (open, or a condenser with cooling water - more power). Steam only under load, ~30 s to spin up. The head joins a shaft along its axis.
+
+Steam Turbine Reduction Gear
+----------------------------
+Place against a formed Railcraft steam turbine. Takes shaft power straight into BuildCraft kinesis pipes (wooden) and adjacent RF machines: 800 RF/t per turbine. Steam is used only under load.
+
+==============================================================================
+ERA 4 - oil and electricity at scale (~1910-1945)
+==============================================================================
+
+Gas Turbine Hub
+---------------
+Controller of a 3x3 multiblock in heat-resistant casing: face outward, along the axis behind it - compressor stages (1-3), a combustion chamber, turbine stages (no more than compressor stages), the head (shaft or EU generator). Behind the face layer, in the casing: a fuel inlet (gases, biogas, kerosene) and exactly one open exhaust. No water needed, starts in 5 s, but the compressor eats over half and burns fuel at idle.
+
+High-Pressure Reactor
+---------------------
+Everything the steam reactor does, three times faster. Plus ammonia + water (+platinum) → nitric acid (Ostwald); coal + hydrogen + creosote → oil (Bergius).
+
+==============================================================================
+ERA 5 - atom and space
+==============================================================================
+
+Calutron
+--------
+Electromagnetic isotope separation: natural uranium dioxide -> small U-235 + 3 U-238 (tails). IC2 EU up to HV, 100 000 EU per dioxide. Track sections in a row BEHIND the calutron (up to 8): each is one more tank per batch and 512 EU/t more intake.
+
+Reactor Steam Generator
+-----------------------
+IC2 fluid reactor hot coolant + water -> Railcraft steam + cooled coolant back to the reactor. Steam goes up, coolant goes down.

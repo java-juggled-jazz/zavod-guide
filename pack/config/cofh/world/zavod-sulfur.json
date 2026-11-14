@@ -1,0 +1,78 @@
+{
+    "sulfur_nether": {
+        "template": {
+            "type": "uniform",
+            "generator": "cluster"
+        },
+        "block": [
+            {
+                "name": "zavod:ore_sulfur_nether"
+            }
+        ],
+        "material": "minecraft:netherrack",
+        "clusterSize": 14,
+        "numClusters": 6,
+        "minHeight": 8,
+        "maxHeight": 120,
+        "retrogen": true,
+        "biomeRestriction": "none",
+        "dimensionRestriction": "whitelist",
+        "dimensions": [
+            -1
+        ],
+        "__reason__": "Вулканическая сера Нижнего мира (фумаролы): 6 гнёзд по ~14 блоков на чанк в адском камне, высота 8-120. Богаче всего, что есть наверху - за серой стоит лезть в Ад. Ретроген включён."
+    },
+    "sulfur_bed": {
+        "template": {
+            "type": "uniform",
+            "generator": "plate",
+            "height": 1,
+            "slim": true,
+            "sizeVariance": 2
+        },
+        "block": [
+            {
+                "name": "zavod:ore_sulfur"
+            }
+        ],
+        "material": "minecraft:stone",
+        "clusterSize": 4,
+        "numClusters": 1,
+        "chunkChance": 16,
+        "minHeight": 24,
+        "maxHeight": 50,
+        "retrogen": true,
+        "biomeRestriction": "none",
+        "dimensionRestriction": "blacklist",
+        "dimensions": [
+            -1,
+            1
+        ],
+        "__reason__": "Осадочная самородная сера (как в Сицилии и под Тарнобжегом): тонкий пласт радиусом 2-4 блока на высоте 24-50, одно на 16 чанков. Плюс шляпы над пластами каменной соли (zavod.jar, только новые чанки). Ретроген для пластов включён."
+    },
+    "pyrite_pockets": {
+        "template": {
+            "type": "uniform",
+            "generator": "cluster"
+        },
+        "block": [
+            {
+                "name": "zavod:ore_pyrite"
+            }
+        ],
+        "material": "minecraft:stone",
+        "clusterSize": 8,
+        "numClusters": 1,
+        "chunkChance": 3,
+        "minHeight": 8,
+        "maxHeight": 56,
+        "retrogen": true,
+        "biomeRestriction": "none",
+        "dimensionRestriction": "blacklist",
+        "dimensions": [
+            -1,
+            1
+        ],
+        "__reason__": "Серный колчедан (пирит): гнёзда ~8 блоков в камне на высоте 8-56, в каждом третьем чанке. Обжигается в топке свинцовой камеры или контактного аппарата: сера - в кислоту, огарок - железная пыль. Ретроген включён."
+    }
+}

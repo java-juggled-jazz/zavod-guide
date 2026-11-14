@@ -1,0 +1,183 @@
+#!/usr/bin/env python3
+"""Веб-панель сервера Zavod (docs/server-vm.md «Панель»).
+
+Слушает ТОЛЬКО адрес сервера в приватной сети (TSIP:8443); правила сети пускают к порту одного админа.
+Вход — по ссылке с токеном (кука, SameSite=Strict); каждое действие — POST с тем же токеном.
+Работает от пользователя zavodweb без прав; всё делает через sudo строго по списку (/etc/sudoers.d/zavod-panel).
+"""
+import hmac, html, json, os, re, subprocess, sys, urllib.parse
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+
+TOKEN = open("/etc/zavod/panel.token").read().strip()
+NICK = re.compile(r"^[A-Za-z0-9_]{3,16}$")
+BACKUP = re.compile(r"^zavod-[0-9-]+\.tgz$")
+
+
+def sudo(*a, timeout=120):
+    r = subprocess.run(["sudo", "-n", *a], capture_output=True, text=True, timeout=timeout)
+    return r.returncode, (r.stdout + r.stderr).strip()
+
+
+def esc(s):
+    return html.escape(str(s), quote=True)
+
+
+CSS = """
+:root{--bg:#14161a;--panel:#1d2026;--line:#2c313a;--text:#d6d9de;--dim:#8b929c;--accent:#d08a2e;--ok:#6fae6f;--no:#c0574f}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:1000px;margin:0 auto;padding:24px 16px 60px}h1{margin:0 0 4px;font-size:1.6rem}h2{color:var(--accent);font-size:1rem;
+text-transform:uppercase;letter-spacing:.08em;margin:28px 0 10px}.card{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:12px 14px}
+table{border-collapse:collapse;width:100%}td,th{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:middle}
+th{color:var(--dim);font-weight:500}.ok{color:var(--ok)}.no{color:var(--no)}.dim{color:var(--dim)}
+input[type=text]{background:#111317;color:var(--text);border:1px solid var(--line);border-radius:3px;padding:6px 8px;font:inherit}
+button{background:#2a2f37;color:var(--text);border:1px solid var(--line);border-radius:3px;padding:5px 12px;font:inherit;cursor:pointer}
+button:hover{border-color:var(--accent)}button.danger:hover{border-color:var(--no);color:var(--no)}form.inline{display:inline}
+pre{background:#0f1114;border:1px solid var(--line);padding:10px;overflow:auto;max-height:420px;font:12.5px/1.45 ui-monospace,Consolas,monospace;white-space:pre-wrap}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}a{color:var(--accent)}.msg{border-left:3px solid var(--accent);padding:8px 12px;background:var(--panel);margin:12px 0}
+"""
+
+
+def page(body, title="Zavod — панель"):
+    return f"<!DOCTYPE html><html lang=ru><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'>" \
+           f"<title>{esc(title)}</title><style>{CSS}</style></head><body><main>{body}</main></body></html>"
+
+
+def form(action, button, fields="", cls="", confirm=None):
+    c = f" onsubmit=\"return confirm('{esc(confirm)}')\"" if confirm else ""
+    return f"<form class=inline method=post action='{action}'{c}><input type=hidden name=t value='{TOKEN}'>{fields}" \
+           f"<button class='{cls}'>{esc(button)}</button></form>"
+
+
+def hidden(name, value):
+    return f"<input type=hidden name='{esc(name)}' value='{esc(value)}'>"
+
+
+def dashboard(msg=""):
+    rc, out = sudo("/opt/zavod/zavod-status", "json", timeout=30)
+    try:
+        s = json.loads(out)
+    except ValueError:
+        return page(f"<h1>Zavod</h1><div class=msg>Не получил состояние: {esc(out[-500:])}</div>")
+    wl = {n.lower() for n in s["whitelist"]}
+    onl = {n.lower() for n in ((s.get("online") or {}).get("names") or [])}
+    rows = []
+    for name in sorted(s["players"]):
+        devs = s["players"][name]
+        net = "<span class=ok>в сети</span>" if any(d["online"] for d in devs) else ("<span class=dim>не в сети</span>" if devs else "<span class=dim>ключ не использован</span>")
+        game = "<span class=ok>играет</span>" if name in onl else ""
+        inwl = name in wl
+        wbtn = form("/wl", "убрать из вайтлиста" if inwl else "в вайтлист", hidden("nick", name) + hidden("op", "remove" if inwl else "add"))
+        kbtn = form("/kick", "выгнать", hidden("nick", name), "danger", f"Выгнать {name} из сети и вайтлиста?")
+        rows.append(f"<tr><td>{esc(name)}</td><td>{net}</td><td>{game}</td><td>{'да' if inwl else '<span class=dim>нет</span>'}</td>"
+                    f"<td class=row>{wbtn} {kbtn}</td></tr>")
+    on = s.get("online") or {}
+    state = f"<span class=ok>работает</span> <span class=dim>с {esc(s['since'])}</span>" if s["active"] else "<span class=no>остановлен</span>"
+    bk = "".join(f"<tr><td><a href='/backup/{esc(b['name'])}'>{esc(b['name'])}</a></td><td>{b['size'] / 1048576:.1f} МБ</td></tr>" for b in s["backups"]) \
+        or "<tr><td class=dim>пока нет</td></tr>"
+    body = f"""<h1>Zavod — панель</h1><div class=dim>Видна только тебе: адрес в приватной сети + токен.</div>
+{f'<div class=msg>{msg}</div>' if msg else ''}
+<h2>Сервер</h2><div class='card row'><div>Сервер: {state}. Онлайн: {on.get('count', '—')}/{on.get('max', '—')}</div>
+{form('/restart', 'перезапустить', '', 'danger', 'Перезапустить сервер? Игроков выкинет на минуту.')}
+{form('/backup', 'сделать бэкап сейчас')}</div>
+<h2>Игроки</h2><div class=card><table><tr><th>Ник</th><th>Сеть</th><th>Игра</th><th>Вайтлист</th><th></th></tr>{''.join(rows) or '<tr><td class=dim colspan=5>никого</td></tr>'}</table></div>
+<h2>Пригласить</h2><div class='card'><form method=post action='/invite' class=row><input type=hidden name=t value='{TOKEN}'>
+<input type=text name=nick placeholder='ник в Minecraft' required pattern='[A-Za-z0-9_]{{3,16}}'>
+<label><input type=checkbox name=forever value=1> ключ без срока (сгорит при входе или по «выгнать»)</label>
+<label><input type=checkbox name=wl value=1 checked> сразу в вайтлист</label><button>создать приглашение</button></form></div>
+<h2>Консоль</h2><div class=card><form method=post action='/cmd' class=row><input type=hidden name=t value='{TOKEN}'>
+<input type=text name=cmd placeholder='say привет / time set day / ...' style='flex:1;min-width:260px' required><button>отправить</button></form>
+<pre>{esc(chr(10).join(s['log']))}</pre><a href='/'>обновить</a></div>
+<h2>Бэкапы</h2><div class=card><table>{bk}</table><div class=dim>Каждый день в 04:30, хранятся 7 последних. Скачивай к себе — VM могут и потерять.</div></div>"""
+    return page(body)
+
+
+class H(BaseHTTPRequestHandler):
+    server_version = "zavod-panel"
+    sys_version = ""
+
+    def log_message(self, fmt, *a):
+        sys.stderr.write("%s %s\n" % (self.address_string(), fmt % a))
+
+    def authed(self):
+        c = self.headers.get("Cookie", "")
+        m = re.search(r"(?:^|;\s*)zt=([A-Za-z0-9_-]+)", c)
+        return bool(m) and hmac.compare_digest(m.group(1), TOKEN)
+
+    def send(self, code, body, ctype="text/html; charset=utf-8", extra=()):
+        b = body.encode() if isinstance(body, str) else body
+        self.send_response(code)
+        self.send_header("Content-Type", ctype)
+        self.send_header("Content-Length", str(len(b)))
+        self.send_header("X-Frame-Options", "DENY")
+        self.send_header("Referrer-Policy", "no-referrer")
+        self.send_header("Cache-Control", "no-store")
+        for k, v in extra:
+            self.send_header(k, v)
+        self.end_headers()
+        self.wfile.write(b)
+
+    def redirect(self, to="/", cookie=None):
+        self.send_response(303)
+        self.send_header("Location", to)
+        if cookie:
+            self.send_header("Set-Cookie", f"zt={cookie}; Path=/; HttpOnly; SameSite=Strict; Max-Age=31536000")
+        self.send_header("Content-Length", "0")
+        self.end_headers()
+
+    def do_GET(self):
+        u = urllib.parse.urlparse(self.path)
+        q = urllib.parse.parse_qs(u.query)
+        if "t" in q and hmac.compare_digest(q["t"][0], TOKEN):
+            return self.redirect("/", TOKEN)
+        if not self.authed():
+            return self.send(403, page("<h1>Нет доступа</h1><p>Открой ссылку с токеном (её печатает <code>sudo zavod-panel-url</code>).</p>"))
+        if u.path == "/":
+            return self.send(200, dashboard())
+        m = re.fullmatch(r"/backup/(.+)", u.path)
+        if m and BACKUP.match(m.group(1)):
+            r = subprocess.run(["sudo", "-n", "/opt/zavod/zavod-status", "backup", m.group(1)], capture_output=True, timeout=600)
+            if r.returncode == 0:
+                return self.send(200, r.stdout, "application/gzip", [("Content-Disposition", f'attachment; filename="{m.group(1)}"')])
+        self.send(404, page("<h1>Не найдено</h1>"))
+
+    def do_POST(self):
+        if not self.authed():
+            return self.send(403, page("<h1>Нет доступа</h1>"))
+        n = min(int(self.headers.get("Content-Length") or 0), 8192)
+        f = {k: v[0] for k, v in urllib.parse.parse_qs(self.rfile.read(n).decode("utf-8", "replace")).items()}
+        if not hmac.compare_digest(f.get("t", ""), TOKEN):
+            return self.send(403, page("<h1>Нет доступа</h1>"))
+        nick = f.get("nick", "")
+        p = self.path
+        if p in ("/invite", "/kick", "/wl") and not NICK.match(nick):
+            return self.send(400, dashboard("Ник: 3–16 символов, латиница, цифры, _"))
+        if p == "/invite":
+            rc, out = sudo("/opt/zavod/zavod-invite", nick, *(["forever"] if f.get("forever") else []))
+            if rc == 0 and f.get("wl"):
+                sudo("/opt/zavod/zavod-cmd", "whitelist", "add", nick)
+            text = out.split("Вайтлист:")[0].strip()
+            body = (f"<h1>Приглашение для {esc(nick)}</h1><p>Отправь игроку этот текст целиком:</p><pre id=t>{esc(text)}</pre>"
+                    "<p class=row><button onclick=\"navigator.clipboard.writeText(document.getElementById('t').innerText)\">скопировать</button>"
+                    "<a href='/'>назад</a></p>") if rc == 0 else f"<h1>Не вышло</h1><pre>{esc(out)}</pre><a href='/'>назад</a>"
+            return self.send(200 if rc == 0 else 500, page(body))
+        if p == "/kick":
+            rc, out = sudo("/opt/zavod/zavod-kick", nick)
+        elif p == "/wl" and f.get("op") in ("add", "remove"):
+            rc, out = sudo("/opt/zavod/zavod-cmd", "whitelist", f["op"], nick)
+        elif p == "/cmd" and f.get("cmd", "").strip():
+            cmd = f["cmd"].strip().lstrip("/")[:200].replace("\n", " ")
+            rc, out = sudo("/opt/zavod/zavod-cmd", cmd)
+            out = out or f"отправлено: {cmd}"
+        elif p == "/backup":
+            rc, out = sudo("/opt/zavod/zavod-backup", timeout=600)
+        elif p == "/restart":
+            rc, out = sudo("/usr/bin/systemctl", "restart", "zavod", timeout=240)
+            out = out or "перезапуск запущен"
+        else:
+            return self.send(404, page("<h1>Не найдено</h1>"))
+        self.send(200 if rc == 0 else 500, dashboard(esc(out[-600:]) or ("готово" if rc == 0 else "ошибка")))
+
+
+if __name__ == "__main__":
+    host = sys.argv[1] if len(sys.argv) > 1 else "127.0.0.1"
+    ThreadingHTTPServer((host, 8443), H).serve_forever()

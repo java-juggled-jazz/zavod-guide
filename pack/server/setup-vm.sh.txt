@@ -1,0 +1,287 @@
+#!/usr/bin/env bash
+# Zavod: VM под сервер одной командой (docs/server-vm.md). Ubuntu 22.04+/Debian 12, amd64/arm64 (Oracle Ampere тоже).
+#   sudo bash setup-vm.sh                       обычный запуск (повторный — безопасен)
+#   DOMAIN=mc.example.com                       свой домен для Headscale (иначе <ip>.sslip.io)
+#   ACCEPT_EULA=1                               ты принимаешь EULA Mojang — пишем eula=true (иначе правь eula.txt сам)
+#   MEM=6G                                      память серверу (по умолчанию 70 % RAM, не больше 8G)
+#   ADMIN=Nick                                  твой ник: правила сети пустят тебя (и только тебя) к веб-панели :8443
+#   ZAVOD_TEST=1                                проверка в CI: Headscale по http на 127.0.0.1, без ufw/ssh
+# Сеть: Headscale (свой сервер управления для клиентов Tailscale) на этой же VM. Сервер Minecraft слушает ТОЛЬКО адрес
+# в приватной сети; правила сети пускают игроков только на порт 25565 сервера — друг к другу и куда-то ещё нельзя.
+set -euo pipefail
+[ "$(id -u)" = 0 ] || { echo "запускать через sudo"; exit 1; }
+HERE="$(cd "$(dirname "$0")" && pwd)"
+TEST="${ZAVOD_TEST:-0}"
+PACK="${PACK_URL:-https://java-juggled-jazz.github.io/zavod-guide/pack}"
+DIR=/srv/zavod; OPT=/opt/zavod; BIN=/opt/zavod/bin; HSC=/etc/headscale/config.yaml; POL=/etc/headscale/acl.hujson
+log() { echo "== $*"; }
+warn() { echo "!! $*"; }
+
+log "пакеты"
+export DEBIAN_FRONTEND=noninteractive
+apt-get update -qq
+apt-get install -y -qq curl ca-certificates python3 unzip tmux cron iproute2 >/dev/null
+J8="$(ls -d /usr/lib/jvm/*-8-*/bin/java /usr/lib/jvm/*-1.8.0-*/bin/java 2>/dev/null | head -1 || true)"
+if [ -z "$J8" ]; then
+  apt-get install -y -qq openjdk-8-jre-headless >/dev/null 2>&1 || {
+    install -d /etc/apt/keyrings
+    curl -fsSL https://packages.adoptium.net/artifactory/api/gpg/key/public -o /etc/apt/keyrings/adoptium.asc
+    echo "deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb $(. /etc/os-release; echo "$VERSION_CODENAME") main" \
+      > /etc/apt/sources.list.d/adoptium.list
+    apt-get update -qq && apt-get install -y -qq temurin-8-jre >/dev/null; }
+  J8="$(ls -d /usr/lib/jvm/*-8-*/bin/java /usr/lib/jvm/*-1.8.0-*/bin/java 2>/dev/null | head -1)"
+fi
+"$J8" -version 2>&1 | head -1
+
+if [ "$TEST" != 1 ]; then
+  log "защита машины: обновления, SSH, файрвол"
+  apt-get install -y -qq ufw unattended-upgrades >/dev/null
+  printf 'APT::Periodic::Update-Package-Lists "1";\nAPT::Periodic::Unattended-Upgrade "1";\n' > /etc/apt/apt.conf.d/20auto-upgrades
+  KEYS="$(cat /root/.ssh/authorized_keys /home/*/.ssh/authorized_keys 2>/dev/null | grep -cE '^(ssh-|ecdsa-|sk-)' || true)"
+  if [ "${KEYS:-0}" -gt 0 ]; then
+    # 00- — первое значение в sshd_config.d выигрывает (cloud-init кладёт 50-cloud-init.conf с паролями)
+    # root по SSH — только если ключей нет ни у кого, кроме root (иначе входи своим пользователем + sudo)
+    ROOTLOGIN=prohibit-password
+    cat /home/*/.ssh/authorized_keys 2>/dev/null | grep -qE '^(ssh-|ecdsa-|sk-)' && ROOTLOGIN=no
+    printf 'PasswordAuthentication no\nKbdInteractiveAuthentication no\nPermitRootLogin %s\nX11Forwarding no\nAllowAgentForwarding no\nAllowTcpForwarding no\nMaxAuthTries 3\n' \
+      "$ROOTLOGIN" > /etc/ssh/sshd_config.d/00-zavod.conf
+    # тому, кто запустил скрипт через sudo, — только исходящий проброс (ssh -D / -L: SOCKS-прокси к себе); остальным — нет
+    if [ -n "${SUDO_USER:-}" ] && [ "$SUDO_USER" != root ]; then
+      printf '\nMatch User %s\n    AllowTcpForwarding local\n' "$SUDO_USER" >> /etc/ssh/sshd_config.d/00-zavod.conf
+    fi
+    sshd -t && { systemctl reload ssh 2>/dev/null || systemctl reload sshd; }
+  else
+    warn "ключей SSH не нашёл — вход по паролю НЕ отключаю. Положи ключ и запусти скрипт ещё раз"
+  fi
+  # Oracle: в образе свои правила iptables с REJECT в конце — ufw за ними не работает
+  if [ -f /etc/iptables/rules.v4 ] && grep -q REJECT /etc/iptables/rules.v4; then
+    iptables -P INPUT ACCEPT && iptables -F INPUT && iptables-save > /etc/iptables/rules.v4
+    log "Oracle: правила iptables образа сняты, дальше рулит ufw"
+  fi
+  ufw default deny incoming >/dev/null; ufw default allow outgoing >/dev/null
+  ufw allow 22/tcp >/dev/null      # SSH
+  ufw allow 80/tcp >/dev/null      # Let's Encrypt для Headscale
+  ufw allow 443/tcp >/dev/null     # Headscale (управление сетью)
+  ufw allow 41641/udp >/dev/null   # прямые соединения Tailscale
+  ufw allow in on tailscale0 to any port 25565 proto tcp >/dev/null  # Minecraft — только из приватной сети
+  ufw allow in on tailscale0 to any port 8443 proto tcp >/dev/null   # панель — только из сети (правила: только админ)
+  ufw allow in on tailscale0 to any port 53 >/dev/null                # DNS админа — только из сети (правила: только админ)
+  ufw --force enable >/dev/null
+fi
+
+log "Headscale"
+ARCH="$(dpkg --print-architecture)"
+if ! command -v headscale >/dev/null; then
+  AUTH=(); [ -n "${GH_TOKEN:-}" ] && AUTH=(-H "Authorization: Bearer $GH_TOKEN")
+  URL="$(curl -fsSL "${AUTH[@]}" https://api.github.com/repos/juanfont/headscale/releases/latest | python3 -c "
+import json,sys; a=json.load(sys.stdin)['assets']
+print(next(x['browser_download_url'] for x in a if x['name'].endswith('_linux_$ARCH.deb')))")"
+  curl -fsSL -o /tmp/headscale.deb "$URL" && apt-get install -y -qq /tmp/headscale.deb >/dev/null
+fi
+headscale version 2>/dev/null | head -1 || true
+[ -f "$HSC" ] || { echo "нет $HSC после установки Headscale"; exit 1; }
+if [ "$TEST" = 1 ]; then
+  HSURL="http://127.0.0.1:8080"; LISTEN="127.0.0.1:8080"; HOST=""
+else
+  PUBIP="$(curl -4 -fsS https://api.ipify.org || curl -4 -fsS https://ifconfig.me)"
+  HOST="${DOMAIN:-$(echo "$PUBIP" | tr . -).sslip.io}"; HSURL="https://$HOST"; LISTEN="0.0.0.0:443"
+  install -d /etc/systemd/system/headscale.service.d
+  printf '[Service]\nAmbientCapabilities=CAP_NET_BIND_SERVICE\n' > /etc/systemd/system/headscale.service.d/zavod.conf
+fi
+[ -f "$POL" ] || echo '{"acls": []}' > "$POL"
+python3 "$HERE/hsconf.py" "$HSC" server_url="$HSURL" listen_addr="$LISTEN" tls_letsencrypt_hostname="$HOST" \
+  tls_letsencrypt_challenge_type=HTTP-01 tls_letsencrypt_listen=":http" policy.mode=file policy.path="$POL" \
+  dns.magic_dns=false dns.base_domain=zavod.internal ?dns.override_local_dns=false
+systemctl daemon-reload
+systemctl enable -q headscale && systemctl restart headscale
+for i in $(seq 30); do headscale users list >/dev/null 2>&1 && break; sleep 1; done
+
+log "скрипты -> $OPT, команды zavod-*"
+install -d "$OPT"
+install -m 0755 "$HERE"/run.sh "$HERE"/lib.sh "$HERE"/zavod-cmd "$HERE"/zavod-stop "$HERE"/zavod-backup \
+  "$HERE"/zavod-invite "$HERE"/zavod-kick "$HERE"/zavod-console "$HERE"/zavod-status "$HERE"/zavod-panel "$OPT/"
+install -m 0644 "$HERE"/forge.py "$HERE"/hsconf.py "$OPT/"
+for c in zavod-cmd zavod-backup zavod-invite zavod-kick zavod-console zavod-status; do ln -sf "$OPT/$c" "/usr/local/bin/$c"; done
+. "$OPT/lib.sh"
+
+log "Tailscale на сервере"
+command -v tailscale >/dev/null || curl -fsSL https://tailscale.com/install.sh | sh >/dev/null
+systemctl enable -q --now tailscaled
+headscale users create zavod-server >/dev/null 2>&1 || true
+if ! tailscale ip -4 >/dev/null 2>&1; then
+  K="$(hs_key zavod-server 1h)"
+  tailscale up --reset --login-server "$HSURL" --authkey "$K" --hostname zavod --accept-dns=false --accept-routes=false \
+    --ssh=false --timeout 300s
+fi
+TSIP="$(tailscale ip -4 | head -1)"
+log "адрес сервера в сети: $TSIP"
+# правила сети: любой участник -> только сервер, только порт Minecraft; админ -> ещё и панель
+ADMIN="${ADMIN:-$(cat "$OPT/admin" 2>/dev/null || true)}"
+ADMIN="$(echo "$ADMIN" | tr 'A-Z' 'a-z')"
+ADMRULE=""
+if [ -n "$ADMIN" ]; then
+  [[ "$ADMIN" =~ ^[a-z0-9_]{3,16}$ ]] || { echo "ADMIN: ник 3–16 символов, латиница/цифры/_"; exit 1; }
+  echo "$ADMIN" > "$OPT/admin"
+  headscale users create "$ADMIN" >/dev/null 2>&1 || true
+  ADMRULE=",
+    {\"action\": \"accept\", \"src\": [\"$ADMIN@\"], \"dst\": [\"zavod:8443\", \"zavod:53\"]}"
+fi
+cat > "$POL" <<POLICY
+// Zavod network rules. Players can reach ONLY the Minecraft port (25565) of the server.
+// The admin (server owner) can also reach the admin panel (8443) and the DNS resolver (53) of the server.
+// No connections between players, no access to anyone's PC. Published as is.
+{
+  "hosts": {"zavod": "$TSIP/32"},
+  "acls": [
+    {"action": "accept", "src": ["*"], "dst": ["zavod:25565"]}$ADMRULE
+  ]
+}
+POLICY
+systemctl restart headscale
+for i in $(seq 30); do headscale users list >/dev/null 2>&1 && break; sleep 1; done
+headscale users list >/dev/null 2>&1 || { journalctl -u headscale --no-pager | tail -20; echo "Headscale не поднялся с правилами $POL"; exit 1; }
+
+log "сервер Minecraft -> $DIR"
+id mc >/dev/null 2>&1 || useradd -r -m -d "$DIR" -s /bin/bash mc
+install -d -o mc -g mc "$DIR"
+install -d -o root -g root -m 0700 /srv/backups  # бэкапы — root: mc их не читает и не подсунет симлинк
+# сервер и библиотеки — в $BIN (root, только чтение): mc не подменит jar, пишет лишь мир, моды, конфиги, логи в $DIR
+python3 "$OPT/forge.py" "$BIN"
+chown -R root:root "$BIN" && chmod -R a+rX,go-w "$BIN"
+UNI="$(ls "$BIN"/forge-*-universal.jar | head -1)"
+runuser -u mc -- curl -fsSL -o "$DIR/Zavod-updater.zip" "$PACK/Zavod-updater.zip"
+runuser -u mc -- unzip -q -o "$DIR/Zavod-updater.zip" zavod-update.sh packwiz-installer-bootstrap.jar -d "$DIR"
+rm -f "$DIR/Zavod-updater.zip"; chmod +x "$DIR/zavod-update.sh"
+chown mc:mc "$DIR" && chmod 0750 "$DIR"
+if [ -z "${MEM:-}" ]; then
+  T="$(awk '/MemTotal/{print int($2/1024)}' /proc/meminfo)"; M=$((T * 70 / 100)); [ "$M" -gt 8192 ] && M=8192; MEM="${M}M"
+fi
+printf 'J8=%q\nMEM=%q\nUNI=%q\nTSIP=%q\nHSURL=%q\n' "$J8" "$MEM" "$UNI" "$TSIP" "$HSURL" > "$OPT/zavod.env"
+chmod 0644 "$OPT/zavod.env"  # root: читают zavod-invite (root) и run.sh (mc); mc его не правит
+[ -f "$DIR/server.properties" ] || runuser -u mc -- python3 -c "
+open('$DIR/server.properties','w').write('white-list=true\nenable-rcon=false\nenable-query=false\nmotd=Zavod\n')"
+if [ "${ACCEPT_EULA:-0}" = 1 ]; then echo "eula=true" > "$DIR/eula.txt"; chown mc:mc "$DIR/eula.txt"; fi
+
+cat > /etc/systemd/system/zavod.service <<EOF
+[Unit]
+Description=Zavod Minecraft server (console: zavod-console)
+After=network-online.target tailscaled.service
+Wants=network-online.target tailscaled.service
+StartLimitIntervalSec=900
+StartLimitBurst=5
+
+[Service]
+Type=forking
+User=mc
+Group=mc
+WorkingDirectory=$DIR
+RuntimeDirectory=zavod
+RuntimeDirectoryMode=0750
+ExecStart=/usr/bin/tmux -S /run/zavod/tmux.sock new-session -d -s zavod $OPT/run.sh
+ExecStop=$OPT/zavod-stop
+Restart=always
+RestartSec=20
+TimeoutStopSec=150
+# песочница: даже если через мод сломают сервер, дальше /srv/zavod и сети не уйдут
+UMask=0027
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+ProtectSystem=strict
+ReadWritePaths=$DIR
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+RestrictNamespaces=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+RemoveIPC=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6 AF_NETLINK
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallErrorNumber=EPERM
+TasksMax=1024
+
+[Install]
+WantedBy=multi-user.target
+EOF
+log "DNS для админа (unbound, только адрес в сети)"
+if [ -n "$ADMIN" ]; then
+  apt-get install -y -qq unbound >/dev/null
+  cat > /etc/unbound/unbound.conf.d/zavod.conf <<UNB
+# Zavod: резолвер для админа. Слушает только адрес сервера в приватной сети; правила сети пускают к 53 только админа.
+server:
+    interface: $TSIP
+    ip-freebind: yes
+    access-control: 0.0.0.0/0 refuse
+    access-control: 100.64.0.0/10 allow
+    hide-identity: yes
+    hide-version: yes
+    qname-minimisation: yes
+UNB
+  unbound-checkconf >/dev/null && systemctl enable -q unbound && systemctl restart unbound
+fi
+
+log "панель"
+id zavodweb >/dev/null 2>&1 || useradd -r -M -d /nonexistent -s /usr/sbin/nologin zavodweb
+install -d -m 0750 -o root -g zavodweb /etc/zavod
+[ -s /etc/zavod/panel.token ] || python3 -c "import secrets; print(secrets.token_urlsafe(32))" > /etc/zavod/panel.token
+chown root:zavodweb /etc/zavod/panel.token && chmod 0640 /etc/zavod/panel.token
+cat > /etc/sudoers.d/zavod-panel <<SUDO
+# Панель Zavod: только эти команды, без пароля, от пользователя zavodweb
+zavodweb ALL=(root) NOPASSWD: $OPT/zavod-status, $OPT/zavod-invite, $OPT/zavod-kick, $OPT/zavod-cmd, $OPT/zavod-backup, /usr/bin/systemctl restart zavod
+SUDO
+chmod 0440 /etc/sudoers.d/zavod-panel && visudo -cqf /etc/sudoers.d/zavod-panel
+printf '#!/bin/bash\n. %s/zavod.env\necho "http://$TSIP:8443/?t=$(cat /etc/zavod/panel.token)"\n' "$OPT" > "$OPT/zavod-panel-url"
+chmod 0700 "$OPT/zavod-panel-url" && ln -sf "$OPT/zavod-panel-url" /usr/local/bin/zavod-panel-url
+cat > /etc/systemd/system/zavod-panel.service <<UNIT
+[Unit]
+Description=Zavod admin panel (private network only)
+After=network-online.target tailscaled.service
+Wants=tailscaled.service
+
+[Service]
+User=zavodweb
+Group=zavodweb
+ExecStart=/usr/bin/python3 $OPT/zavod-panel $TSIP
+Restart=always
+RestartSec=5
+# sudo нужен (setuid), поэтому без NoNewPrivileges; остальное — песочница
+ProtectSystem=full
+ProtectHome=yes
+PrivateTmp=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6 AF_NETLINK
+LockPersonality=yes
+
+[Install]
+WantedBy=multi-user.target
+UNIT
+echo "30 4 * * * root $OPT/zavod-backup >/dev/null 2>&1" > /etc/cron.d/zavod-backup
+systemctl daemon-reload
+systemctl enable -q zavod
+systemctl enable -q zavod-panel && systemctl restart zavod-panel
+if grep -q 'eula=true' "$DIR/eula.txt" 2>/dev/null; then systemctl restart zavod; STARTED=1; else STARTED=0; fi
+
+echo
+echo "================ Zavod: готово ================"
+echo "Headscale:     $HSURL"
+echo "Сервер в сети: $TSIP:25565 (снаружи порт закрыт)"
+echo "Память:        $MEM, Java: $J8"
+[ "$STARTED" = 1 ] || echo "EULA: прочитай https://aka.ms/MinecraftEULA, впиши eula=true в $DIR/eula.txt и: sudo systemctl start zavod"
+[ -n "$ADMIN" ] && echo "DNS админа:    $TSIP (только твоё устройство в сети)"
+echo "Панель:        sudo zavod-panel-url   (открывай со своего устройства в сети; ${ADMIN:-ADMIN не задан — перезапусти с ADMIN=<ник>})"
+echo "Игрок:         sudo zavod-invite <ник> [forever]   (ключ и инструкция на английском)"
+echo "Выгнать:       sudo zavod-kick <ник>"
+echo "Консоль:       sudo zavod-console (выйти: Ctrl+B, потом D)   команда: sudo zavod-cmd whitelist add <ник>"
+echo "Бэкапы:        /srv/backups (каждый день в 04:30, 7 штук) — забирай к себе: scp <vm>:/srv/backups/* ."
+[ "$TEST" = 1 ] || echo "Oracle/облако: в Security List/фаерволе провайдера открыть TCP 22, 80, 443 и UDP 41641. 25565 НЕ открывать."

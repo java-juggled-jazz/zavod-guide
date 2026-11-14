@@ -1,0 +1,217 @@
+{
+ "version": 1,
+ "minItems": 1,
+ "maxItems": 3,
+ "contents": [
+  {
+   "weight": 20,
+   "genMin": 1,
+   "genMax": 3,
+   "item": {
+    "id": "minecraft:bread",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 8,
+   "genMin": 1,
+   "genMax": 2,
+   "item": {
+    "id": "minecraft:cooked_beef",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 10,
+   "genMin": 1,
+   "genMax": 3,
+   "item": {
+    "id": "minecraft:apple",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 8,
+   "genMin": 1,
+   "genMax": 2,
+   "item": {
+    "id": "minecraft:baked_potato",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 5,
+   "genMin": 2,
+   "genMax": 6,
+   "item": {
+    "id": "minecraft:cookie",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 10,
+   "genMin": 1,
+   "genMax": 2,
+   "item": {
+    "id": "zavod:bandage",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 8,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "minecraft:book",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 8,
+   "genMin": 1,
+   "genMax": 4,
+   "item": {
+    "id": "minecraft:paper",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 4,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "reccomplex:bookGenerationTag",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 8,
+   "genMin": 1,
+   "genMax": 4,
+   "item": {
+    "id": "minecraft:string",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 5,
+   "genMin": 1,
+   "genMax": 2,
+   "item": {
+    "id": "minecraft:leather",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 4,
+   "genMin": 1,
+   "genMax": 2,
+   "item": {
+    "id": "minecraft:flint",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 6,
+   "genMin": 1,
+   "genMax": 3,
+   "item": {
+    "id": "minecraft:coal",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 6,
+   "genMin": 1,
+   "genMax": 4,
+   "item": {
+    "id": "minecraft:stick",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 4,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "minecraft:bowl",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 4,
+   "genMin": 1,
+   "genMax": 2,
+   "item": {
+    "id": "minecraft:glass_bottle",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 2,
+   "genMin": 1,
+   "genMax": 3,
+   "item": {
+    "id": "minecraft:gold_nugget",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 6,
+   "genMin": 1,
+   "genMax": 4,
+   "item": {
+    "id": "minecraft:torch",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 6,
+   "genMin": 2,
+   "genMax": 6,
+   "item": {
+    "id": "zavod:cartridge_pistol",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 1,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "minecraft:compass",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 1,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "minecraft:clock",
+    "damage": 0,
+    "count": 1
+   }
+  }
+ ]
+}

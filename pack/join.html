@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Joining the Zavod server</title>
+<style>
+  :root { --bg:#14161a; --panel:#1d2026; --line:#2c313a; --text:#d6d9de; --dim:#8b929c; --accent:#d08a2e; --ok:#6fae6f; --no:#c0574f; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif; }
+  main { max-width:820px; margin:0 auto; padding:48px 20px 80px; }
+  h1 { font-size:2rem; margin:0 0 4px; letter-spacing:.02em; }
+  h2 { font-size:1.15rem; margin:44px 0 12px; color:var(--accent); text-transform:uppercase; letter-spacing:.08em; }
+  p, li { color:var(--text); }
+  .lead { color:var(--dim); margin:0 0 8px; }
+  code, pre { font-family:ui-monospace,"Cascadia Mono",Consolas,monospace; font-size:.9em; }
+  code { background:var(--panel); padding:1px 5px; border-radius:3px; }
+  pre { background:var(--panel); border:1px solid var(--line); border-left:3px solid var(--accent); padding:14px 16px; overflow-x:auto; border-radius:3px; }
+  .cols { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:4px; padding:4px 18px 10px; }
+  .card h3 { font-size:1rem; margin:14px 0 6px; }
+  .can h3 { color:var(--ok); } .cannot h3 { color:var(--no); }
+  .card ul { padding-left:18px; margin:0; } .card li { margin:6px 0; }
+  ol li { margin:10px 0; }
+  table { border-collapse:collapse; width:100%; } td { border-bottom:1px solid var(--line); padding:6px 8px; vertical-align:top; }
+  td:first-child { white-space:nowrap; }
+  a { color:var(--accent); }
+  .files a { display:inline-block; margin:2px 10px 2px 0; }
+  @media (max-width:640px) { .cols { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<main>
+<h1>Joining the Zavod server</h1>
+<p class="lead">Minecraft 1.7.10 · hardcore industrial modpack · whitelist only</p>
+<p>The server is not on the open internet. It sits in a small private network, and only devices I invite can reach it — no griefers scanning
+ports, no strangers. To join, you install the open-source Tailscale client and connect it to that network with a one-time key I send you.
+Below is exactly what that gives me and what it doesn't.</p>
+
+<h2>What I can and can't do</h2>
+<div class="cols">
+  <div class="card can">
+    <h3>I can see</h3>
+    <ul>
+      <li>the name of your device in the network — it's set to <code>zavod-&lt;your nick&gt;</code>, not your computer's name;</li>
+      <li>its OS and client version;</li>
+      <li>your public IP address and when you're online — the control server needs them to connect you;</li>
+      <li>normal Minecraft server logs: your nick, join/leave times, chat.</li>
+    </ul>
+  </div>
+  <div class="card cannot">
+    <h3>I can't</h3>
+    <ul>
+      <li>connect to your computer: your client runs with <code>--shields-up</code>, which refuses every incoming connection, whatever the server says;</li>
+      <li>see or redirect your internet traffic: no exit node, no routes, your DNS is left alone (<code>--exit-node=</code>, <code>--accept-routes=false</code>, <code>--accept-dns=false</code>);</li>
+      <li>install or run anything on your PC (<code>--ssh=false</code>, and the client has no such feature for the network owner);</li>
+      <li>let players reach each other — the rules below allow one thing only.</li>
+    </ul>
+  </div>
+</div>
+<p>All of these are settings on <em>your</em> side. You can check them yourself at any time (step 3 below), and nothing I change on the server can switch them back.</p>
+
+<h2>The network rules, verbatim</h2>
+<p>This is the whole access policy of the network. Members can open a connection to one port of one machine — the Minecraft server. Nothing else.</p>
+<pre>{
+  "hosts": {"zavod": "&lt;server address&gt;/32"},
+  "acls": [
+    {"action": "accept", "src": ["*"], "dst": ["zavod:25565"]},
+    {"action": "accept", "src": ["&lt;admin&gt;@"], "dst": ["zavod:8443", "zavod:53"]}
+  ]
+}</pre>
+<p>The second line is for me only: the admin panel of the server (invites, whitelist, backups) and a DNS resolver on the server for my own PC.
+Both live on the server, not on anyone's PC, and no other account can reach them.</p>
+<p>Devices also can't add themselves or advertise routes: joining needs a single-use key from me (it expires in 48 hours), and route or exit-node
+offers from any device are never approved.</p>
+
+<h2>How to join</h2>
+<ol>
+  <li>Install Tailscale: <a href="https://tailscale.com/download">tailscale.com/download</a> (Windows, macOS, Linux). No Tailscale account needed.</li>
+  <li>Run the one line I send you. Windows — Command Prompt; macOS/Linux — terminal, with <code>sudo</code>. It looks like this:
+<pre>tailscale up --login-server https://&lt;server&gt; --authkey &lt;one-time key&gt; --hostname zavod-&lt;nick&gt; --shields-up --accept-dns=false --accept-routes=false --exit-node= --ssh=false</pre></li>
+  <li>Check it took: run <code>tailscale debug prefs</code> and look for these four values.
+    <table>
+      <tr><td><code>"ShieldsUp": true</code></td><td>nothing can connect to your device</td></tr>
+      <tr><td><code>"CorpDNS": false</code></td><td>your DNS is untouched</td></tr>
+      <tr><td><code>"RouteAll": false</code></td><td>no routes from the network</td></tr>
+      <tr><td><code>"ExitNodeID": ""</code></td><td>your traffic goes out as usual</td></tr>
+    </table></li>
+  <li>Install the modpack (Prism Launcher zip or the updater — links in the pack thread), then Minecraft → Multiplayer → Direct Connection → the address I send.</li>
+</ol>
+
+<h2>Leaving</h2>
+<p><code>tailscale logout</code> disconnects you from the network for good; uninstalling Tailscale does the same. If you already use Tailscale for
+something else, the join command switches your client to this network — switch back with <code>tailscale up --login-server &lt;yours&gt;</code>,
+or log out first.</p>
+
+<h2>The server side</h2>
+<p>The server runs Headscale (an open-source control server for Tailscale clients) and Minecraft on one rented machine. Minecraft listens only on
+its private-network address — the port isn't open to the internet at all. The game runs as an unprivileged user inside a locked-down systemd
+sandbox; the server software is read-only to it. I administer the machine over SSH with a key, no passwords. World backups run daily.</p>
+<p>Every script that sets the server up, as it's deployed:</p>
+<p class="files">
+  <a href="server/setup-vm.sh.txt">setup-vm.sh</a><a href="server/run.sh.txt">run.sh</a><a href="server/lib.sh.txt">lib.sh</a>
+  <a href="server/zavod-invite.txt">zavod-invite</a><a href="server/zavod-kick.txt">zavod-kick</a><a href="server/zavod-cmd.txt">zavod-cmd</a>
+  <a href="server/zavod-stop.txt">zavod-stop</a><a href="server/zavod-backup.txt">zavod-backup</a><a href="server/zavod-console.txt">zavod-console</a>
+  <a href="server/forge.py.txt">forge.py</a><a href="server/hsconf.py.txt">hsconf.py</a>
+  <a href="server/zavod-panel.txt">zavod-panel</a><a href="server/zavod-status.txt">zavod-status</a><a href="server/install.sh.txt">install.sh</a>
+</p>
+<p>Questions — message me before you join. Happy to walk through any of it.</p>
+</main>
+</body>
+</html>
