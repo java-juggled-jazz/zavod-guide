@@ -1,0 +1,14 @@
+{
+  "_name": "Creeper",
+  "_comment": "MODPACK: zdorov'e +50%; skorost' vanil'naya; radius presledovaniya -25% (16 -> 12 blokov). Spavn - 10% ot vanili (config/zavod.cfg, creeperKeep). Zavod 1.47: radius presledovaniya - vanil'nyy (put' ishchetsya na etu dal'nost' - +50% gruzilo server; slukh i pamyat' tseli - v zavod.jar).",
+  "pre_stats": [],
+  "stats": [
+    {
+      "function": "modifier",
+      "attribute": "generic.maxHealth",
+      "value": 0.5,
+      "operator": 1
+    }
+  ],
+  "drops": []
+}

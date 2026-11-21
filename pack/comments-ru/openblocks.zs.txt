@@ -1,0 +1,87 @@
+// ====================================================================================
+//                 OPENBLOCKS: ВЫРЕЗАНИЕ ЧИТОВ И ИНЖЕНЕРНЫЕ РЕЦЕПТЫ
+// ====================================================================================
+
+// ------------------------------------------------------------------------------------
+// 1. ВЫРЕЗАНО — ломает выживание или логистику
+// ------------------------------------------------------------------------------------
+recipes.remove(<OpenBlocks:heal>);               // Лечебный блок: бесплатная регенерация
+recipes.remove(<OpenBlocks:cursor>);             // Курсор: удалённый доступ к любому интерфейсу — убивает логистику
+recipes.remove(<OpenBlocks:craneBackpack>);      // Кран-рюкзак: таскает любые блоки и машины
+recipes.remove(<OpenBlocks:craneControl>);
+recipes.remove(<OpenBlocks:pencilGlasses>);      // Воображаемые блоки: строительство без материалов
+recipes.remove(<OpenBlocks:crayonGlasses>);
+recipes.remove(<OpenBlocks:technicolorGlasses>);
+recipes.remove(<OpenBlocks:imaginary>);
+recipes.remove(<OpenBlocks:goldenEye>);          // Золотое око: навигатор к структурам
+
+// ------------------------------------------------------------------------------------
+// 2. УСЛОЖНЕНО — полезные машины, но слишком дешёвые
+// ------------------------------------------------------------------------------------
+val plateSteel  = <ore:plateSteel>;
+val plateGold   = <ore:plateGold>;
+val denseSteel  = <IC2:itemDensePlates:5>;
+val motorIC2    = <IC2:itemRecipePart:1>;
+val circuitIC2  = <IC2:itemPartCircuit>;
+val advCircuit  = <IC2:itemPartCircuitAdv>;
+val tankBC      = <BuildCraft|Factory:tankBlock>;
+val fusedQuartz = <EnderIO:blockFusedQuartz>;
+val doubleCap   = <EnderIO:itemBasicCapacitor:1>;
+val piston      = <minecraft:piston>;
+
+// Лифт: настоящий лифт — электромотор, схема управления, стальная кабина
+recipes.remove(<OpenBlocks:elevator>);
+recipes.addShaped(<OpenBlocks:elevator>, [
+    [plateSteel,     motorIC2,                plateSteel],
+    [<ore:blockWool>, <minecraft:ender_pearl>, <ore:blockWool>],
+    [plateSteel,     circuitIC2,              plateSteel]
+]);
+
+// Бак: БЫЛО — дешёвый бак на 16 вёдер в обход баков BC и Railcraft.
+// ТЕПЕРЬ — бак BC в кварцевом корпусе со стальным каркасом.
+recipes.remove(<OpenBlocks:tank>);
+recipes.addShaped(<OpenBlocks:tank>, [
+    [plateSteel,  fusedQuartz, plateSteel],
+    [fusedQuartz, tankBC,      fusedQuartz],
+    [plateSteel,  fusedQuartz, plateSteel]
+]);
+
+// Вакуумная воронка: всасывание делают вентиляторы на моторах
+recipes.remove(<OpenBlocks:vacuumhopper>);
+recipes.addShaped(<OpenBlocks:vacuumhopper>, [
+    [plateSteel, <minecraft:ender_eye>, plateSteel],
+    [motorIC2,   <minecraft:hopper>,    motorIC2],
+    [plateSteel, circuitIC2,            plateSteel]
+]);
+
+// Разрушитель блоков: алмазная кирка на приводе
+recipes.remove(<OpenBlocks:blockbreaker>);
+recipes.addShaped(<OpenBlocks:blockbreaker>, [
+    [plateSteel, <minecraft:diamond_pickaxe>, plateSteel],
+    [piston,     motorIC2,                    piston],
+    [plateSteel, circuitIC2,                  plateSteel]
+]);
+
+// Установщик блоков
+recipes.remove(<OpenBlocks:blockPlacer>);
+recipes.addShaped(<OpenBlocks:blockPlacer>, [
+    [plateSteel, <minecraft:dispenser>, plateSteel],
+    [piston,     motorIC2,              piston],
+    [plateSteel, circuitIC2,            plateSteel]
+]);
+
+// Авто-наковальня: пресс по наковальне + бак для жидкого опыта
+recipes.remove(<OpenBlocks:autoanvil>);
+recipes.addShaped(<OpenBlocks:autoanvil>, [
+    [denseSteel, circuitIC2,          denseSteel],
+    [piston,     <minecraft:anvil>,   piston],
+    [denseSteel, tankBC,              denseSteel]
+]);
+
+// Авто-зачаровальный стол: золотая обвязка, продвинутая схема, бак опыта
+recipes.remove(<OpenBlocks:autoenchantmenttable>);
+recipes.addShaped(<OpenBlocks:autoenchantmenttable>, [
+    [plateGold, advCircuit,                   plateGold],
+    [tankBC,    <minecraft:enchanting_table>, tankBC],
+    [plateGold, doubleCap,                    plateGold]
+]);

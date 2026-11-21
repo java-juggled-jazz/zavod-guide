@@ -1,0 +1,79 @@
+// ====================================================================================
+// ЭЛЕКТРОНИКА: ЛАМПОВАЯ ЭРА -> ПЕЧАТНЫЕ ПЛАТЫ
+// ПОЧЕМУ: схема IC2 из кабелей и редстоуна на верстаке - это электроника из ниоткуда.
+// ТЕПЕРЬ две ступени:
+//   1. Ламповая (Forestry): плата из плотника (олово + редстоун + вода) + медные электронные лампы
+//      из термоионного фабрикатора (медь + редстоун + расплавленное стекло). 2 схемы за крафт.
+//   2. Печатная (BuildCraft): из чипсетов лазерного стола делаются ПРОДВИНУТЫЕ схемы.
+//   Обе - только в плотнике (пайка + лак).
+// Ванильный рецепт схемы IC2 удалён. Плотник и фабрикатор схем IC2 не требуют - тупика нет.
+// ====================================================================================
+
+val circuitIC2  = <IC2:itemPartCircuit>;
+val cuCable     = <IC2:itemCable>;                      // изолированный медный кабель
+val plateIron   = <ore:plateIron>;
+val copperTube  = <Forestry:thermionicTubes>;           // медная электронная лампа (meta 0)
+val boardBasic  = <Forestry:chipsets>;                  // базовая плата Forestry (meta 0)
+val chipRed     = <BuildCraft|Silicon:redstoneChipset>; // красный чипсет BC (meta 0)
+
+recipes.remove(circuitIC2);
+
+// 1. Ламповая схема
+// Только плотник: пайка оловом, плата покрывается лаком (растительное масло). Вручную схему не собрать.
+mods.forestry.Carpenter.addRecipe(circuitIC2 * 2, [
+    [cuCable,         copperTube, cuCable],
+    [<zavod:solder>,  boardBasic, <zavod:solder>],
+    [cuCable,         copperTube, cuCable]
+], <liquid:seedoil> * 100, 40);
+
+// Продвинутая схема - только плотник, на чипсетах BC (без ламповых схем): золотые контакты, оловянный припой, лак.
+recipes.remove(<IC2:itemPartCircuitAdv>);
+mods.forestry.Carpenter.addRecipe(<IC2:itemPartCircuitAdv>, [
+    [<ore:plateGold>, <BuildCraft|Silicon:redstoneChipset:5>, <ore:plateGold>],
+    [chipRed,         <BuildCraft|Silicon:redstoneChipset:2>, chipRed],
+    [<zavod:solder>,  <BuildCraft|Silicon:redstoneChipset:5>, <zavod:solder>]
+], <liquid:seedoil> * 250, 80);
+
+// Сканер плотности руды (геологический молоток сборки): ламповые схемы, бронзовый корпус, аккумулятор RE.
+// БЫЛО: продвинутый аккумулятор и золотые оболочки. Продвинутый сканер - без изменений.
+recipes.remove(<IC2:itemScanner>);
+mods.forestry.Carpenter.addRecipe(<IC2:itemScanner:27>, [
+    [<IC2:itemCasing:2>, <minecraft:glass_pane>, <IC2:itemCasing:2>],   // стекло шкалы (БЫЛО: светопыль)
+    [circuitIC2, <IC2:itemBatREDischarged>, circuitIC2],
+    [cuCable, cuCable, cuCable]
+], <liquid:seedoil> * 100, 40);
+
+// Улучшения машин IC2 (ускоритель, трансформатор, накопитель) - электроника, только плотник.
+recipes.remove(<IC2:upgradeModule:0>);
+mods.forestry.Carpenter.addRecipe(<IC2:upgradeModule:0> * 2, [
+    [<IC2:reactorCoolantSimple:*>, <IC2:reactorCoolantSimple:*>, <IC2:reactorCoolantSimple:*>],
+    [<IC2:itemCable>,              circuitIC2,                   <IC2:itemCable>]
+], <liquid:seedoil> * 100, 40);
+recipes.remove(<IC2:upgradeModule:1>);
+mods.forestry.Carpenter.addRecipe(<IC2:upgradeModule:1>, [
+    [<minecraft:glass>,  <minecraft:glass>,      <minecraft:glass>],
+    [<IC2:itemCable:3>,  <IC2:blockElectric:4>,  <IC2:itemCable:3>],
+    [<minecraft:glass>,  circuitIC2,             <minecraft:glass>]
+], <liquid:seedoil> * 100, 40);
+recipes.remove(<IC2:upgradeModule:2>);
+mods.forestry.Carpenter.addRecipe(<IC2:upgradeModule:2>, [
+    [<ore:plankWood>, <ore:plankWood>,             <ore:plankWood>],
+    [<IC2:itemCable>, <IC2:itemBatREDischarged>,   <IC2:itemCable>],
+    [<ore:plankWood>, circuitIC2,                  <ore:plankWood>]
+], <liquid:seedoil> * 100, 40);
+
+// Продвинутый сканер, частотный передатчик - электроника, только плотник.
+// Энергокристалл - выращивание в растворе: 9 энергиевой пыли + 1000 mB дистиллята (компрессор больше не прессует).
+recipes.remove(<IC2:itemScannerAdv>);
+mods.forestry.Carpenter.addRecipe(<IC2:itemScannerAdv:27>, [
+    [<IC2:itemCasing:3>,         <IC2:itemBatCrystal:*>,    <IC2:itemCasing:3>],
+    [<minecraft:glass_pane>,     <IC2:itemPartCircuitAdv>,  <IC2:itemRecipePart>],   // шкала + катушка датчика (БЫЛО: 2 светопыли)
+    [<IC2:itemCable:3>,          <IC2:itemScanner:*>,       <IC2:itemCable:3>]
+], <liquid:seedoil> * 100, 60);
+recipes.remove(<IC2:itemFreq>);
+mods.forestry.Carpenter.addRecipe(<IC2:itemFreq>, [[circuitIC2, cuCable]], <liquid:seedoil> * 50, 20);
+mods.forestry.Carpenter.addRecipe(<IC2:itemBatCrystal:27>, [
+    [<IC2:itemDust2:2>, <IC2:itemDust2:2>, <IC2:itemDust2:2>],
+    [<IC2:itemDust2:2>, <IC2:itemDust2:2>, <IC2:itemDust2:2>],
+    [<IC2:itemDust2:2>, <IC2:itemDust2:2>, <IC2:itemDust2:2>]
+], <liquid:ic2distilledwater> * 1000, 100);

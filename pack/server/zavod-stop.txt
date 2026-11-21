@@ -1,0 +1,7 @@
+#!/bin/bash
+# ExecStop: stop в консоль, ждём сохранения мира.
+. /opt/zavod/lib.sh
+mc_tmux has-session -t zavod 2>/dev/null || exit 0
+mc_tmux send-keys -t zavod -l "stop" && mc_tmux send-keys -t zavod Enter
+for i in $(seq 120); do mc_tmux has-session -t zavod 2>/dev/null || exit 0; sleep 1; done
+mc_tmux kill-session -t zavod

@@ -1,0 +1,23 @@
+// Zavod 1.56.67: prostaya oskolochnaya granata. Model', tekstury i lang - v flans_world_war_two_pack (tam byl tol'ko ostov).
+// Bloki ne lomaet (ExplosionBreaksBlocks False), mobam ne vydaetsya. Retsept - flans.zs.
+Name Mk. 2 Frag Grenade
+ShortName mk2Frag
+Icon Mk2Grenade
+Colour 255 255 255
+Model ww2.FragGrenade
+Texture Mk2Frag
+ModelScale 1.0
+MaxStackSize 8
+ThrowDelay 20
+ThrowSpeed 1.0
+FallSpeed 1.0
+Bounciness 0.3
+SpinWhenThrown True
+Fuse 80
+DetonateOnImpact False
+ExplosionRadius 3.0
+ExplosionBreaksBlocks False
+Fire 0
+NumExplodeParticles 20
+DetonateSound bomb
+MeleeDamage 1

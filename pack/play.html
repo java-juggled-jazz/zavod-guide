@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zavod — download and play</title>
+<meta name="description" content="Zavod: a hardcore industrial realism modpack for Minecraft 1.7.10. From a farm and black powder to steam, electricity, oil and the atom.">
+<style>
+  :root { --bg:#14161a; --panel:#1d2026; --line:#2c313a; --text:#d6d9de; --dim:#8b929c; --accent:#d08a2e; --warn:#c9a04a; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif; }
+  main { max-width:860px; margin:0 auto; padding:56px 20px 90px; }
+  h1 { font-size:2.6rem; margin:0; letter-spacing:.04em; }
+  .tag { color:var(--dim); margin:4px 0 26px; }
+  h2 { font-size:1.1rem; margin:46px 0 14px; color:var(--accent); text-transform:uppercase; letter-spacing:.08em; }
+  p, li { color:var(--text); }
+  a { color:var(--accent); }
+  code { background:var(--panel); padding:1px 5px; border-radius:3px; font-family:ui-monospace,"Cascadia Mono",Consolas,monospace; font-size:.9em; }
+  .eras { display:grid; grid-template-columns:repeat(5,1fr); gap:6px; margin:18px 0 6px; }
+  .era { background:var(--panel); border:1px solid var(--line); border-top:3px solid var(--accent); padding:10px 10px 8px; border-radius:3px; }
+  .era b { display:block; font-size:.95rem; } .era span { color:var(--dim); font-size:.82rem; }
+  .warn { border:1px solid var(--line); border-left:4px solid var(--warn); background:var(--panel); padding:12px 16px; border-radius:3px; margin:22px 0; }
+  .warn b { color:var(--warn); }
+  .ways { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  .way { background:var(--panel); border:1px solid var(--line); border-radius:4px; padding:16px 16px 14px; display:flex; flex-direction:column; }
+  .way h3 { margin:0 0 4px; font-size:1.05rem; } .way .sub { color:var(--dim); font-size:.88rem; margin-bottom:10px; }
+  .way ol { padding-left:18px; margin:0 0 12px; font-size:.93rem; } .way li { margin:5px 0; }
+  .way .btn { margin-top:auto; }
+  .btn { display:inline-block; background:var(--accent); color:#16120b; font-weight:600; text-decoration:none; padding:8px 14px; border-radius:3px; text-align:center; }
+  .btn.alt { background:transparent; color:var(--accent); border:1px solid var(--accent); }
+  .rec { font-size:.75rem; color:#16120b; background:var(--accent); padding:1px 6px; border-radius:2px; margin-left:6px; vertical-align:middle; }
+  ul.mods { columns:2; padding-left:18px; color:var(--dim); font-size:.93rem; }
+  .dim { color:var(--dim); }
+  footer { margin-top:56px; color:var(--dim); font-size:.88rem; border-top:1px solid var(--line); padding-top:16px; }
+  @media (max-width:720px) { .ways, .eras { grid-template-columns:1fr; } ul.mods { columns:1; } }
+</style>
+</head>
+<body>
+<main>
+<h1>ZAVOD</h1>
+<p class="tag">Hardcore industrial realism · Minecraft 1.7.10 · version 1.57.6</p>
+
+<p>You start with a field, a hammer and black powder. You end with turbines, refineries, rails, a reactor and a rocket on the pad.
+No magic, no shortcuts: every machine is heavy, built from parts you made, and has its own niche. A steam turbine wants a river,
+a gas turbine wants a gas field, a diesel wants fuel hauled in. The world is hostile — difficulty is locked to Hard,
+and fortified outposts with garrisons sit between you and the good loot.</p>
+
+<div class="eras">
+  <div class="era"><b>1 · Farm</b><span>fields, black powder, bloomery iron</span></div>
+  <div class="era"><b>2 · Steam</b><span>coke, steel, shafts, machine tools, rail</span></div>
+  <div class="era"><b>3 · Electricity</b><span>dynamos, electrolysis, first engines</span></div>
+  <div class="era"><b>4 · Oil</b><span>cracking, gas turbines, synthetics</span></div>
+  <div class="era"><b>5 · Atom &amp; space</b><span>graphite, heavy water, satellites</span></div>
+</div>
+
+<div class="warn"><b>Preview build.</b> The pack is still changing — mods get cut, recipes and blocks get reworked. Worlds may break
+between versions: back up your <code>saves</code> folder before launching if a world matters to you. A small whitelist server comes later;
+singleplayer progress doesn't carry over.</div>
+
+<h2>Download</h2>
+<p class="dim">Forge 1.7.10-10.13.4.1614 · Java 8 · give it about 4 GB of RAM.</p>
+<div class="ways">
+  <div class="way">
+    <h3>Prism Launcher <span class="rec">easiest</span></h3>
+    <div class="sub">Updates itself every launch. Best choice on Apple Silicon Macs.</div>
+    <ol>
+      <li>Install <a href="https://prismlauncher.org">Prism Launcher</a>.</li>
+      <li>Add Instance → Import → paste the link below → OK.</li>
+      <li>Launch. Prism fetches Forge, Java and the mods.</li>
+    </ol>
+    <a class="btn" href="Zavod-Prism.zip">Zavod-Prism.zip</a>
+  </div>
+  <div class="way">
+    <h3>Any launcher + updater</h3>
+    <div class="sub">For whatever launcher you already use.</div>
+    <ol>
+      <li>Make a Forge 1.7.10-10.13.4.1614 profile.</li>
+      <li>Unzip into the game folder (next to <code>mods/</code>).</li>
+      <li>Before playing run <code>zavod-update.bat</code> (Windows) or <code>sh zavod-update.sh</code>.</li>
+    </ol>
+    <a class="btn" href="Zavod-updater.zip">Zavod-updater.zip</a>
+  </div>
+  <div class="way">
+    <h3>By hand</h3>
+    <div class="sub">No scripts at all. Every mod links to where it comes from, with checksums.</div>
+    <ol>
+      <li>Download each mod from the list.</li>
+      <li>Unzip the config archive into the game folder.</li>
+      <li>Repeat when the version changes.</li>
+    </ol>
+    <a class="btn alt" href="manual.html">Manual install</a>
+  </div>
+</div>
+<p class="dim">The updater is a ~30-line script you can read, plus the open-source
+<a href="https://github.com/packwiz/packwiz-installer">packwiz installer</a>. It downloads exactly the list on the manual page, verifies every
+checksum, and only ever removes files it installed itself. On first run it moves your old <code>mods/</code> and <code>scripts/</code> into
+<code>zavod-backup/</code>.</p>
+
+<h2>What's inside</h2>
+<p>A custom core mod, <b>Zavod</b>, with its own machines and multiblocks — steam, gas and diesel turbines, coke batteries, a seismic station,
+an engineering bureau, a launch pad — and patches that pull the mods below into one tech tree. Built on:</p>
+<ul class="mods">
+  <li>IndustrialCraft 2 (experimental)</li><li>BuildCraft + Logistics Pipes</li><li>Railcraft</li><li>Forestry</li>
+  <li>Flan's Mod</li><li>Pam's HarvestCraft</li><li>Climate Control (Earth-like climate bands)</li><li>Recurrent Complex (forts, outposts)</li>
+  <li>Nuclear Control</li><li>Storage Drawers, Iron Chests, BiblioCraft</li><li>NEI, Waila, Xaero's Minimap</li><li>MineTweaker</li>
+</ul>
+<p>Full list with versions: <a href="manual.html">manual install page</a>. Machine guide: the <a href="../en/">Engineer's handbook</a> — also in game as a book.</p>
+
+<footer>Zavod 1.57.6 · questions and bug reports — message me.</footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,14 @@
+# Рецепты машин Pam's HarvestCraft (Zavod). Читается при запуске игры.
+# add    <машина> <вход> <выход>     - добавить
+# remove <машина> <вход>             - убрать
+# Машины: presser (пресс), churn (маслобойка), quern (жёрнов), oven (печь).
+# Предмет: мод:имя  |  мод:имя@мета  |  мод:имя*кол-во (только выход)  |  ore:имяСловаря (только вход).
+# Имя предмета смотри в игре: /mt hand с предметом в руке. Строки с # - комментарии.
+#
+# Примеры:
+#   add presser minecraft:melon harvestcraft:melonjuiceItem
+#   add quern ore:cropBarley harvestcraft:flourItem*2
+#   remove presser minecraft:reeds
+
+# Жёрнов мелет каменную соль в поваренную (как кузнечный молот: 1 к 1)
+add quern zavod:rock_salt zavod:salt

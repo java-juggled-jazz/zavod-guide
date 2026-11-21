@@ -1,0 +1,8 @@
+name = "CodeChickenLib-1.7.10-1.1.3.141-universal"
+filename = "CodeChickenLib-1.7.10-1.1.3.141-universal.jar"
+side = "both"
+
+[download]
+url = "https://chickenbones.net/maven/codechicken/CodeChickenLib/1.7.10-1.1.3.141/CodeChickenLib-1.7.10-1.1.3.141-universal.jar"
+hash-format = "sha256"
+hash = "49131e1960b8a968bdaf7806e595a73a9e96f7db1c128aaeb7b25a6a13c2788c"

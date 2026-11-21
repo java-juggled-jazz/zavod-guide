@@ -1,0 +1,12 @@
+name = "Logistics Pipes"
+filename = "logisticspipes-0.9.3.132.jar"
+side = "both"
+
+[download]
+url = "https://mediafilez.forgecdn.net/files/2427/862/logisticspipes-0.9.3.132.jar"
+hash-format = "sha1"
+hash = "0bdac80270b6216acebdc8cbf17e7136756afb45"
+[update]
+[update.curseforge]
+file-id = 2427862
+project-id = 232838

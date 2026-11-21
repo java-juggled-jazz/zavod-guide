@@ -1,0 +1,164 @@
+// ====================================================================================
+// ЭНЕРГОХРАНИЛИЩА: IC2, EnderIO, Thermal Expansion
+// ПОЧЕМУ: энергосистема строится под потребление + небольшой запас, а не под бесконечный склад.
+// ТЕПЕРЬ: каждый следующий уровень собирается ИЗ предыдущего (и из соседнего мода).
+//   Склеить большой накопитель из маленьких = ровно та же ёмкость, экономии масштаба нет.
+// Дешёвый, но медленный и с потерями буфер - электролизёр IC2 рядом с хранилищем IC2
+//   (водород в капсулах, см. README).
+// ====================================================================================
+
+// ---------- общие компоненты ----------
+val plateLead    = <ore:plateLead>;
+val plateBronze  = <ore:plateBronze>;
+val plateSteel   = <ore:plateSteel>;
+val denseSteel   = <IC2:itemDensePlates:5>;
+val ingotInvar   = <ore:ingotInvar>;
+val ingotElectrum = <ore:ingotElectrum>;
+val ingotEnderium = <ore:ingotEnderium>;
+
+val tinCable     = <IC2:itemCable:13>;          // изолированный оловянный кабель
+val copperCable  = <IC2:itemCable>;             // изолированный медный кабель
+val goldCable    = <IC2:itemCable:3>;           // изолированный золотой кабель
+val machineFrameIC2 = <IC2:blockMachine>;
+val advCasing    = <IC2:blockMachine:12>;
+val circuitIC2   = <IC2:itemPartCircuit>;
+val advCircuit   = <IC2:itemPartCircuitAdv>;
+val reBattery    = <IC2:itemBatREDischarged> | <IC2:itemBatRE:*>;
+val advBattery   = <IC2:itemAdvBat:*>;
+val energyCrystal = <IC2:itemBatCrystal:*>;
+val lapotron     = <IC2:itemBatLamaCrystal:*>;
+
+val batBox  = <IC2:blockElectric>;
+val cesu    = <IC2:blockElectric:7>;
+val mfe     = <IC2:blockElectric:1>;
+val mfsu    = <IC2:blockElectric:2>;
+val mvTransformer = <IC2:blockElectric:4>;
+val hvTransformer = <IC2:blockElectric:5>;
+
+val doubleCap  = <EnderIO:itemBasicCapacitor:1>;
+val octadicCap = <EnderIO:itemBasicCapacitor:2>;
+val elSteel    = <EnderIO:itemAlloy>;           // электротехническая сталь
+val energetic  = <EnderIO:itemAlloy:1>;         // энергетический сплав
+val vibrant    = <EnderIO:itemAlloy:2>;         // вибрирующий сплав
+
+val transCoil  = <ThermalExpansion:material:2>; // катушка передачи
+val recCoil    = <ThermalExpansion:material:1>; // катушка приёма
+
+// ====================================================================================
+// 1. АККУМУЛЯТОР RE (IC2) - СВИНЦОВО-КИСЛОТНЫЙ
+// БЫЛО: 4 оловянные оболочки + 2 редстоуна. ТЕПЕРЬ: свинцовые пластины + сера (электролит).
+// ====================================================================================
+recipes.remove(<IC2:itemBatREDischarged>);
+// Корпус - эбонит (резина + сера, твёрдая вулканизация): так делали корпуса настоящих аккумуляторов.
+
+// Аккумулятор RE - только плотник: заливка электролита (сера + дистиллированная вода). Вручную не собрать.
+mods.forestry.Carpenter.addRecipe(<IC2:itemBatREDischarged> * 2, [
+    [null,            <IC2:itemCable:13>,   null],
+    [<ore:plateLead>, <ore:dustLead>,       <ore:plateLead>],   // активная масса: свинцовый порошок (паста Фора, 1881), при формовке — диоксид свинца
+    [<ore:plateLead>, <ore:dustSulfur>,     <ore:plateLead>]
+], <liquid:ic2distilledwater> * 250, 40);
+
+// ====================================================================================
+// 2. ХРАНИЛИЩА IC2: BatBox -> CESU -> MFE -> MFSU (каждое внутри следующего)
+// ====================================================================================
+// BatBox: БЫЛО деревянный ящик. ТЕПЕРЬ корпус машины в свинцовой обшивке.
+recipes.remove(batBox);
+recipes.addShaped(batBox, [
+    [plateLead, tinCable,        plateLead],
+    [reBattery, machineFrameIC2, reBattery],
+    [plateLead, reBattery,       plateLead]
+]);
+
+// CESU: BatBox + 2 продвинутых аккумулятора + схема, бронзовый корпус
+recipes.remove(cesu);
+recipes.addShaped(cesu, [
+    [plateBronze, copperCable, plateBronze],
+    [advBattery,  batBox,      advBattery],
+    [plateBronze, circuitIC2,  plateBronze]
+]);
+
+// MFE: CESU + 4 энергокристалла + MV-трансформатор, стальной корпус
+recipes.remove(mfe);
+recipes.addShaped(mfe, [
+    [energyCrystal, goldCable,     energyCrystal],
+    [plateSteel,    cesu,          plateSteel],
+    [energyCrystal, mvTransformer, energyCrystal]
+]);
+
+// MFSU: MFE + 6 лапотронов + HV-трансформатор + продвинутый корпус
+recipes.remove(mfsu);
+recipes.addShaped(mfsu, [
+    [lapotron, hvTransformer, lapotron],
+    [lapotron, mfe,           lapotron],
+    [lapotron, advCasing,     lapotron]
+]);
+
+// ====================================================================================
+// 3. БАНКИ КОНДЕНСАТОРОВ EnderIO (базовый -> усиленный -> вибрирующий)
+// Внутри - хранилища IC2: банк без аккумуляторной сборки - просто коробка.
+// ====================================================================================
+recipes.remove(<EnderIO:blockCapBank:*>);
+recipes.addShaped(<EnderIO:blockCapBank:1>.withTag({type: "SIMPLE", storedEnergyRF: 0}), [
+    [elSteel,   doubleCap,                elSteel],
+    [doubleCap, batBox,                   doubleCap],
+    [elSteel,   <minecraft:redstone_block>, elSteel]
+]);
+recipes.addShaped(<EnderIO:blockCapBank:2>.withTag({type: "ACTIVATED", storedEnergyRF: 0}), [
+    [energetic,               octadicCap, energetic],
+    [<EnderIO:blockCapBank:1>, cesu,      <EnderIO:blockCapBank:1>],
+    [energetic,               octadicCap, energetic]
+]);
+recipes.addShaped(<EnderIO:blockCapBank:3>.withTag({type: "VIBRANT", storedEnergyRF: 0}), [
+    [vibrant,                 octadicCap, vibrant],
+    [<EnderIO:blockCapBank:2>, mfe,       <EnderIO:blockCapBank:2>],
+    [vibrant,                 octadicCap, vibrant]
+]);
+
+// ====================================================================================
+// 4. ЭНЕРГОЯЧЕЙКИ Thermal Expansion (свинцовая -> укреплённая -> редстоуновая -> резонансная)
+// Каждая ячейка = 2 предыдущие в своей рамке + катушки. Улучшение "на месте" убрано.
+// Рамки: Frame:4 базовая, :5 укреплённая, :7 редстоуновая (заполненная), :9 резонансная (заполненная)
+// ====================================================================================
+recipes.remove(<ThermalExpansion:Cell:1>);
+recipes.remove(<ThermalExpansion:Cell:2>);
+recipes.remove(<ThermalExpansion:Cell:3>);
+recipes.remove(<ThermalExpansion:Cell:4>);
+
+recipes.addShaped(<ThermalExpansion:Cell:1>, [
+    [plateLead, transCoil,                 plateLead],
+    [reBattery, <ThermalExpansion:Frame:4>, reBattery],
+    [plateLead, recCoil,                   plateLead]
+]);
+recipes.addShaped(<ThermalExpansion:Cell:2>, [
+    [ingotInvar,               transCoil,                 ingotInvar],
+    [<ThermalExpansion:Cell:1>, <ThermalExpansion:Frame:5>, <ThermalExpansion:Cell:1>],
+    [ingotInvar,               recCoil,                   ingotInvar]
+]);
+recipes.addShaped(<ThermalExpansion:Cell:3>, [
+    [ingotElectrum,            energyCrystal,             ingotElectrum],
+    [<ThermalExpansion:Cell:2>, <ThermalExpansion:Frame:7>, <ThermalExpansion:Cell:2>],
+    [ingotElectrum,            energyCrystal,             ingotElectrum]
+]);
+recipes.addShaped(<ThermalExpansion:Cell:4>, [
+    [ingotEnderium,            lapotron,                  ingotEnderium],
+    [<ThermalExpansion:Cell:3>, <ThermalExpansion:Frame:9>, <ThermalExpansion:Cell:3>],
+    [ingotEnderium,            lapotron,                  ingotEnderium]
+]);
+
+// ====================================================================================
+// 5. ОБХОДЫ (В КОНЦЕ ФАЙЛА: если ID не найдётся, упадёт только эта строка)
+// Набор улучшения MFSU превращал MFE в MFSU гаечным ключом в обход нового рецепта.
+// ====================================================================================
+recipes.remove(<IC2:itemupgradekit>);
+
+// ====================================================================================
+// ОДНОРАЗОВАЯ БАТАРЕЙКА IC2 (Zavod 1.35): БЫЛО редстоун + угольная пыль. ТЕПЕРЬ — медно-железный элемент
+// на медном купоросе (как элемент Даниеля, цинка в сборке нет — вместо него железо): железная пластина
+// вытесняет медь из купороса, между ними — ток.
+// ====================================================================================
+recipes.remove(<IC2:itemBatSU>);
+recipes.addShaped(<IC2:itemBatSU> * 3, [
+    [<IC2:itemCable:13>],
+    [<zavod:copper_vitriol>],
+    [<ore:plateIron>]
+]);

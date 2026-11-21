@@ -1,0 +1,9 @@
+// Zavod 1.56.52 (A17): neytral'naya forma - spetsnaz. Tekstury i lang - v flans_modern_weapons_pack (tam byl tol'ko zhilet).
+Name Spetsnaz Boots
+ShortName spetsnazBoots
+ItemID 23884
+Icon SpetsnazBoots
+Colour 255 255 255
+Type Boots
+Defence 0.1
+ArmourTexture Spetsnaz

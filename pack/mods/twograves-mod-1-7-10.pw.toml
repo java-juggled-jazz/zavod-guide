@@ -1,0 +1,8 @@
+name = "TwoGraves_Mod_1.7.10"
+filename = "TwoGraves_Mod_1.7.10.jar"
+side = "both"
+
+[download]
+url = "https://java-juggled-jazz.github.io/zavod-guide/pack/files/mods/TwoGraves_Mod_1.7.10.jar"
+hash-format = "sha256"
+hash = "d9dbdd45d6c379bb42d6474c5261af660bd511276257bbaf254819a4d9d5b7b2"

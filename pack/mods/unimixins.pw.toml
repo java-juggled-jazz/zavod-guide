@@ -1,0 +1,12 @@
+name = "UniMixins"
+filename = "+unimixins-all-1.7.10-0.3.1.jar"
+side = "both"
+
+[download]
+url = "https://mediafilez.forgecdn.net/files/8153/136/%2Bunimixins-all-1.7.10-0.3.1.jar"
+hash-format = "sha1"
+hash = "75f9251b1ac4eeacdce0b86a1a68bd8ff4fbf604"
+[update]
+[update.curseforge]
+file-id = 8153136
+project-id = 826970

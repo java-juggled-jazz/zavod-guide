@@ -1,0 +1,4 @@
+#!/bin/bash
+# Консоль сервера. Выйти, не останавливая: Ctrl+B, потом D.
+. /opt/zavod/lib.sh
+mc_tmux attach -t zavod

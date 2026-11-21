@@ -1,0 +1,123 @@
+// ====================================================================================
+//   ЖИДКОСТНЫЕ ТРУБЫ BUILDCRAFT — ТОЛЬКО В ПЛОТНИКЕ FORESTRY, НА РАСТИТЕЛЬНОМ МАСЛЕ
+// ПОЧЕМУ: олифа (растительное масло) — исторический гидроупор: ей пропитывали
+// швы и соединения, чтобы они держали жидкость.
+// ТЕПЕРЬ: 8 труб для предметов + резиновая прокладка + 250 mB масла -> 8 жидкостных труб.
+// Ручной крафт "труба + герметик" и сам герметик вырезаны.
+// ====================================================================================
+
+val seedOil = <liquid:seedoil> * 250;
+val rubber  = <ore:itemRubber>;
+
+// Герметик труб больше не нужен
+recipes.remove(<BuildCraft|Transport:pipeWaterproof>);
+
+// --- Деревянная ---
+val iWood = <BuildCraft|Transport:item.buildcraftPipe.pipeitemswood>;
+val fWood = <BuildCraft|Transport:item.buildcraftPipe.pipefluidswood>;
+recipes.remove(fWood);
+mods.forestry.Carpenter.addRecipe(fWood * 8, [[iWood, iWood, iWood], [iWood, rubber, iWood], [iWood, iWood, iWood]], seedOil, 10);
+
+// --- Булыжная ---
+val iCobble = <BuildCraft|Transport:item.buildcraftPipe.pipeitemscobblestone>;
+val fCobble = <BuildCraft|Transport:item.buildcraftPipe.pipefluidscobblestone>;
+recipes.remove(fCobble);
+mods.forestry.Carpenter.addRecipe(fCobble * 8, [[iCobble, iCobble, iCobble], [iCobble, rubber, iCobble], [iCobble, iCobble, iCobble]], seedOil, 10);
+
+// --- Каменная ---
+val iStone = <BuildCraft|Transport:item.buildcraftPipe.pipeitemsstone>;
+val fStone = <BuildCraft|Transport:item.buildcraftPipe.pipefluidsstone>;
+recipes.remove(fStone);
+mods.forestry.Carpenter.addRecipe(fStone * 8, [[iStone, iStone, iStone], [iStone, rubber, iStone], [iStone, iStone, iStone]], seedOil, 10);
+
+// --- Песчаниковая ---
+val iSand = <BuildCraft|Transport:item.buildcraftPipe.pipeitemssandstone>;
+val fSand = <BuildCraft|Transport:item.buildcraftPipe.pipefluidssandstone>;
+recipes.remove(fSand);
+mods.forestry.Carpenter.addRecipe(fSand * 8, [[iSand, iSand, iSand], [iSand, rubber, iSand], [iSand, iSand, iSand]], seedOil, 10);
+
+// --- Кварцевая ---
+val iQuartz = <BuildCraft|Transport:item.buildcraftPipe.pipeitemsquartz>;
+val fQuartz = <BuildCraft|Transport:item.buildcraftPipe.pipefluidsquartz>;
+recipes.remove(fQuartz);
+mods.forestry.Carpenter.addRecipe(fQuartz * 8, [[iQuartz, iQuartz, iQuartz], [iQuartz, rubber, iQuartz], [iQuartz, iQuartz, iQuartz]], seedOil, 10);
+
+// --- Глиняная ---
+val iClay = <BuildCraft|Transport:item.buildcraftPipe.pipeitemsclay>;
+val fClay = <BuildCraft|Transport:item.buildcraftPipe.pipefluidsclay>;
+recipes.remove(fClay);
+mods.forestry.Carpenter.addRecipe(fClay * 8, [[iClay, iClay, iClay], [iClay, rubber, iClay], [iClay, iClay, iClay]], seedOil, 10);
+
+// --- Железная ---
+val iIron = <BuildCraft|Transport:item.buildcraftPipe.pipeitemsiron>;
+val fIron = <BuildCraft|Transport:item.buildcraftPipe.pipefluidsiron>;
+recipes.remove(fIron);
+mods.forestry.Carpenter.addRecipe(fIron * 8, [[iIron, iIron, iIron], [iIron, rubber, iIron], [iIron, iIron, iIron]], seedOil, 10);
+
+// --- Золотая ---
+val iGold = <BuildCraft|Transport:item.buildcraftPipe.pipeitemsgold>;
+val fGold = <BuildCraft|Transport:item.buildcraftPipe.pipefluidsgold>;
+recipes.remove(fGold);
+mods.forestry.Carpenter.addRecipe(fGold * 8, [[iGold, iGold, iGold], [iGold, rubber, iGold], [iGold, iGold, iGold]], seedOil, 10);
+
+// --- Изумрудная ---
+val iEmerald = <BuildCraft|Transport:item.buildcraftPipe.pipeitemsemerald>;
+val fEmerald = <BuildCraft|Transport:item.buildcraftPipe.pipefluidsemerald>;
+recipes.remove(fEmerald);
+mods.forestry.Carpenter.addRecipe(fEmerald * 8, [[iEmerald, iEmerald, iEmerald], [iEmerald, rubber, iEmerald], [iEmerald, iEmerald, iEmerald]], seedOil, 10);
+
+// --- Алмазная ---
+val iDiamond = <BuildCraft|Transport:item.buildcraftPipe.pipeitemsdiamond>;
+val fDiamond = <BuildCraft|Transport:item.buildcraftPipe.pipefluidsdiamond>;
+recipes.remove(fDiamond);
+mods.forestry.Carpenter.addRecipe(fDiamond * 8, [[iDiamond, iDiamond, iDiamond], [iDiamond, rubber, iDiamond], [iDiamond, iDiamond, iDiamond]], seedOil, 10);
+
+// --- Пустотная ---
+val iVoid = <BuildCraft|Transport:item.buildcraftPipe.pipeitemsvoid>;
+val fVoid = <BuildCraft|Transport:item.buildcraftPipe.pipefluidsvoid>;
+recipes.remove(fVoid);
+mods.forestry.Carpenter.addRecipe(fVoid * 8, [[iVoid, iVoid, iVoid], [iVoid, rubber, iVoid], [iVoid, iVoid, iVoid]], seedOil, 10);
+
+// ====================================================================================
+// ДОБЫЧА, НАСОСЫ, РОБОТЫ (в конце файла: при неверном ID упадёт только этот блок)
+// Шахтный бур: БЫЛО железная кирка + шестерня - дешёвый обход Advanced Miner. ТЕПЕРЬ коронка с токарки, мотор, сталь.
+// Карьер: БЫЛО ванильный. ТЕПЕРЬ шахтный бур внутри, алмазные коронки, продвинутая схема, плотная сталь.
+// Насос и шлюз-наполнитель: резиновые уплотнения. Робот: сталь, продвинутая схема, алмазные чипсеты, мотор.
+// ====================================================================================
+val bcCrown    = (<IC2:itemTurningBlanks>.onlyWithTag({state: {l0: 4, l1: 4, l2: 3, l3: 2, l4: 1}}) | <IC2:itemTurningBlanks>.onlyWithTag({state: {l0: 1, l1: 2, l2: 3, l3: 4, l4: 4}}));
+val bcCrownDia = (<IC2:itemTurningBlanks>.onlyWithTag({state: {l0: 4, l1: 3, l2: 2, l3: 1, l4: 1}}) | <IC2:itemTurningBlanks>.onlyWithTag({state: {l0: 1, l1: 1, l2: 2, l3: 3, l4: 4}}));
+
+recipes.remove(<BuildCraft|Factory:miningWellBlock>);
+recipes.addShaped(<BuildCraft|Factory:miningWellBlock>, [
+    [<ore:plateSteel>, <ore:gearIron>,        <ore:plateSteel>],
+    [<ore:plateSteel>, <IC2:itemRecipePart:1>, <ore:plateSteel>],
+    [<ore:plateSteel>, bcCrown,               <ore:plateSteel>]
+]);
+
+recipes.remove(<BuildCraft|Builders:machineBlock>);
+recipes.addShaped(<BuildCraft|Builders:machineBlock>, [
+    [<ore:gearSteel>, <IC2:itemPartCircuitAdv>,           <ore:gearSteel>],
+    [<IC2:itemDensePlates:5>, <BuildCraft|Factory:miningWellBlock>, <IC2:itemDensePlates:5>],
+    [bcCrownDia,      <ore:gearDiamond>,                  bcCrownDia]
+]);
+
+recipes.remove(<BuildCraft|Factory:pumpBlock>);
+recipes.addShaped(<BuildCraft|Factory:pumpBlock>, [
+    [<ore:plateIron>,  <ore:dustRedstone>,           <ore:plateIron>],
+    [<ore:itemRubber>, <ore:gearIron>,               <ore:itemRubber>],
+    [<BuildCraft|Factory:tankBlock>, <minecraft:bucket>, <BuildCraft|Factory:tankBlock>]
+]);
+
+recipes.remove(<BuildCraft|Factory:floodGateBlock>);
+recipes.addShaped(<BuildCraft|Factory:floodGateBlock>, [
+    [<ore:plateIron>,       <ore:gearIron>,                 <ore:plateIron>],
+    [<minecraft:iron_bars>, <BuildCraft|Factory:tankBlock>, <minecraft:iron_bars>],
+    [<ore:plateIron>,       <ore:itemRubber>,               <ore:plateIron>]
+]);
+
+recipes.remove(<BuildCraft|Robotics:robot>);
+recipes.addShaped(<BuildCraft|Robotics:robot>, [
+    [<ore:plateSteel>, <IC2:itemPartCircuitAdv>, <ore:plateSteel>],
+    [<ore:plateSteel>, <ore:crystalRedstone>,    <ore:plateSteel>],
+    [<BuildCraft|Silicon:redstoneChipset:3>, <IC2:itemRecipePart:1>, <BuildCraft|Silicon:redstoneChipset:3>]
+]);

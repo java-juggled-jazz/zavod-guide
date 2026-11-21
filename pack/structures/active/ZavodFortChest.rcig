@@ -1,0 +1,257 @@
+{
+ "version": 1,
+ "minItems": 2,
+ "maxItems": 6,
+ "contents": [
+  {
+   "weight": 360,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "minecraft:web",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 54,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "minecraft:bone",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 126,
+   "genMin": 1,
+   "genMax": 7,
+   "item": {
+    "id": "minecraft:rotten_flesh",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 60,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "reccomplex:bookGenerationTag",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 36,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "reccomplex:artifactGenerationTag",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 120,
+   "genMin": 2,
+   "genMax": 6,
+   "item": {
+    "id": "zavod:cartridge_pistol",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 90,
+   "genMin": 2,
+   "genMax": 6,
+   "item": {
+    "id": "zavod:cartridge_rifle",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 90,
+   "genMin": 1,
+   "genMax": 3,
+   "item": {
+    "id": "zavod:bandage",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 48,
+   "genMin": 1,
+   "genMax": 3,
+   "item": {
+    "id": "zavod:powder_smokeless",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 48,
+   "genMin": 2,
+   "genMax": 6,
+   "item": {
+    "id": "zavod:primer",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 1,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "zavod:blueprint_hp_reactor",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 1,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "zavod:blueprint_contact",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 1,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "zavod:blueprint_reactor",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 1,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "zavod:blueprint_rifle",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 1,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "zavod:blueprint_replicator",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 1,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "zavod:blueprint_anchor",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 1,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "zavod:blueprint_mass_fab",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 1,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "zavod:blueprint_solar",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 1,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "zavod:blueprint_diesel",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 1,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "zavod:blueprint_gas_turbine",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 1,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "zavod:blueprint_satellite",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 2,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "zavod:blueprint_laser",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 1,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "zavod:blueprint_bar",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 1,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "zavod:blueprint_nano",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 1,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "zavod:blueprint_quantum",
+    "damage": 0,
+    "count": 1
+   }
+  }
+ ]
+}

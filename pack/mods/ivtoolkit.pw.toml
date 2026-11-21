@@ -1,0 +1,12 @@
+name = "IvToolkit"
+filename = "IvToolkit-1.2.1.jar"
+side = "both"
+
+[download]
+url = "https://mediafilez.forgecdn.net/files/2294/442/IvToolkit-1.2.1.jar"
+hash-format = "sha1"
+hash = "dbfd202496e3f89b8d1fbb42c69263e92e92c13b"
+[update]
+[update.curseforge]
+file-id = 2294442
+project-id = 224535

@@ -1,0 +1,97 @@
+{
+ "version": 1,
+ "minItems": 2,
+ "maxItems": 5,
+ "contents": [
+  {
+   "weight": 20,
+   "genMin": 1,
+   "genMax": 3,
+   "item": {
+    "id": "minecraft:book",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 20,
+   "genMin": 2,
+   "genMax": 8,
+   "item": {
+    "id": "minecraft:paper",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 10,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "reccomplex:bookGenerationTag",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 6,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "minecraft:writable_book",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 5,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "minecraft:map",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 4,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "minecraft:compass",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 3,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "minecraft:clock",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 8,
+   "genMin": 1,
+   "genMax": 4,
+   "item": {
+    "id": "minecraft:feather",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 8,
+   "genMin": 1,
+   "genMax": 3,
+   "item": {
+    "id": "minecraft:dye",
+    "damage": 0,
+    "count": 1
+   }
+  }
+ ]
+}

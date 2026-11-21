@@ -1,0 +1,8 @@
+name = "Flans_Mod_1.7.10_4.10.0-fixed"
+filename = "Flans_Mod_1.7.10_4.10.0-fixed.jar"
+side = "both"
+
+[download]
+url = "https://java-juggled-jazz.github.io/zavod-guide/pack/files/mods/Flans_Mod_1.7.10_4.10.0-fixed.jar"
+hash-format = "sha256"
+hash = "7065957a2fed51b38c12f01b2dcf30ad44e9696580719959ff0f95c5bee522df"

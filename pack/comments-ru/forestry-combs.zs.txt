@@ -1,0 +1,12 @@
+// ====================================================================================
+// СОТЫ FORESTRY: БЕЗ ПОРОХА И БЕЗ ЛАВЫ
+// Порошковые соты (beeCombs:10) давали 90% пороха - обход всей селитро-серной цепочки. ТЕПЕРЬ: мёд + воск.
+// Тлеющие соты (beeCombs:2) дают фосфор, а фосфор в соковыжималке превращался в ЛАВУ
+// (2 фосфора + песок/земля/булыжник -> 1600-2000 mB) - пчелиная ферма = бесконечная лава для динамо. Вырезано.
+// Фосфор теперь - фосфорное удобрение: 2 фосфора + сера + 500 mB воды -> 4 сложных удобрения (как суперфосфат).
+// ====================================================================================
+
+mods.forestry.Centrifuge.removeRecipe(<Forestry:beeCombs:10>);
+mods.forestry.Centrifuge.addRecipe(20, <Forestry:beeCombs:10>, [<Forestry:honeyDrop>, <Forestry:beeswax>], [40, 40]);
+mods.forestry.Squeezer.removeRecipe(<liquid:lava>);
+mods.forestry.Carpenter.addRecipe(<Forestry:fertilizerCompound> * 4, [[<Forestry:phosphor>, <Forestry:phosphor>]], <liquid:sulfuricacid> * 500, 40);

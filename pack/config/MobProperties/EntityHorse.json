@@ -1,0 +1,33 @@
+{
+  "_name": "EntityHorse",
+  "_comment": "MODPACK. Detyonyshi (Age < 0) nichego ne roniayut.",
+  "pre_stats": [],
+  "stats": [],
+  "drops": [
+    {
+      "function": "all",
+      "_comment": "Loshad': 2-4 kozhi, 3-5 kostey",
+      "functions": [
+        {
+          "function": "remove",
+          "id": "minecraft:leather"
+        },
+        {
+          "function": "if_check_nbt_Age>-1",
+          "functions": [
+            {
+              "function": "add",
+              "id": "minecraft:leather",
+              "count": "2~4"
+            },
+            {
+              "function": "add",
+              "id": "minecraft:bone",
+              "count": "3~5"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+#!/usr/bin/env python3
+"""Вайтлист с правильным UUID (docs/server-vm.md «Вайтлист»). От root (sudo, панель).
+
+  zavod-whitelist add NICK [UUID]   UUID из отказа в логе — точнее всего; без него: онлайн-режим — штатный
+                                    `whitelist add`, оффлайн — UUID считается из ника как у самой игры (регистр важен)
+  zavod-whitelist remove NICK
+  zavod-whitelist --selftest
+
+Вайтлист 1.7.10 сверяет UUID, не ник. Штатный `whitelist add` спрашивает UUID у Mojang — в оффлайн-режиме он не тот.
+"""
+import hashlib, json, os, pwd, re, subprocess, sys, uuid
+
+DIR = "/srv/zavod"
+NICK = re.compile(r"^[A-Za-z0-9_]{3,16}$")
+UUID = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
+
+
+def offline_uuid(name):
+    """Как Java UUID.nameUUIDFromBytes("OfflinePlayer:" + name) — так игра считает UUID без проверки аккаунта."""
+    h = bytearray(hashlib.md5(("OfflinePlayer:" + name).encode("utf-8")).digest())
+    h[6] = (h[6] & 0x0F) | 0x30
+    h[8] = (h[8] & 0x3F) | 0x80
+    return str(uuid.UUID(bytes=bytes(h)))
+
+
+def online_mode(d=DIR):
+    try:
+        for line in open(f"{d}/server.properties"):
+            if line.startswith("online-mode="):
+                return line.split("=", 1)[1].strip().lower() != "false"
+    except OSError:
+        pass
+    return True
+
+
+def cmd(*a):
+    subprocess.run(["/opt/zavod/zavod-cmd", *a], capture_output=True, timeout=15)
+
+
+def edit(nick, op, uid=None, d=DIR, chown=True):
+    p = f"{d}/whitelist.json"
+    try:
+        wl = json.load(open(p))
+    except (OSError, ValueError):
+        wl = []
+    wl = [e for e in wl if e.get("name", "").lower() != nick.lower() and e.get("uuid") != uid]
+    if op == "add":
+        wl.append({"uuid": uid, "name": nick})
+    tmp = p + ".tmp"
+    with open(tmp, "w") as f:
+        json.dump(wl, f, indent=2)
+    if chown:
+        pw = pwd.getpwnam("mc")
+        os.chown(tmp, pw.pw_uid, pw.pw_gid)
+    os.replace(tmp, p)
+    return wl
+
+
+def main(a):
+    if len(a) < 2 or a[0] not in ("add", "remove") or not NICK.match(a[1]) or (len(a) > 2 and not UUID.match(a[2])):
+        sys.exit(__doc__)
+    op, nick = a[0], a[1]
+    uid = a[2] if len(a) > 2 else None
+    if op == "add" and uid is None and online_mode():
+        cmd("whitelist", "add", nick)
+        print(f"{nick}: whitelist add (онлайн-режим, UUID от Mojang)")
+        return
+    if op == "add" and uid is None:
+        uid = offline_uuid(nick)
+    edit(nick, op, uid)
+    cmd("whitelist", "reload")
+    print(f"{nick}: {'добавлен' if op == 'add' else 'убран'}" + (f", UUID {uid}" if op == "add" else ""))
+
+
+def selftest():
+    import tempfile
+    assert offline_uuid("Notch") == "b50ad385-829d-3141-a216-7e7d7539ba7f", offline_uuid("Notch")
+    assert offline_uuid("notch") != offline_uuid("Notch")
+    d = tempfile.mkdtemp()
+    json.dump([{"uuid": "x", "name": "kamil"}, {"uuid": "y", "name": "Other"}], open(f"{d}/whitelist.json", "w"))
+    wl = edit("Kamil", "add", offline_uuid("Kamil"), d, chown=False)
+    assert [e["name"] for e in wl] == ["Other", "Kamil"] and wl[1]["uuid"] == offline_uuid("Kamil"), wl
+    assert [e["name"] for e in edit("other", "remove", None, d, chown=False)] == ["Kamil"]
+    open(f"{d}/server.properties", "w").write("motd=Zavod\nonline-mode=false\n")
+    assert online_mode(d) is False and online_mode("/nonexistent") is True
+    print("whitelist selftest OK")
+
+
+if __name__ == "__main__":
+    selftest() if sys.argv[1:] == ["--selftest"] else main(sys.argv[1:])

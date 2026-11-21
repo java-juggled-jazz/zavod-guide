@@ -1,0 +1,20 @@
+{
+  "_name": "Skeleton",
+  "_comment": "MODPACK: monstry pod ognestrel - zdorov'e +50%, uron +25%, skorost' +10-15%, radius presledovaniya x2 (16 -> 32 bloka). Zavod 1.47: radius presledovaniya - vanil'nyy (put' ishchetsya na etu dal'nost' - +50% gruzilo server; slukh i pamyat' tseli - v zavod.jar).",
+  "pre_stats": [],
+  "stats": [
+    {
+      "function": "modifier",
+      "attribute": "generic.maxHealth",
+      "value": 0.5,
+      "operator": 1
+    },
+    {
+      "function": "modifier",
+      "attribute": "generic.movementSpeed",
+      "value": 0.1,
+      "operator": 1
+    }
+  ],
+  "drops": []
+}

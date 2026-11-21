@@ -1,0 +1,8 @@
+name = "Pams_HarvestCraft_1.7.10k-fixed"
+filename = "Pams_HarvestCraft_1.7.10k-fixed.jar"
+side = "both"
+
+[download]
+url = "https://java-juggled-jazz.github.io/zavod-guide/pack/files/mods/Pams_HarvestCraft_1.7.10k-fixed.jar"
+hash-format = "sha256"
+hash = "9b6d4decbb32cc7ab7c598dfe463b9b7d5c260488a6a3ff807f32009a64547ad"
