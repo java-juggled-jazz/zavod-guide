@@ -1,0 +1,26 @@
+// ====================================================================================
+// БЛОКОРЕЗКА IC2 (Block Cutting Machine, blockMachine3:2) - ЦЕХ РАСКРОЯ
+// ПОЧЕМУ: блокорезка делала то же, что прокатка (блок -> 9 пластин) и пилорама. Своей роли не было.
+// ТЕПЕРЬ: точные плоские детали, которые молотом и прокатом не сделать:
+//   - пластины лазурита (стальной диск) -> лапотронные кристаллы
+//   - пластины обсидиана (алмазный диск) -> футеровка корпуса реактора
+// Компрессор больше не прессует пыль лазурита и обсидиана в пластины (config/ic2/compressor.ini).
+// Диски: железный - мягкие металлы и дерево, стальной - железо и лазурит, алмазный - сталь и обсидиан.
+// ====================================================================================
+
+val lapisPlate    = <IC2:itemPlates:8>;
+val obsidianPlate = <IC2:itemPlates:7>;
+
+// Лапотронный кристалл: БЫЛО 6 пыли лазурита. ТЕПЕРЬ 6 точно нарезанных пластин лазурита,
+// только плотник: кристалл растят в растворе на дистилляте.
+recipes.remove(<IC2:itemBatLamaCrystal>);
+mods.forestry.Carpenter.addRecipe(<IC2:itemBatLamaCrystal:27>, [
+    [lapisPlate, <IC2:itemPartCircuitAdv>, lapisPlate],
+    [lapisPlate, <IC2:itemBatCrystal:*>,   lapisPlate],
+    [lapisPlate, <IC2:itemPartCircuitAdv>, lapisPlate]
+], <liquid:ic2distilledwater> * 1000, 100);
+
+// Лопатка паровой турбины IC2 - НЕ блокорезка (пила не делает профиль лопатки), а КОВКА:
+// плотная стальная пластина под кузнечным молотом. БЫЛО: 8 стальных пластин + слиток на верстаке.
+recipes.remove(<IC2:itemSteamTurbineBlade>);
+recipes.addShapeless(<IC2:itemSteamTurbineBlade>, [<IC2:itemDensePlates:5>, <IC2:itemToolForgeHammer>.anyDamage()]);

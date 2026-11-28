@@ -1,0 +1,12 @@
+name = "Guide-API"
+filename = "Guide-API-1.7.10-1.0.1-29.jar"
+side = "both"
+
+[download]
+url = "https://mediafilez.forgecdn.net/files/2287/184/Guide-API-1.7.10-1.0.1-29.jar"
+hash-format = "sha1"
+hash = "88f963214f81ec528cead48dcc11144f22f165ab"
+[update]
+[update.curseforge]
+file-id = 2287184
+project-id = 228832

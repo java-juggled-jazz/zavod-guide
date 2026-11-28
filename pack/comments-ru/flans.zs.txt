@@ -1,0 +1,124 @@
+// ====================================================================================
+// FLAN'S MOD: ОРУЖИЕ ИЗ ДЕТАЛЕЙ, ПАТРОНЫ ИЗ КОМПОНЕНТОВ
+// Пакеты Flan's очищены (Flan/*_modpack.jar): осталось только согласованное оружие, оружейные ящики убраны,
+// все рецепты - здесь. Детали и патроны - мод Zavod.
+// ДЕТАЛИ: длинный ствол (токарка 4-3-3-3-3 + 2 стали), короткий ствол (токарка 3-2-2-2-2 + сталь -> 2),
+//   фрезерованная коробка (5 стали + шестерня, вручную), штампованная (прокатный стан, 4 стальные пластины -> 3),
+//   ложа (доски), оптический прицел (железные пластины + стёкла).
+// ПАТРОНЫ: гильза (медь молотом / сталь на транспозере с лаком), пуля (свинец молотом или металлоформовщик;
+//   оболочечная - плотник), капсюль (медь + сера + селитра), порох (дымный или бездымный).
+//   Винтовочный и пистолетный патрон - на любом порохе; промежуточный (АК, M16, карабин M1) - только бездымный.
+// СНАРЯЖЕНИЕ: обоймы до 8 патронов - вручную; магазины 13-30 - консервный автомат IC2
+//   (корпус магазина = пластина, патроны засыпаются пачкой).
+// ====================================================================================
+
+val hammer   = <IC2:itemToolForgeHammer>.anyDamage();
+val steel    = <ore:ingotSteel>;
+val plSteel  = <ore:plateSteel>;
+val plIron   = <ore:plateIron>;
+val plCopper = <ore:plateCopper>;
+val gearSt   = <ore:gearSteel>;
+val gearFe   = <ore:gearIron>;
+val plank    = <ore:plankWood>;
+val carbon   = <IC2:itemPartCarbonPlate>;
+val nugFe    = <ore:nuggetIron>;
+val nugSt    = <ore:nuggetSteel>;
+val saltpeter = <Railcraft:dust:2>;
+
+val BL = <zavod:barrel_long>;
+val BS = <zavod:barrel_short>;
+val RM = <zavod:receiver_milled>;
+val RS = <zavod:receiver_stamped>;
+val ST = <zavod:stock>;
+val SC = <zavod:scope_optic>;
+
+val casing = <zavod:casing_copper> | <zavod:casing_steel>;
+val jacketed = <zavod:bullet_jacketed>;
+val leadB = <zavod:bullet_lead>;
+val primer = <zavod:primer>;
+val powderAny = <minecraft:gunpowder> | <zavod:powder_smokeless>;
+val smokeless = <zavod:powder_smokeless>;
+val cR = <zavod:cartridge_rifle>;
+val cI = <zavod:cartridge_intermediate>;
+val cP = <zavod:cartridge_pistol>;
+val cS = <zavod:shell_shotgun>;
+
+// ---------------- ДЕТАЛИ ----------------
+recipes.addShapeless(BL, [(<IC2:itemTurningBlanks>.onlyWithTag({state: {l0: 4, l1: 3, l2: 3, l3: 3, l4: 3}}) | <IC2:itemTurningBlanks>.onlyWithTag({state: {l0: 3, l1: 3, l2: 3, l3: 3, l4: 4}})), steel, steel]);
+recipes.addShapeless(BS * 2, [(<IC2:itemTurningBlanks>.onlyWithTag({state: {l0: 3, l1: 2, l2: 2, l3: 2, l4: 2}}) | <IC2:itemTurningBlanks>.onlyWithTag({state: {l0: 2, l1: 2, l2: 2, l3: 2, l4: 3}})), steel]);
+recipes.addShaped(RM, [[steel, steel, steel], [steel, gearFe, steel]]);
+mods.railcraft.Rolling.addShaped(RS * 3, [[plSteel, plSteel], [plSteel, plSteel]]);
+recipes.addShaped(ST, [[plank, plank], [<ore:stickWood>, plank]]);
+recipes.addShaped(SC, [[plIron, plIron, plIron], [<minecraft:glass_pane>, null, <minecraft:glass_pane>]]);
+
+// ---------------- КОМПОНЕНТЫ ПАТРОНОВ ----------------
+recipes.addShapeless(<zavod:casing_copper> * 4, [plCopper, hammer]);
+mods.thermalexpansion.Transposer.addFillRecipe(4000, <Railcraft:part.plate:1>, <zavod:casing_steel> * 8, <liquid:turpentine> * 50);
+mods.thermalexpansion.Transposer.addFillRecipe(4000, <IC2:itemPlates:5>, <zavod:casing_steel> * 8, <liquid:turpentine> * 50);
+recipes.addShapeless(leadB * 4, [<ore:ingotLead>, hammer]);
+mods.ic2.MetalFormer.addExtrudingRecipe(leadB * 8, <ore:ingotLead>);
+mods.forestry.Carpenter.addRecipe(jacketed * 4, [[leadB, leadB, leadB], [leadB, plCopper, null]], 20);
+recipes.addShapeless(primer * 8, [plCopper, <ore:dustSulfur>, saltpeter]);
+
+// ---------------- ПАТРОНЫ ----------------
+recipes.addShapeless(cP * 2, [casing, casing, leadB, leadB, primer, primer, powderAny]);
+// Пуля - только в оболочке (Zavod 1.37): на бездымном порохе 800 м/с голый свинец срывает нарезы.
+recipes.addShapeless(cR * 2, [casing, casing, jacketed, jacketed, primer, primer, smokeless, smokeless, smokeless]);
+recipes.addShapeless(cI * 3, [casing, casing, casing, jacketed, jacketed, jacketed, primer, primer, smokeless]);
+recipes.addShapeless(cS * 2, [<minecraft:paper>, casing, casing, leadB, primer, primer, powderAny]);
+
+// ---------------- ОБОЙМЫ ВРУЧНУЮ (до 8) ----------------
+recipes.addShapeless(<flansmod:nagantAmmo>,    [cR, cR, cR, cR, cR, nugFe]);
+recipes.addShapeless(<flansmod:kar98kAmmo>,    [cR, cR, cR, cR, cR, nugSt]);
+recipes.addShapeless(<flansmod:m1GarandAmmo>,  [cR, cR, cR, cR, cR, cR, cR, cR, nugSt]);
+recipes.addShapeless(<flansmod:webleyAmmo>,    [cP, cP, cP, cP, cP, cP]);
+recipes.addShapeless(<flansmod:coltAmmo>,      [cP, cP, cP, cP, cP, cP, cP, nugSt]);
+recipes.addShapeless(<flansmod:trenchgunAmmo>, [cS, cS, cS, cS, cS, cS, cS, cS]);
+
+// ---------------- МАГАЗИНЫ: КОНСЕРВНЫЙ АВТОМАТ IC2 (корпус + патроны пачкой) ----------------
+// Hi-Power и его магазин сняты (1.56.64): текстура = Colt, дубль -> скрыты в NEI (nei-hide.zs)
+mods.ic2.Canner.addBottleRecipe(<flansmod:ak47Ammo>,      plSteel, cI * 30);
+mods.ic2.Canner.addBottleRecipe(<flansmod:m16a4Ammo>,     carbon,  cI * 30);
+mods.ic2.Canner.addBottleRecipe(<flansmod:BARAmmo>,       plIron,  cR * 20);
+
+// ---------------- ГРАНАТЫ (Zavod 1.56.67): только простые, блоки не ломают, мобам не даются ----------------
+// Пак-папка Flan/zavod_grenades (модель, текстуры, lang — в паке WW2). Заряд — TNT (нитрование толуола в химреакторе):
+// 1 TNT на 4 гранаты, капсюль-воспламенитель на каждую. Mk2 — чугунный корпус (4 пластины), колотушка — ручки.
+recipes.addShaped(<flansmod:mk2Frag> * 4, [[plIron, primer, plIron], [primer, <minecraft:tnt>, primer], [plIron, primer, plIron]]);
+recipes.addShaped(<flansmod:stielhandgranate> * 4, [[<ore:stickWood>, primer, <ore:stickWood>], [primer, <minecraft:tnt>, primer], [plIron, primer, plIron]]);
+
+// ---------------- АРБАЛЕТ (ярус -1) ----------------
+recipes.addShaped(<flansmod:crossbow>, [[plank, (<ore:ingotIron> | <ore:ingotBronze>), plank], [<minecraft:string>, plank, <minecraft:string>], [null, plank, null]]);
+recipes.addShaped(<flansmod:crossbowBolt> * 4, [[(<ore:nuggetIron> | <ore:nuggetBronze>)], [<ore:stickWood>], [<minecraft:feather>]]);
+
+// ---------------- ЯРУС 0-1: раннее (вручную, фрезерованные коробки) ----------------
+// Webley: револьвер = ствол + рама + барабан. Рама кованая и фрезерованная (фрезерованная коробка), барабан - железная шестерня.
+recipes.addShaped(<flansmod:webley>, [[BS, RM, gearFe], [null, null, plank]]);
+recipes.addShaped(<flansmod:nagant>, [[BL, RM, ST]]);
+recipes.addShaped(<flansmod:kar98k>, [[BL, RM, ST], [null, steel, gearFe]]);
+recipes.addShaped(<flansmod:colt>, [[BS, RM, plank]]);
+recipes.addShaped(<flansmod:trenchgun>, [[BL, RM, ST], [null, plank, null]]);
+recipes.addShapeless(<flansmod:nagantSniper>, [<flansmod:nagant>, SC]);
+recipes.addShapeless(<flansmod:kar98kSniper>, [<flansmod:kar98k>, SC]);
+
+// ---------------- ЯРУС 2: самозарядные и ручные пулемёты (стальные шестерни) ----------------
+recipes.addShaped(<flansmod:m1Garand>, [[BL, RM, ST], [gearSt, steel, gearSt]]);
+// BAR (Zavod 1.37): по чертежу (конструкторское бюро или находка), чертёж не тратится.
+recipes.addShaped(<flansmod:BAR>, [[BL, RM, ST], [gearSt, plSteel, gearSt], [steel, <zavod:blueprint_bar>.reuse(), steel]]);
+
+// ---------------- ЯРУС 3: штамповка и полимеры ----------------
+// Hi-Power снят (1.56.64): дубль Colt. Trench Gun — ближний бой: дробь гаснет за ~15 блоков (zavod.cfg weapons/bulletTicks)
+recipes.addShaped(<flansmod:ak47>, [[BL, RS, ST], [null, gearSt, null]]);
+recipes.addShaped(<flansmod:m16a4>, [[BL, RS, carbon], [carbon, gearSt, null]]);
+
+// ---------------- ПРИЦЕЛЫ, ЗАЩИТА, АПТЕЧКИ ----------------
+// ФОРМА (Zavod 1.56.52, A17): армейская форма WW2 — без рецептов и скрыта в NEI, только трофей (MobGear, гарнизон форта).
+// Своя — нейтральная, спецназ (пак Flan/zavod_uniform): шлем — 4 стальных листа + парусина; брюки — 5 парусины + нитки;
+// ботинки — парусина, нитки, кожаная подошва. Всё у плотника. БЫЛО: каска russianHelmet в верстаке.
+mods.forestry.Carpenter.addRecipe(<flansmod:spetsnazHelmet>, [[plSteel, plSteel, plSteel], [plSteel, <zavod:waxed_canvas>, plSteel]], 60);
+mods.forestry.Carpenter.addRecipe(<flansmod:spetsnazPants>, [[<zavod:waxed_canvas>, <minecraft:string>, <zavod:waxed_canvas>], [<zavod:waxed_canvas>, null, <zavod:waxed_canvas>], [<zavod:waxed_canvas>, null, null]], 60);
+mods.forestry.Carpenter.addRecipe(<flansmod:spetsnazBoots>, [[<zavod:waxed_canvas>, <minecraft:string>, <zavod:waxed_canvas>], [<minecraft:leather>, null, <minecraft:leather>]], 60);
+// Бронежилет спецназа (1.56.68): парусиновый чехол + 3 стальных листа в карманах; трофей (loot.zs) остаётся.
+mods.forestry.Carpenter.addRecipe(<flansmod:spetsnazBody>, [[<zavod:waxed_canvas>, null, <zavod:waxed_canvas>], [plSteel, <zavod:waxed_canvas>, plSteel], [<zavod:waxed_canvas>, plSteel, <zavod:waxed_canvas>]], 60);
+recipes.addShaped(<flansmod:ww2MedKit>, [[<minecraft:leather>, <minecraft:leather>, <minecraft:leather>], [<minecraft:potion:8229>, <minecraft:potion:8229>, <minecraft:potion:8229>], [<minecraft:leather>, <minecraft:leather>, <minecraft:leather>]]);
+recipes.addShaped(<flansmod:mwMedKit>, [[carbon, carbon, carbon], [<minecraft:potion:8229>, <minecraft:potion:8229>, <minecraft:potion:8229>], [carbon, carbon, carbon]]);

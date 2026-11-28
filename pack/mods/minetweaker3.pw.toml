@@ -1,0 +1,12 @@
+name = "MineTweaker3"
+filename = "MineTweaker3-1.7.10-3.0.10B.jar"
+side = "both"
+
+[download]
+url = "https://mediafilez.forgecdn.net/files/2259/434/MineTweaker3-1.7.10-3.0.10B.jar"
+hash-format = "sha1"
+hash = "11ae0e9f55184e3f50b388ec8294200ae3ebd253"
+[update]
+[update.curseforge]
+file-id = 2259434
+project-id = 224029

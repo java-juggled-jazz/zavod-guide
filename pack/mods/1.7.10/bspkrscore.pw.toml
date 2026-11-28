@@ -1,0 +1,12 @@
+name = "bspkrsCore"
+filename = "[1.7.10]bspkrsCore-universal-6.16.jar"
+side = "both"
+
+[download]
+url = "https://mediafilez.forgecdn.net/files/2227/503/%5B1.7.10%5DbspkrsCore-universal-6.16.jar"
+hash-format = "sha1"
+hash = "b591d7b526794c0b9d22d10e0a0b46636c10fce3"
+[update]
+[update.curseforge]
+file-id = 2227503
+project-id = 59218

@@ -1,0 +1,33 @@
+// ====================================================================================
+// ХИМЦЕХ: СОЛЬ, РТУТЬ, СКИПИДАР, ПРИПОЙ, ГРЕМУЧАЯ РТУТЬ
+// Кислоты - жидкости мода Zavod, варятся в чане EnderIO (config/enderio/VatRecipes_User.xml):
+//   вода + сера -> серная; серная + селитра -> азотная; серная + соль -> соляная;
+//   соляная + селитра -> царская водка; серная + медная пыль -> раствор купороса.
+// Гоняются по трубам, хранятся в баках, наливаются в ячейки IC2 и капсулы Forestry.
+// ====================================================================================
+
+// Соль: выпаривание рассола - промывка морского песка (рудомойка IC2), песок возвращается
+<ore:dustSalt>.add(<zavod:salt>);
+<ore:foodSalt>.add(<zavod:salt>);
+<ore:itemSalt>.add(<zavod:salt>);
+mods.ic2.OreWasher.addRecipe([<zavod:salt> * 2], <minecraft:sand>, 1000);
+
+// Ртуть: обжиг киновари в тигле TE (HgS -> Hg + SO2). Киноварь - 25% при размоле красной руды в пульверизаторе.
+mods.thermalexpansion.Crucible.addRecipe(16000, <ThermalFoundation:material:20>, <liquid:mercury> * 125);
+
+// Амальгамация золота: 3 дроблёной золотой руды + 50 mB ртути -> 4 золотой пыли (ртуть возвращается отгонкой, убыль - 50 mB)
+mods.forestry.Carpenter.addRecipe(<ThermalFoundation:material:1> * 4, [[<ore:crushedGold>, <ore:crushedGold>, <ore:crushedGold>]], <liquid:mercury> * 50, 80);
+
+// Живица (смола IC2) -> скипидар + канифоль: перегонка в транспозере
+mods.thermalexpansion.Transposer.addExtractRecipe(2400, <IC2:itemHarz>, <liquid:turpentine> * 100, <zavod:rosin>, 100);
+
+// Припой: олово + свинец (ПОС-40) + канифоль (флюс) -> 4. Идёт в ламповые и продвинутые схемы вместо чистого олова.
+recipes.addShapeless(<zavod:solder> * 4, [<ore:ingotTin>, <ore:ingotLead>, <zavod:rosin>]);
+
+// Медный купорос: кристаллизация из раствора на нитках (плотник): нитка + 1000 mB раствора -> 4 кристалла
+mods.forestry.Carpenter.addRecipe(<zavod:copper_vitriol> * 4, [[<minecraft:string>]], <liquid:coppersulfate> * 1000, 60);
+
+// Гремучая ртуть: плотник, 250 mB ртути + 2 селитры + сера (азотная кислота на месте) -> 16.
+// (Плотник не различает ячейки IC2 по содержимому, поэтому азотная не из трубы, а из селитры.) Капсюль на гремучей ртути: медная пластина + гремучая ртуть -> 16.
+mods.forestry.Carpenter.addRecipe(<zavod:mercury_fulminate> * 16, [[<Railcraft:dust:2>, <Railcraft:dust:2>, <ore:dustSulfur>]], <liquid:mercury> * 250, 80);
+recipes.addShapeless(<zavod:primer> * 16, [<ore:plateCopper>, <zavod:mercury_fulminate>]);

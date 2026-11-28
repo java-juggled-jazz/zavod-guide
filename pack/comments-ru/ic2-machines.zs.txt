@@ -1,0 +1,436 @@
+// ====================================================================================
+//          ТЯЖЁЛАЯ РЕФОРМА МАШИН IC2: ЭЛЕКТРОНИКА, АЭС, UU-МАТЕРИЯ, АГРОТЕХ
+// Логика ступеней:
+//   базовый корпус IC2 + схема          -> средний уровень (помпа, электролизёр, рудомойка)
+//   продвинутая схема (лазеры BC)       -> автоматизация (переработчик, фермы)
+//   продвинутый корпус (углепластик)    -> тяжёлые машины (АЭС, UU, терраформер)
+// Проверка: в minetweaker.log после каждого "Removing N recipes" идёт
+// "Adding recipe for <ИМЯ>" — имя должно совпасть с машиной из комментария.
+// ====================================================================================
+
+// --- переменные ---
+val machineFrameIC2 = <IC2:blockMachine>;          // Базовый корпус
+val advCasing       = <IC2:blockMachine:12>;       // Продвинутый корпус
+val circuitIC2      = <IC2:itemPartCircuit>;
+val advCircuit      = <IC2:itemPartCircuitAdv>;
+val copperCoil      = <IC2:itemRecipePart>;        // Катушка
+val motorIC2        = <IC2:itemRecipePart:1>;      // Электромотор
+val heatConductor   = <IC2:itemRecipePart:5>;      // Теплопроводник
+val advAlloy        = <IC2:itemPartAlloy>;         // Композит
+val carbonPlate     = <IC2:itemPartCarbonPlate>;   // Углепластик
+val iridiumPlate    = <IC2:itemPartIridium>;
+val crystalMemory   = <IC2:itemcrystalmemory>;
+val miningPipe      = <IC2:blockMiningPipe>;
+val energyCrystal   = <IC2:itemBatCrystal:*>;      // любой заряд
+val lapotron        = <IC2:itemBatLamaCrystal:*>;  // любой заряд
+
+val denseSteel  = <IC2:itemDensePlates:5>;
+val denseBronze = <IC2:itemDensePlates:2>;
+val denseLead   = <IC2:itemDensePlates:6>;
+val plateSteel  = <ore:plateSteel>;
+val plateBronze = <ore:plateBronze>;
+val plateLead   = <ore:plateLead>;
+val plateIron   = <ore:plateIron>;
+val plateGold   = <ore:plateGold>;
+val plateTin    = <ore:plateTin>;
+val ingotInvar  = <ore:ingotInvar>;
+val gearSteel   = <ore:gearSteel>;
+val gearBronze  = <ore:gearBronze>;
+
+val chipGold    = <BuildCraft|Silicon:redstoneChipset:2>;
+val chipDiamond = <BuildCraft|Silicon:redstoneChipset:3>;
+val chipQuartz  = <BuildCraft|Silicon:redstoneChipset:5>;
+val chipEmerald = <BuildCraft|Silicon:redstoneChipset:7>;
+val laserBC     = <BuildCraft|Silicon:laserBlock>;
+
+val tankBC          = <BuildCraft|Factory:tankBlock>;
+val fusedQuartz     = <EnderIO:blockFusedQuartz>;
+val doubleCapacitor = <EnderIO:itemBasicCapacitor:1>;
+val octadicCap      = <EnderIO:itemBasicCapacitor:2>;
+
+// ====================================================================================
+// 1. ПРОДВИНУТАЯ СХЕМА — многослойная плата. Травится только лазерами BC:
+// золотой и кварцевые чипсеты делает Сборочный стол. Это и есть "замена AE2".
+// ====================================================================================
+// Продвинутая схема перенесена в electronics.zs (только плотник).
+
+// ====================================================================================
+// 2. ПРОДВИНУТЫЙ КОРПУС — углепластиковая обшивка (кокс -> волокно -> сетка -> пластина)
+// + композит + плотная сталь.
+// ====================================================================================
+recipes.remove(advCasing);
+recipes.addShaped(advCasing, [
+    [carbonPlate, denseSteel,      carbonPlate],
+    [advAlloy,    machineFrameIC2, advAlloy],
+    [carbonPlate, denseSteel,      carbonPlate]
+]);
+
+// ====================================================================================
+// 3. ДОБЫЧА
+// ====================================================================================
+// Обычный Miner — ВЫРЕЗАН. Только Advanced Miner (рецепт в lategame.zs).
+recipes.remove(<IC2:blockMachine:7>);
+
+// Помпа: бронзовая гидравлика, два мотора, заборная труба
+recipes.remove(<IC2:blockMachine:8>);
+recipes.addShaped(<IC2:blockMachine:8>, [
+    [gearBronze, circuitIC2,      gearBronze],
+    [tankBC,     machineFrameIC2, tankBC],
+    [motorIC2,   miningPipe,      motorIC2]
+]);
+
+// ====================================================================================
+// 4. ЭЛЕКТРОТЕХНИКА
+// ====================================================================================
+// Намагничиватель: шесть катушек на железном сердечнике + двойной конденсатор
+recipes.remove(<IC2:blockMachine:9>);
+recipes.addShaped(<IC2:blockMachine:9>, [
+    [copperCoil, copperCoil,      copperCoil],
+    [plateIron,  machineFrameIC2, plateIron],
+    [copperCoil, doubleCapacitor, copperCoil]
+]);
+
+// Электролизёр: свинцовые электроды, ванна из баков, кварцевое смотровое окно
+recipes.remove(<IC2:blockMachine:10>);
+// Никелевые электроды: промышленный щелочной электролиз воды идёт на никеле (платина - только в мембранных, PEM)
+recipes.addShaped(<IC2:blockMachine:10>, [
+    [plateLead,  <ore:ingotNickel>, plateLead],
+    [tankBC,     machineFrameIC2, tankBC],
+    [copperCoil, circuitIC2,      copperCoil]
+]);
+
+// ====================================================================================
+// 5. ПЕРЕРАБОТКА
+// ====================================================================================
+// Рудопромывочная машина: тяжёлая бронзовая гидравлика
+// Сердце - намагничиватель: магнитная сепарация отделяет рудные зёрна от пустой породы
+recipes.remove(<IC2:blockMachine2:5>);
+recipes.addShaped(<IC2:blockMachine2:5>, [
+    [denseBronze, <minecraft:cauldron>, denseBronze],
+    [tankBC,      <IC2:blockMachine:9>, tankBC],
+    [gearBronze,  motorIC2,             gearBronze]
+]);
+
+// Утилизатор (источник утильсырья для UU): дробилка + компрессор на стальном приводе
+recipes.remove(<IC2:blockMachine:11>);
+recipes.addShaped(<IC2:blockMachine:11>, [
+    [gearSteel,  <IC2:blockMachine:3>, gearSteel],
+    [denseSteel, <IC2:blockMachine:5>, denseSteel],
+    [gearSteel,  advCircuit,           gearSteel]
+]);
+
+// ====================================================================================
+// 6. АГРОТЕХ (ферма EnderIO уже вырезана — автосбор тоже должен стоить денег)
+// ====================================================================================
+// Автосадовник (Crop-Matron)
+recipes.remove(<IC2:blockMachine2:2>);
+recipes.addShaped(<IC2:blockMachine2:2>, [
+    [denseBronze, advCircuit,      denseBronze],
+    [tankBC,      machineFrameIC2, tankBC],
+    [gearBronze,  <minecraft:chest>, gearBronze]
+]);
+
+// Сборщик урожая (Crop Harvester): стальные ножницы Railcraft как режущий узел
+recipes.remove(<IC2:blockMachine3:7>);
+recipes.addShaped(<IC2:blockMachine3:7>, [
+    [<Railcraft:tool.steel.shears>, advCircuit,      <Railcraft:tool.steel.shears>],
+    [gearSteel,                     machineFrameIC2, gearSteel],
+    [motorIC2,                      <minecraft:chest>, motorIC2]
+]);
+
+// Терраформер
+recipes.remove(<IC2:blockMachine:15>);
+recipes.addShaped(<IC2:blockMachine:15>, [
+    [denseSteel,           chipDiamond, denseSteel],
+    [<IC2:blockMachine:8>, advCasing,   <IC2:blockMachine:9>],
+    [advCircuit,           energyCrystal, advCircuit]
+]);
+
+// ====================================================================================
+// 7. АТОМНАЯ ЭНЕРГЕТИКА
+// ====================================================================================
+// Реакторная камера: 4 плотных свинца биозащиты + теплопроводники + инваровый каркас
+val reactorChamber = <IC2:blockReactorChamber>;
+recipes.remove(reactorChamber);
+recipes.addShaped(reactorChamber, [
+    [denseLead,  heatConductor,   denseLead],
+    [ingotInvar, machineFrameIC2, ingotInvar],
+    [denseLead,  heatConductor,   denseLead]
+]);
+
+// Ядерный реактор: вместо генератора — паровая турбина Railcraft (реактор = котёл, энергию даёт турбина)
+recipes.remove(<IC2:blockGenerator:5>);
+recipes.addShaped(<IC2:blockGenerator:5>, [
+    [denseLead,      advCircuit,                  denseLead],
+    [reactorChamber, advCasing,                   reactorChamber],
+    [denseLead,      <Railcraft:machine.alpha:1>, denseLead]
+]);
+
+// ------------------------------------------------------------------------------------
+// 7b. ХЛАДАГЕНТ И КАПСУЛЫ ОХЛАЖДЕНИЯ
+// Хладагент IC2 (жидкость) варится в Консервирующей машине (режим обогащения):
+// дистиллированная вода + "натрий" (редстоун). Лазурит в атомной технике — пигмент, а не хладагент.
+// ВНИМАНИЕ: родной рецепт IC2 "вода + лазуритовая пыль" MineTweaker удалить не может — он останется.
+// ------------------------------------------------------------------------------------
+mods.ic2.Canner.addEnrichRecipe(<liquid:ic2coolant> * 1000, <liquid:ic2distilledwater> * 1000, <minecraft:redstone>);
+
+// Капсула 10k: оловянная герметичная оболочка вокруг универсальной капсулы с хладагентом
+val coolantFluidCell = <IC2:itemFluidCell>.onlyWithTag({Fluid: {FluidName: "ic2coolant", Amount: 1000}});
+recipes.remove(<IC2:reactorCoolantSimple:*>);
+recipes.addShaped(<IC2:reactorCoolantSimple:1>, [
+    [null,      plateTin,         null],
+    [plateTin,  coolantFluidCell, plateTin],
+    [null,      plateTin,         null]
+]);
+
+// ------------------------------------------------------------------------------------
+// 7c. КОРПУС ЖИДКОСТНОГО РЕАКТОРА: укреплённый камень + свинцовая биозащита
+// ------------------------------------------------------------------------------------
+val vessel = <IC2:blockreactorvessel>;
+recipes.remove(vessel);
+// Обсидиановая футеровка (пластины только из блокорезки, алмазный диск)
+recipes.addShaped(vessel * 2, [[plateLead, <IC2:blockAlloy>, plateLead], [null, <IC2:itemPlates:7>, null]]);
+
+// Люк доступа: стальная рама, мотор привода, люк
+recipes.remove(<IC2:blockReactorAccessHatch>);
+// Резиновый уплотнитель люка
+recipes.addShaped(<IC2:blockReactorAccessHatch>, [
+    [plateSteel, motorIC2,              plateSteel],
+    [<IC2:itemRubber>, vessel, <IC2:itemRubber>],
+    [plateSteel, <minecraft:trapdoor>,  plateSteel]
+]);
+
+// Жидкостный порт: помпа IC2 + жидкостные трубы
+recipes.remove(<IC2:blockReactorFluidPort>);
+// Резиновые уплотнения порта (хладагент под давлением)
+recipes.addShaped(<IC2:blockReactorFluidPort>, [
+    [<IC2:itemRubber>,                                         <IC2:blockMachine:8>, <IC2:itemRubber>],
+    [<BuildCraft|Transport:item.buildcraftPipe.pipefluidsiron>, vessel,              <BuildCraft|Transport:item.buildcraftPipe.pipefluidsiron>]
+]);
+
+// Редстоун-порт: схема управления
+recipes.remove(<IC2:blockReactorRedstonePort>);
+recipes.addShaped(<IC2:blockReactorRedstonePort>, [
+    [null,                 circuitIC2, null],
+    [<minecraft:redstone>, vessel,     <minecraft:redstone>]
+]);
+
+// ------------------------------------------------------------------------------------
+// 7d. РЕАКТОРНЫЕ КОМПОНЕНТЫ
+// Вентиляторы — это реальные вентиляторы: решётки + электромотор IC2.
+// Теплообменники — теплопроводники + медь. Обшивка — композит + свинец.
+// ------------------------------------------------------------------------------------
+val denseCopper  = <IC2:itemDensePlates:0>;
+val plating      = <IC2:reactorPlating>;
+val ironBars     = <minecraft:iron_bars>;
+
+// Реакторная обшивка
+recipes.remove(plating);
+recipes.addShaped(plating, [[advAlloy, denseLead, advAlloy]]);
+// Теплоёмкая обшивка
+recipes.remove(<IC2:reactorPlatingHeat>);
+recipes.addShaped(<IC2:reactorPlatingHeat>, [[denseCopper, plating, denseCopper]]);
+// Защитная (сдерживающая) обшивка
+recipes.remove(<IC2:reactorPlatingExplosive>);
+recipes.addShaped(<IC2:reactorPlatingExplosive>, [[denseSteel, plating, denseSteel]]);
+
+// Теплоотвод
+val vent = <IC2:reactorVent:*>;
+recipes.remove(vent);
+recipes.addShaped(<IC2:reactorVent:1>, [
+    [plateSteel, ironBars, plateSteel],
+    [ironBars,   motorIC2, ironBars],
+    [plateSteel, ironBars, plateSteel]
+]);
+// Реакторный теплоотвод
+recipes.remove(<IC2:reactorVentCore:*>);
+recipes.addShaped(<IC2:reactorVentCore:1>, [
+    [heatConductor, vent,    heatConductor],
+    [null,          plating, null]
+]);
+// Разогнанный теплоотвод
+recipes.remove(<IC2:reactorVentGold:*>);
+recipes.addShaped(<IC2:reactorVentGold:1>, [
+    [plateGold, <IC2:reactorVentCore:*>, plateGold],
+    [null,      motorIC2,                null]
+]);
+// Продвинутый теплоотвод
+recipes.remove(<IC2:reactorVentDiamond:*>);
+recipes.addShaped(<IC2:reactorVentDiamond:1>, [
+    [<minecraft:diamond>, vent,     <minecraft:diamond>],
+    [ironBars,            motorIC2, ironBars]
+]);
+// Компонентный теплоотвод
+recipes.remove(<IC2:reactorVentSpread:*>);
+recipes.addShaped(<IC2:reactorVentSpread:1>, [
+    [ironBars,    plateBronze, ironBars],
+    [plateBronze, vent,        plateBronze],
+    [ironBars,    plateBronze, ironBars]
+]);
+
+// Теплообменник
+val heatSwitch = <IC2:reactorHeatSwitch:*>;
+recipes.remove(heatSwitch);
+recipes.addShaped(<IC2:reactorHeatSwitch:1>, [
+    [heatConductor, circuitIC2,       heatConductor],
+    [denseCopper,   <ore:ingotInvar>, denseCopper]
+]);
+// Реакторный теплообменник
+recipes.remove(<IC2:reactorHeatSwitchCore:*>);
+recipes.addShaped(<IC2:reactorHeatSwitchCore:1>, [[denseCopper, heatSwitch, denseCopper]]);
+// Компонентный теплообменник
+recipes.remove(<IC2:reactorHeatSwitchSpread:*>);
+recipes.addShaped(<IC2:reactorHeatSwitchSpread:1>, [[plateGold, heatSwitch, plateGold]]);
+// Продвинутый теплообменник
+recipes.remove(<IC2:reactorHeatSwitchDiamond:*>);
+recipes.addShaped(<IC2:reactorHeatSwitchDiamond:1>, [
+    [heatSwitch,  advCircuit,          heatSwitch],
+    [denseCopper, <minecraft:diamond>, denseCopper]
+]);
+
+// ====================================================================================
+// 8. UU-МАТЕРИЯ — ВЕНЕЦ ТЕХНОЛОГИЙ, ТОЛЬКО ПОСЛЕ АЭС
+// ====================================================================================
+// Генератор материи (Mass Fabricator): иридиевая обшивка + лапотроны + свинцовая защита
+recipes.remove(<IC2:blockMachine:14>);
+recipes.addShaped(<IC2:blockMachine:14>, [
+    [iridiumPlate, chipEmerald, iridiumPlate],
+    [lapotron,     advCasing,   lapotron],
+    [denseLead,    octadicCap,  denseLead]
+]);
+
+// Хранилище шаблонов
+recipes.remove(<IC2:blockMachine2:6>);
+recipes.addShaped(<IC2:blockMachine2:6>, [
+    [crystalMemory, chipDiamond, crystalMemory],
+    [advCircuit,    advCasing,   advCircuit],
+    [denseSteel,    octadicCap,  denseSteel]
+]);
+
+// Сканер: сканирует лазером BC через кварцевые окна
+recipes.remove(<IC2:blockMachine2:7>);
+recipes.addShaped(<IC2:blockMachine2:7>, [
+    [fusedQuartz, laserBC,    fusedQuartz],
+    [chipDiamond, advCasing,  chipDiamond],
+    [denseLead,   advCircuit, denseLead]
+]);
+
+// Репликатор: телепортер IC2 как "сборщик материи по координатам"
+recipes.remove(<IC2:blockMachine2:8>);
+recipes.addShaped(<IC2:blockMachine2:8>, [
+    [iridiumPlate, <IC2:blockMachine2:0>, iridiumPlate],
+    [chipEmerald,  advCasing,             chipEmerald],
+    [denseLead,    lapotron,              denseLead]
+]);
+
+// Усилитель материи: утильсырьё в 10 раз слабее (это и был "scrapFactor = 0.1").
+// По умолчанию: утиль 5000, коробка утиля 45000. Перезаписывает значение IC2.
+mods.ic2.MatterAmplifier.setAmplifier(<IC2:itemScrap>, 500);
+mods.ic2.MatterAmplifier.setAmplifier(<IC2:itemScrapbox>, 4500);
+
+// ====================================================================================
+// 9. ПРОМЫШЛЕННЫЙ ДИНАМИТ = АММИАЧНАЯ СЕЛИТРА + ДИЗТОПЛИВО (ANFO)
+// ПОЧЕМУ: ITNT сохраняет 100% блоков, а наши жилы огромные — дешёвый ITNT превращал добычу
+// в "взорвал жилу — собрал всё" в обход Advanced Miner.
+// ТЕПЕРЬ: селитра Railcraft + динамит + 500 mB топлива BC в Плотнике Forestry -> 2 ITNT.
+// Топливо — это нефтепереработка, т.е. середина игры.
+// Мощность взрыва ITNT в IC2 конфигом не меняется.
+// ====================================================================================
+val saltpeter = <Railcraft:dust:2>;
+recipes.remove(<IC2:blockITNT>);
+mods.forestry.Carpenter.addRecipe(<IC2:blockITNT> * 2, [
+    [saltpeter, saltpeter,    saltpeter],
+    [saltpeter, <minecraft:tnt>, saltpeter],
+    [saltpeter, saltpeter,    saltpeter]
+], <liquid:fuel> * 500, 20);
+
+// ====================================================================================
+// 10. ПОЛУЖИДКОСТНЫЙ ГЕНЕРАТОР — ВЫРЕЗАН
+// Это обычный дизель-генератор: жжёт нефть/топливо/биомассу/этанол/биогаз прямо в EU.
+// Жидкое топливо должно идти в турбины (Advanced Generators) и котлы, а не в "коробку".
+// ====================================================================================
+recipes.remove(<IC2:blockGenerator:7>);
+
+// ====================================================================================
+// 11. ПАРОВАЯ ТУРБИНА IC2 — ЧИСТАЯ МЕХАНИКА
+// Паровой кинетический генератор (пар -> кинетика): толстый стальной корпус, стальной вал,
+// стальные редукторы, паровпуск и выхлоп — железные жидкостные трубы BC.
+// Кинетический генератор (кинетика -> EU): вал вращает электромашину (мотор IC2 в режиме генератора)
+// с обмотками-катушками, через стальной редуктор.
+// Мощность турбины удвоена в IC2.ini (steam = 2.0), генератор Стирлинга — ранняя ступень (Stirling = 2.0).
+// ====================================================================================
+val steelShaft  = <IC2:itemRecipePart:12>;
+val fluidPipeFe = <BuildCraft|Transport:item.buildcraftPipe.pipefluidsiron>;
+
+recipes.remove(<IC2:blockKineticGenerator:1>);
+recipes.addShaped(<IC2:blockKineticGenerator:1>, [
+    [denseSteel,  gearSteel,  denseSteel],
+    [fluidPipeFe, steelShaft, fluidPipeFe],
+    [denseSteel,  gearSteel,  denseSteel]
+]);
+
+recipes.remove(<IC2:blockGenerator:9>);
+recipes.addShaped(<IC2:blockGenerator:9>, [
+    [plateSteel, copperCoil, plateSteel],
+    [steelShaft, motorIC2,   gearSteel],
+    [plateSteel, copperCoil, plateSteel]
+]);
+
+// ====================================================================================
+// 12. ГЕНЕРАТОР IC2 (твёрдое топливо -> EU) — ВЫРЕЗАН
+// Железная печка, которая жжёт уголь прямо в электричество, без котла, пара и машины. Так не бывает.
+// Уголь -> EU теперь только по-честному: топка (твердотопливный теплогенератор) -> Стирлинг -> динамо,
+// или котёл -> пар -> турбина. В рецептах других генераторов его заменил электромотор IC2
+// (мотор и динамо — одна машина) или термоэлементы. Уже поставленные генераторы работают.
+// ====================================================================================
+recipes.remove(<IC2:blockGenerator>);
+
+// ====================================================================================
+// 13. ГЕОТЕРМАЛЬНЫЙ ГЕНЕРАТОР IC2 (лава -> EU)
+// БЫЛО: генератор + стекло + пустые капсулы. Лава из Незера бесконечна, а рецепт копеечный.
+// ТЕПЕРЬ: настоящая ГеоТЭС - инваровый теплообменник, жидкостный контур, стальной корпус.
+// Выход урезан в IC2.ini (geothermal = 0.5): базовая нагрузка, а не главный источник.
+// ====================================================================================
+recipes.remove(<IC2:blockGenerator:1>);
+recipes.addShaped(<IC2:blockGenerator:1>, [
+    [ingotInvar,  heatConductor,         ingotInvar],
+    [fluidPipeFe, motorIC2,              fluidPipeFe],   // турбогенератор: мотор IC2 в режиме динамо
+    [plateSteel,  tankBC,                plateSteel]
+]);
+
+// ====================================================================================
+// КОРОБКА ЛОМА ВЫРЕЗАНА: утилизатор + коробка превращали булыжник в руду, алмазы и угольную пыль.
+// Удалить содержимое коробки скриптом нельзя (MineTweaker умеет только добавлять), поэтому убран её крафт.
+// Лом остаётся усилителем генератора материи.
+// ====================================================================================
+recipes.remove(<IC2:itemScrapbox>);
+
+// ====================================================================================
+// 14. БАЗОВЫЕ ДЕТАЛИ IC2 ДОРОЖЕ (Zavod 1.30): от них зависит вся электротехника
+// Корпус машины: БЫЛО 8 железных пластин. ТЕПЕРЬ стальная рама (углы) + железная обшивка.
+// Электромотор: БЫЛО слиток железа вместо вала. ТЕПЕРЬ точёный железный вал на баббитовых подшипниках.
+// ====================================================================================
+recipes.remove(machineFrameIC2);
+recipes.addShaped(machineFrameIC2, [
+    [<ore:plateSteel>, <ore:plateIron>, <ore:plateSteel>],
+    [<ore:plateIron>,  null,            <ore:plateIron>],
+    [<ore:plateSteel>, <ore:plateIron>, <ore:plateSteel>]
+]);
+recipes.remove(motorIC2);
+recipes.addShaped(motorIC2, [
+    [<zavod:ingot_babbitt>, <IC2:itemCasing:1>,      <zavod:ingot_babbitt>],   // подшипники скольжения
+    [copperCoil,            <IC2:itemRecipePart:11>, copperCoil],              // обмотки на железном валу
+    [null,                  <IC2:itemCasing:1>,      null]
+]);
+
+// ====================================================================================
+// 15. СВИНЦОВО-КИСЛОТНЫЙ АККУМУЛЯТОР БЕЗ RF (Zavod 1.30)
+// Сухозаряженный аккумулятор (пластины, эбонитовый корпус, вывод) собирается на верстаке,
+// электролит (250 mB серной кислоты) заливается в химреакторе Zavod -> аккумулятор RE.
+// Путь через плотник Forestry (дистиллят + сера) остался.
+// ====================================================================================
+recipes.addShaped(<zavod:battery_dry> * 2, [
+    [null,            <IC2:itemCable:13>,  null],
+    [<ore:plateLead>, <ore:dustLead>,       <ore:plateLead>],   // активная масса: свинцовый порошок (паста Фора, 1881), при формовке — диоксид свинца
+    [<ore:plateLead>, <IC2:itemRubber>,     <ore:plateLead>]
+]);

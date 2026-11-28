@@ -1,0 +1,12 @@
+name = "Treecapitator"
+filename = "[1.7.10]Treecapitator-universal-2.0.4.jar"
+side = "both"
+
+[download]
+url = "https://mediafilez.forgecdn.net/files/2218/771/%5B1.7.10%5DTreecapitator-universal-2.0.4.jar"
+hash-format = "sha1"
+hash = "87f540bb1e3b502924044c6482e04c2b8cb8a049"
+[update]
+[update.curseforge]
+file-id = 2218771
+project-id = 59216

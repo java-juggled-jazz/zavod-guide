@@ -1,0 +1,54 @@
+// ====================================================================================
+// 13. РЕФОРМА LOGISTICS PIPES (исправленный)
+// БЫЛО: <ore:chipRedstone> / <ore:chipGold> — пустые записи словаря (BC регистрирует chipsetRedstone...),
+// поэтому ВСЕ логистические трубы были некрафтабельны.
+// ====================================================================================
+
+val logBasicPipe    = <LogisticsPipes:item.PipeItemsBasicLogistics>;
+val logRequestPipe  = <LogisticsPipes:item.PipeItemsRequestLogistics>;
+val logCraftingPipe = <LogisticsPipes:item.PipeItemsCraftingLogistics>;
+val logChassis1     = <LogisticsPipes:item.PipeLogisticsChassiMk1>;
+
+val chipRed        = <BuildCraft|Silicon:redstoneChipset>;    // Красный чипсет BC
+val chipGold       = <BuildCraft|Silicon:redstoneChipset:2>;  // Золотой чипсет BC
+val siliconChipBC  = <BuildCraft|Silicon:redstoneChipset:5>;  // Кварцевый чипсет BC
+val pipeGold       = <BuildCraft|Transport:item.buildcraftPipe.pipeitemsgold>;
+val plateBronze    = <ore:plateBronze>;
+val ingotInvar     = <ore:ingotInvar>;
+val gearBronze     = <ore:gearBronze>;
+val gearSteel      = <ore:gearSteel>;
+val circuitIC2     = <IC2:itemPartCircuit>;
+val copperCoil     = <IC2:itemRecipePart>;                     // Катушка IC2 (meta 0)
+
+recipes.remove(logBasicPipe);
+recipes.remove(logRequestPipe);
+recipes.remove(logCraftingPipe);
+recipes.remove(logChassis1);
+
+// 1. Базовая логистическая труба — золотая труба BC + красный чипсет + схема IC2
+recipes.addShaped(logBasicPipe * 2, [
+    [null,        chipRed,    null],
+    [plateBronze, pipeGold,   plateBronze],
+    [null,        circuitIC2, null]
+]);
+
+// 2. Труба запроса — золотой чипсет + катушки управления
+recipes.addShaped(logRequestPipe, [
+    [copperCoil,  chipGold,      copperCoil],
+    [plateBronze, logBasicPipe,  plateBronze],
+    [gearBronze,  siliconChipBC, gearBronze]
+]);
+
+// 3. Труба автокрафта — стальной привод + кварцевый чипсет
+recipes.addShaped(logCraftingPipe, [
+    [gearSteel,   chipGold,      gearSteel],
+    [plateBronze, logBasicPipe,  plateBronze],
+    [copperCoil,  siliconChipBC, copperCoil]
+]);
+
+// 4. Шасси Mk1 — инваровая станина + логическая труба
+recipes.addShaped(logChassis1, [
+    [ingotInvar,  chipRed,      ingotInvar],
+    [plateBronze, logBasicPipe, plateBronze],
+    [ingotInvar,  circuitIC2,   ingotInvar]
+]);

@@ -1,0 +1,12 @@
+name = "Recurrent Complex"
+filename = "RecurrentComplex-0.9.7.1.2.jar"
+side = "both"
+
+[download]
+url = "https://mediafilez.forgecdn.net/files/8563/477/RecurrentComplex-0.9.7.1.2.jar"
+hash-format = "sha1"
+hash = "cc4ab12d09d48c48beae850717584362fae8dd17"
+[update]
+[update.curseforge]
+file-id = 8563477
+project-id = 223150

@@ -1,0 +1,467 @@
+// ====================================================================================
+//        ГЛОБАЛЬНЫЙ ПАК УСЛОЖНЕНИЙ "ХАРДКОРНАЯ ЛОГИСТИКА" (v3, исправленный)
+//     IC2 Experimental, Thermal Expansion, EnderIO, Forestry, BuildCraft, Railcraft
+// ------------------------------------------------------------------------------------
+// ВАЖНО ПРО MINETWEAKER 1.7.10: если ID предмета не найден, он превращается в null.
+//  - recipes.remove(null)      -> NullPointerException -> ВЕСЬ ОСТАТОК ФАЙЛА НЕ ВЫПОЛНЯЕТСЯ
+//  - null внутри addShaped     -> пустая клетка (рецепт становится другим)
+//  - пустой <ore:...>          -> рецепт добавлен, но скрафтить его невозможно
+// Поэтому после каждого изменения смотри minetweaker.log на "Could not resolve" и "Error executing".
+// ====================================================================================
+
+// ====================================================================================
+// 0. ПЕРЕМЕННЫЕ
+// ====================================================================================
+
+// --- Стальная шестерня: ни один мод сборки не регистрирует <ore:gearSteel>.
+// Railcraft имеет Steel Gear (part.gear:2), но не кладёт её в словарь. Кладём сами.
+<ore:gearSteel>.add(<Railcraft:part.gear:2>);
+
+// --- БАЗОВЫЕ КОМПОНЕНТЫ ---
+val ironChassis        = <EnderIO:itemMachinePart>;          // Корпус машины EnderIO
+val basicCapacitor     = <EnderIO:itemBasicCapacitor>;
+val doubleCapacitor    = <EnderIO:itemBasicCapacitor:1>;
+val octadicCapacitor   = <EnderIO:itemBasicCapacitor:2>;
+val machineFrameTE     = <ThermalExpansion:Frame>;           // Каркас машины TE
+val machineFrameIC2    = <IC2:blockMachine>;                 // Базовый корпус IC2 (meta 0)
+val advMachineFrameIC2 = <IC2:blockMachine:12>;              // ПРОДВИНУТЫЙ корпус IC2 (meta 12, НЕ 8 — 8 это помпа)
+val copperCoil         = <IC2:itemRecipePart>;               // Катушка IC2 (meta 0, НЕ 3 — 3 это малый силовой блок)
+val motorIC2           = <IC2:itemRecipePart:1>;             // Электромотор
+val heatConductor      = <IC2:itemRecipePart:5>;             // Теплопроводник
+val steelShaft         = <IC2:itemRecipePart:12>;            // Стальной вал IC2
+val circuitIC2         = <IC2:itemPartCircuit>;
+val advCircuit         = <IC2:itemPartCircuitAdv>;
+// Кузнечный молот. БЕЗ .transformDamage(): у молота IC2 уже есть "предмет-контейнер",
+// он сам остаётся в сетке с -1 прочности. transformDamage поверх этого даёт ДЮП молота.
+val hammer             = <IC2:itemToolForgeHammer>.anyDamage();
+val piston             = <minecraft:piston>;
+val tankBC             = <BuildCraft|Factory:tankBlock>;
+val fusedQuartz        = <EnderIO:blockFusedQuartz>;
+val blastBrick         = <Railcraft:machine.alpha:12>;       // Доменный кирпич (НЕ cube:2 — это блок стали!)
+val pipeFluidsGold     = <BuildCraft|Transport:item.buildcraftPipe.pipefluidsgold>;
+
+// --- ЧИПЫ BUILDCRAFT (словарь BC: chipsetRedstone/Iron/Gold/Diamond/Quartz, а НЕ chipRedstone)
+val chipRed            = <BuildCraft|Silicon:redstoneChipset>;
+val chipGold           = <BuildCraft|Silicon:redstoneChipset:2>;
+val siliconChipBC      = <BuildCraft|Silicon:redstoneChipset:5>; // Кварцевый чипсет = "кремниевая плата" (SiO2)
+
+// --- ПРОКАТ И СПЛАВЫ ---
+val plateIron   = <ore:plateIron>;
+val plateCopper = <ore:plateCopper>;
+val plateTin    = <ore:plateTin>;
+val plateBronze = <ore:plateBronze>;
+val plateSteel  = <ore:plateSteel>;
+val plateGold   = <ore:plateGold>;
+
+val ingotSteel  = <Railcraft:ingot:0>;      // конкретный предмет — для машин TE (им нужен IItemStack)
+val oreSteel    = <ore:ingotSteel>;        // словарь — для верстака (подходит и сталь IC2)
+val ingotBronze = <ore:ingotBronze>;
+val ingotInvar  = <ore:ingotInvar>;
+val blockInvar  = <ore:blockInvar>;
+val steelBlock  = <ore:blockSteel>;
+
+val itemPlateSteel  = <IC2:itemPlates:5>;   // Стальная пластина IC2 (для выходов рецептов)
+val itemPlateBronze = <IC2:itemPlates:2>;   // Бронзовая пластина IC2
+
+// --- КИНЕТИЧЕСКАЯ МАТРИЦА ШЕСТЕРЕН ---
+val gearSteel  = <ore:gearSteel>;  // Высокий момент (дробители, прокат, ДВС)
+val gearBronze = <ore:gearBronze>; // Высокие обороты (центрифуги, помпы, турбины)
+val gearInvar  = <ore:gearInvar>;  // Термостойкая кинетика (печи, термо-узлы)
+
+// --- ПЛОТНЫЕ ПЛАСТИНЫ IC2 ---
+val denseSteel  = <IC2:itemDensePlates:5>;
+val denseBronze = <IC2:itemDensePlates:2>;
+val denseLead   = <IC2:itemDensePlates:6>;
+val denseTin    = <IC2:itemDensePlates:1>;
+val denseCopper = <IC2:itemDensePlates:0>;
+
+// ====================================================================================
+// 1. ВЫРЕЗАНИЕ ХАЛЯВЫ
+// ====================================================================================
+recipes.remove(<BuildCraft|Builders:machineBlock>); // Карьер BC (замена — Advanced Miner)
+recipes.remove(<EnderIO:blockFarmStation>);         // Фермерская станция EnderIO
+recipes.remove(<ThermalExpansion:Machine:11>);      // Фитогенный инсолятор TE
+recipes.remove(<IC2:itemArmorJetpackElectric>);     // Электроранец IC2
+
+// Вывод из эксплуатации деревянных, железных и оловянных шестерен.
+// БЫЛО: material:128 — это МЕДНАЯ шестерня, на ней висят Пульверизатор и Экструдер TE (стали некрафтабельны).
+recipes.remove(<BuildCraft|Core:woodenGearItem>);
+recipes.remove(<ThermalFoundation:material:12>);  // Железная шестерня TF
+recipes.remove(<ThermalFoundation:material:129>); // Оловянная шестерня TF (Сборщик TE переписан ниже, в thermal-expansion.zs)
+
+// ====================================================================================
+// 2. КУЗНЕЧНОЕ ДЕЛО: МОЛОТ И ДВУХУРОВНЕВЫЙ КРАФТ БРОНИ (ручной с молотом = -1 слиток)
+// ====================================================================================
+recipes.remove(<IC2:itemToolForgeHammer>);
+recipes.addShaped(<IC2:itemToolForgeHammer>, [
+    [<ore:nuggetIron>, <ore:nuggetIron>, <ore:nuggetIron>],
+    [<ore:nuggetIron>, <minecraft:stick>, <ore:nuggetIron>],
+    [null,             <minecraft:stick>, null]
+]);
+
+// Ручная ковка стальной пластины (БЫЛО: на выходе шестерня серебра material:130)
+recipes.addShapeless(itemPlateSteel, [oreSteel, hammer]);
+
+// --- БРОНЗОВАЯ БРОНЯ IC2 (поножи/ботинки оставлены ванильными) ---
+recipes.remove(<IC2:itemArmorBronzeHelmet>);
+recipes.remove(<IC2:itemArmorBronzeChestplate>);
+recipes.remove(<IC2:itemArmorBronzeLegs>);
+
+recipes.addShaped(<IC2:itemArmorBronzeHelmet>,     [[ingotBronze, hammer, ingotBronze], [ingotBronze, null, ingotBronze]]);
+recipes.addShaped(<IC2:itemArmorBronzeHelmet>,     [[ingotBronze, ingotBronze, ingotBronze], [ingotBronze, null, ingotBronze]]);
+recipes.addShaped(<IC2:itemArmorBronzeChestplate>, [[ingotBronze, hammer, ingotBronze], [ingotBronze, ingotBronze, ingotBronze], [ingotBronze, ingotBronze, ingotBronze]]);
+recipes.addShaped(<IC2:itemArmorBronzeChestplate>, [[ingotBronze, null, ingotBronze], [ingotBronze, ingotBronze, ingotBronze], [ingotBronze, ingotBronze, ingotBronze]]);
+recipes.addShaped(<IC2:itemArmorBronzeLegs>,   [[ingotBronze, hammer, ingotBronze], [ingotBronze, null, ingotBronze], [ingotBronze, null, ingotBronze]]);
+recipes.addShaped(<IC2:itemArmorBronzeLegs>,   [[ingotBronze, ingotBronze, ingotBronze], [ingotBronze, null, ingotBronze], [ingotBronze, null, ingotBronze]]);
+// БЫЛО: поножи и ботинки удалялись без замены — их нельзя было скрафтить. Ботинки теперь не трогаем.
+
+// --- СТАЛЬНАЯ БРОНЯ RAILCRAFT ---
+// БЫЛО: <Railcraft:armor.steel.chest> — такого предмета нет (правильно armor.steel.plate).
+// ИМЕННО ЭТА СТРОКА роняла global.zs: всё, что ниже неё, НЕ ПРИМЕНЯЛОСЬ.
+recipes.remove(<Railcraft:armor.steel.helmet>);
+recipes.remove(<Railcraft:armor.steel.plate>);
+recipes.remove(<Railcraft:armor.steel.legs>);
+
+recipes.addShaped(<Railcraft:armor.steel.helmet>, [[oreSteel, hammer, oreSteel], [oreSteel, null, oreSteel]]);
+recipes.addShaped(<Railcraft:armor.steel.helmet>, [[oreSteel, oreSteel, oreSteel], [oreSteel, null, oreSteel]]);
+recipes.addShaped(<Railcraft:armor.steel.plate>,  [[oreSteel, hammer, oreSteel], [oreSteel, oreSteel, oreSteel], [oreSteel, oreSteel, oreSteel]]);
+recipes.addShaped(<Railcraft:armor.steel.plate>,  [[oreSteel, null, oreSteel], [oreSteel, oreSteel, oreSteel], [oreSteel, oreSteel, oreSteel]]);
+recipes.addShaped(<Railcraft:armor.steel.legs>,   [[oreSteel, hammer, oreSteel], [oreSteel, null, oreSteel], [oreSteel, null, oreSteel]]);
+recipes.addShaped(<Railcraft:armor.steel.legs>,   [[oreSteel, oreSteel, oreSteel], [oreSteel, null, oreSteel], [oreSteel, null, oreSteel]]);
+
+// Лопатки паровой турбины Railcraft. Материал одинаковый в обоих путях: 6 инвара + стальная пластина -> 2 лопатки
+//   (инваровое перо на стальном хвостовике). БЫЛО: экструзия 1 инвар -> 1 лопатка, втрое дешевле и без стали.
+//   Вручную - ковка молотом (молот изнашивается). На потоке - профильная прокатка в прокатном стане Railcraft.
+recipes.remove(<Railcraft:part.turbine.blade>);
+recipes.addShaped(<Railcraft:part.turbine.blade> * 2, [
+    [ingotInvar, hammer,     ingotInvar],
+    [ingotInvar, plateSteel, ingotInvar],
+    [ingotInvar, null,       ingotInvar]
+]);
+mods.railcraft.Rolling.addShaped(<Railcraft:part.turbine.blade> * 2, [
+    [ingotInvar, null,       ingotInvar],
+    [ingotInvar, plateSteel, ingotInvar],
+    [ingotInvar, null,       ingotInvar]
+]);
+
+// ====================================================================================
+// 3. ПЕРВАЯ СТАЛЬ: ДОМЕННЫЙ КИРПИЧ RAILCRAFT (до Незера и до компрессора)
+// БЫЛО: cube:2 = блок стали -> из 2 железных пластин получалось 4 блока стали (36 слитков).
+// ====================================================================================
+recipes.remove(blastBrick);
+recipes.addShaped(blastBrick * 4, [
+    [<minecraft:brick>, plateIron,       <minecraft:brick>],
+    [<Railcraft:machine.alpha:7>, <minecraft:clay>, <Railcraft:machine.alpha:7>],   // шамот: коксовый кирпич как огнеупорный наполнитель + блок глины
+    [<minecraft:brick>, plateIron,       <minecraft:brick>]
+]);
+
+// ====================================================================================
+// 4. БРОНЗОВАЯ ГИДРОДИНАМИКА
+// ====================================================================================
+// MODPACK: nasos BC - v buildcraft.zs (rezinovye uplotneniya), staryy retsept zdes' ubran.
+
+// Водяной накопитель TE (Aqueous Accumulator) — это Machine:8 (БЫЛО: Machine:4 = Магматический тигель)
+recipes.remove(<ThermalExpansion:Machine:8>);
+recipes.addShaped(<ThermalExpansion:Machine:8>, [
+    [null,        <minecraft:bucket>,            null],
+    [plateBronze, machineFrameTE,                plateBronze],
+    [gearBronze,  <ThermalExpansion:material:1>, gearBronze]   // катушка приёма
+]);
+
+// Водяная мельница IC2 (blockKineticGenerator:4) - бронзовый век: железный корпус машины, кованые валы, бронза.
+// БЫЛО: продвинутые схема и корпус - мельница появлялась позже, чем была нужна.
+recipes.remove(<IC2:blockKineticGenerator:4>);
+recipes.addShaped(<IC2:blockKineticGenerator:4>, [
+    [<ore:plateBronze>,      <ore:gearBronze>, <ore:plateBronze>],
+    [<IC2:itemRecipePart:11>, <IC2:blockMachine>, <IC2:itemRecipePart:11>],
+    [<ore:plateBronze>,      <ore:gearBronze>, <ore:plateBronze>]
+]);
+
+// Роторы: деревянный (диаметр 5, 3 часа работы) - 4 деревянные лопасти на кованом валу.
+// Железный, стальной и углеродный - стандартные рецепты IC2 (железный: 4 железные лопасти + железный вал).
+recipes.remove(<IC2:itemwoodrotor>);
+recipes.addShaped(<IC2:itemwoodrotor>, [
+    [null,                  <IC2:itemRecipePart:7>,  null],
+    [<IC2:itemRecipePart:7>, <IC2:itemRecipePart:11>, <IC2:itemRecipePart:7>],
+    [null,                  <IC2:itemRecipePart:7>,  null]
+]);
+
+// ====================================================================================
+// 5. МЕХАНИЗМЫ IC2 EXPERIMENTAL
+// Метаданные: blockMachine 2 электропечь, 3 дробитель, 4 экстрактор, 5 компрессор,
+// 12 ПРОДВИНУТЫЙ КОРПУС, 13 индукционная печь; blockMachine2 3 термоцентрифуга, 4 металлоформовщик.
+// БЫЛО: удалялся рецепт продвинутого корпуса (blockMachine:12) и Crop-Matron'а (blockMachine2:2).
+// ====================================================================================
+recipes.remove(<IC2:blockMachine:3>);    // Дробитель
+recipes.remove(<IC2:blockMachine:5>);    // Компрессор
+recipes.remove(<IC2:blockMachine:2>);    // Электропечь
+recipes.remove(<IC2:blockMachine:4>);    // Экстрактор
+recipes.remove(<IC2:blockMachine2:4>);   // Металлоформовщик
+recipes.remove(<IC2:blockMachine:13>);   // Индукционная печь
+recipes.remove(<IC2:blockMachine2:3>);   // Термоцентрифуга
+
+// Дробитель (щёки из кремня + поршень + сталь + бронзовый редуктор)
+recipes.addShaped(<IC2:blockMachine:3>, [
+    [<minecraft:flint>, piston,          <minecraft:flint>],
+    [plateSteel,        machineFrameIC2, plateSteel],
+    [gearBronze,        circuitIC2,      gearBronze]
+]);
+
+// Компрессор (противоходные поршни + стальная обшивка)
+recipes.addShaped(<IC2:blockMachine:5>, [
+    [piston,     plateSteel,      piston],
+    [plateSteel, machineFrameIC2, plateSteel],
+    [piston,     circuitIC2,      piston]
+]);
+
+// Электропечь (теплопроводники + доменный кирпич)
+recipes.addShaped(<IC2:blockMachine:2>, [
+    [heatConductor, heatConductor,   heatConductor],
+    [blastBrick,    machineFrameIC2, blastBrick],
+    [plateSteel,    circuitIC2,      plateSteel]
+]);
+
+// Экстрактор (пресс-поршень + бронза + баки BC)
+recipes.addShaped(<IC2:blockMachine:4>, [
+    [plateBronze, piston,          plateBronze],
+    [tankBC,      machineFrameIC2, tankBC],
+    [plateBronze, circuitIC2,      plateBronze]
+]);
+
+// Металлоформовщик (стальные шестерни + моторы + молот ИЛИ поршень)
+recipes.addShaped(<IC2:blockMachine2:4>, [
+    [gearSteel,  hammer,          gearSteel],
+    [plateSteel, machineFrameIC2, plateSteel],
+    [motorIC2,   circuitIC2,      motorIC2]
+]);
+recipes.addShaped(<IC2:blockMachine2:4>, [
+    [gearSteel,  piston,          gearSteel],
+    [plateSteel, machineFrameIC2, plateSteel],
+    [motorIC2,   circuitIC2,      motorIC2]
+]);
+
+// Индукционная печь (катушки + инваровый экран + теплопроводники)
+recipes.addShaped(<IC2:blockMachine:13>, [
+    [copperCoil,    advCircuit,         copperCoil],
+    [heatConductor, advMachineFrameIC2, heatConductor],
+    [ingotInvar,    copperCoil,         ingotInvar]
+]);
+
+// Термоцентрифуга (бронзовые шестерни + мотор + инвар, без лазера)
+recipes.addShaped(<IC2:blockMachine2:3>, [
+    [gearBronze, motorIC2,           gearBronze],
+    [ingotInvar, advMachineFrameIC2, ingotInvar],
+    [gearBronze, advCircuit,         gearBronze]
+]);
+
+// MODPACK: ручной рецепт схемы IC2 убран - схема только в плотнике (electronics.zs).
+
+// ====================================================================================
+// 6. КАМНЕЛОМ RAILCRAFT И ГЛУБОКАЯ ПЕРЕРАБОТКА
+// ====================================================================================
+recipes.remove(<Railcraft:machine.alpha:15>);
+recipes.addShaped(<Railcraft:machine.alpha:15> * 4, [
+    [plateSteel, steelBlock, plateSteel],
+    [gearBronze, motorIC2,   gearBronze],
+    [plateSteel, piston,     plateSteel]
+]);
+
+// Гравий в камнеломе: песок + глина + кремень. Металлов нет: вечный булыжник (экструдер, генератор) = вечный металл.
+mods.railcraft.RockCrusher.removeRecipe(<minecraft:gravel>);
+mods.railcraft.RockCrusher.addRecipe(
+    <minecraft:gravel>, true, false,
+    [<minecraft:sand>, <minecraft:clay_ball>, <minecraft:flint>],
+    [1.0,              0.35,                  0.20]
+);
+
+// Булыжник -> гравий + каменная крошка (мелочь дробления, пыль камня IC2): заполнитель бетона и строительной пены.
+// Цепочка: булыжник -> гравий -> песок, глина, кремень.
+mods.railcraft.RockCrusher.removeRecipe(<minecraft:cobblestone>);
+mods.railcraft.RockCrusher.addRecipe(
+    <minecraft:cobblestone>, true, false,
+    [<minecraft:gravel>, <IC2:itemDust:9>],
+    [1.0,                0.25]
+);
+
+// ====================================================================================
+// ЖЕЛЕЗОБЕТОН: арматура + шлакоцемент + каменная крошка (заполнитель) + вода, в плотнике (бетономешалка).
+// БЫЛО: 4 арматуры + 5 камня вручную -> 8. ТЕПЕРЬ: 4 арматуры + 1 шлак + 4 каменной крошки + 1000 mB воды -> 8.
+// Крошка - побочка дробления булыжника в камнеломе (global.zs) и промывки руды IC2.
+// ====================================================================================
+recipes.remove(<Railcraft:cube:1>);
+mods.forestry.Carpenter.addRecipe(<Railcraft:cube:1> * 8, [
+    [<IC2:itemDust:9>,      <Railcraft:part.rebar>, <IC2:itemDust:9>],
+    [<Railcraft:part.rebar>, <ore:crystalSlag>,     <Railcraft:part.rebar>],
+    [<IC2:itemDust:9>,      <Railcraft:part.rebar>, <IC2:itemDust:9>]
+], <liquid:water> * 1000, 60);
+
+// Глубокая переработка земли
+// Отмучивание вручную: землю размешивают в воде, песок оседает, глина остаётся взвесью и отстаивается.
+// 8 земли + ведро воды -> 2 комка глины, ведро возвращается. Дорого по земле, но с первого дня, без машин.
+recipes.addShapeless(<minecraft:clay_ball> * 2, [8 x <minecraft:dirt>, <minecraft:water_bucket>]);
+mods.ic2.OreWasher.addRecipe([<minecraft:sand>, <minecraft:clay_ball>, <IC2:itemDustSmall:0>], <minecraft:dirt>, 100);
+mods.thermalexpansion.Pulverizer.addRecipe(2000, <minecraft:dirt>, <minecraft:sand>, <IC2:itemDustSmall:1>, 30);
+// Гумус (soil:0). БЫЛО soil:1 — это болотная земля.
+recipes.addShaped(<Forestry:soil:0> * 8, [[<minecraft:dirt>, <minecraft:dirt>, <minecraft:dirt>], [<minecraft:dirt>, <Forestry:ash>, <minecraft:dirt>], [<minecraft:dirt>, <minecraft:dirt>, <minecraft:dirt>]]);
+// ПРОВЕРЬ: этот рецепт делал из 2 земли + песка 4 БЛОКА КРЕОЗОТА (Railcraft:cube:8). Похоже на ошибку — отключён.
+// mods.thermalexpansion.Smelter.addRecipe(4000, <minecraft:dirt> * 2, <minecraft:sand>, <Railcraft:cube:8> * 4);
+
+// ====================================================================================
+// 7. ХИМИЯ УГЛЯ, СЕРА, РАСТИТЕЛЬНОЕ МАСЛО И HPHT-СИНТЕЗ АЛМАЗОВ
+// ПОЧЕМУ: угольная пыль в сборке = практически чистый углерод. Получить её можно ТОЛЬКО размолом КОКСА
+// (в коксовой печи уголь уже отдал летучие и креозот). Сера — побочка размола.
+// Сырой уголь в пыль больше не мелется.
+// ====================================================================================
+val coke        = <Railcraft:fuel.coke>;
+val coalDust    = <IC2:itemDust:2>;                 // Угольная пыль IC2 = "пыль кокса"
+val sulfurRC    = <Railcraft:dust:1>;               // Серная пыль Railcraft
+val sulfurTF    = <ThermalFoundation:material:16>;  // Серная пыль Thermal Foundation
+
+// --- Убираем помол сырого угля ---
+mods.thermalexpansion.Pulverizer.removeRecipe(<minecraft:coal>);
+// IC2 Macerator — config/ic2/macerator.ini, SAG Mill EnderIO — config/enderio/SAGMillRecipes_User.xml
+
+// --- Помол кокса ---
+// Вручную, до дробилок: кокс + кузнечный молот -> угольная пыль (нужна для доменного кирпича)
+recipes.addShapeless(coalDust, [coke, hammer]);
+// Дробитель IC2: кокс -> пыль задан в config/ic2/macerator.ini (там же убран помол сырого угля)
+// Пульверизатор TE: + 15% серы
+mods.thermalexpansion.Pulverizer.addRecipe(2400, coke, coalDust, sulfurRC, 15);
+
+// БЫЛО: промывка 2 угольной пыли -> кокс + сера. С новой логикой это круговой рецепт — убран.
+
+// ОТКЛЮЧЕНО: Транспозер не умеет "жидкость -> жидкость". Этот рецепт делал 100 mB топлива из серной пыли (халява).
+// mods.thermalexpansion.Transposer.addExtractRecipe(2000, sulfurRC, <liquid:fuel> * 100, <minecraft:gravel>, 50);
+
+// Углеволокно — из угольной пыли (то есть из кокса)
+recipes.remove(<IC2:itemPartCarbonFibre>);
+recipes.addShaped(<IC2:itemPartCarbonFibre>, [[<ore:dustCoal>, <ore:dustCoal>], [<ore:dustCoal>, <ore:dustCoal>]]);
+
+// HPHT-синтез алмазов: угольная пыль + масло -> угольный шар -> 8 шаров + железо -> сжатый шар -> компрессор -> алмаз
+recipes.remove(<IC2:itemPartCoalBall>);
+recipes.remove(<IC2:itemPartCoalBlock>);
+recipes.remove(<IC2:itemPartCoalChunk>);  // Угольная глыба (сжатый шар + обсидиан) вырезана — алмаз только HPHT-синтезом
+recipes.remove(<minecraft:diamond>);      // ВНИМАНИЕ: это убирает и разборку алмазного блока на 9 алмазов
+mods.thermalexpansion.Transposer.addFillRecipe(3000, coalDust * 4, <IC2:itemPartCoalBall>, <liquid:seedoil> * 250);
+recipes.addShaped(<IC2:itemPartCoalBlock>, [[<IC2:itemPartCoalBall>, <IC2:itemPartCoalBall>, <IC2:itemPartCoalBall>], [<IC2:itemPartCoalBall>, <ore:dustIron>, <IC2:itemPartCoalBall>], [<IC2:itemPartCoalBall>, <IC2:itemPartCoalBall>, <IC2:itemPartCoalBall>]]);
+mods.ic2.Compressor.addRecipe(<minecraft:diamond>, <IC2:itemPartCoalBlock>);
+
+// СОЖ убрана. Растительное масло в сборке:
+//  - связующее для угольных шаров (HPHT-синтез, выше);
+//  - фактис: сера + масло -> резиноподобный материал (ниже);
+//  - гидроупор жидкостных труб BC в плотнике (buildcraft.zs);
+//  (полужидкостный генератор IC2 вырезан — масло больше не топливо, ic2-machines.zs)
+
+// ====================================================================================
+// 7b. УНИВЕРСАЛЬНЫЕ ПЛАСТИНЫ
+// БЫЛО: пластины Railcraft (прокатный стан) не были в словаре -> не годились для рецептов IC2/MT,
+// а пластины IC2 не годятся для родных рецептов Railcraft. Два несовместимых проката.
+// ТЕПЕРЬ: пластины прокатного стана записаны в словарь -> подходят ВЕЗДЕ (и в Railcraft, и в IC2/скрипты).
+// Прокатный стан: 4 слитка -> 4 пластины (1:1, как молот), плюс бронза и золото (пластины IC2).
+// ====================================================================================
+<ore:plateIron>.add(<Railcraft:part.plate:0>);
+<ore:plateSteel>.add(<Railcraft:part.plate:1>);
+<ore:plateTin>.add(<Railcraft:part.plate:2>);
+<ore:plateCopper>.add(<Railcraft:part.plate:3>);
+<ore:plateLead>.add(<Railcraft:part.plate:4>);
+mods.railcraft.Rolling.addShaped(<IC2:itemPlates:2> * 4, [[ingotBronze, ingotBronze], [ingotBronze, ingotBronze]]);
+mods.railcraft.Rolling.addShaped(<IC2:itemPlates:3> * 4, [[<ore:ingotGold>, <ore:ingotGold>], [<ore:ingotGold>, <ore:ingotGold>]]);
+
+// Фактис: вулканизация растительного масла серой — резиноподобный материал (реальная технология)
+mods.thermalexpansion.Transposer.addFillRecipe(3000, sulfurRC, <IC2:itemRubber>, <liquid:seedoil> * 500);  // 1 резина (БЫЛО 2): фактис — эрзац, настоящий каучук даёт гевея/тростник (rubber.zs)
+
+// ====================================================================================
+// 8. FORESTRY: БИМЕТАЛЛИЧЕСКИЕ КОРПУСА
+// factory: 2 центрифуга, 5 выжиматель, 6 перегонный куб, 7 ветряк-дождевик; factory2:0 термоэмиссионный завод
+// БЫЛО: factory:6/:7 — ломались Перегонный куб и Дождевик вместо Центрифуги и Завода.
+// ====================================================================================
+recipes.remove(<Forestry:sturdyMachine>);
+recipes.addShaped(<Forestry:sturdyMachine>, [[plateBronze, plateIron, plateBronze], [plateIron, hammer, plateIron], [plateBronze, plateIron, plateBronze]]);
+recipes.addShaped(<Forestry:sturdyMachine>, [[plateBronze, plateIron, plateBronze], [plateIron, piston, plateIron], [plateBronze, plateIron, plateBronze]]);
+
+// Выжиматель
+recipes.remove(<Forestry:factory:5>);
+recipes.addShaped(<Forestry:factory:5>, [[denseBronze, piston, denseBronze], [denseBronze, <Forestry:sturdyMachine>, denseBronze], [gearBronze, motorIC2, gearBronze]]);
+
+// Центрифуга
+recipes.remove(<Forestry:factory:2>);
+recipes.addShaped(<Forestry:factory:2>, [[gearSteel, <minecraft:glass>, gearSteel], [gearBronze, <Forestry:sturdyMachine>, gearBronze], [plateBronze, motorIC2, plateBronze]]);
+
+// Термоэмиссионный завод (на инваре)
+recipes.remove(<Forestry:factory2:0>);
+recipes.addShaped(<Forestry:factory2:0>, [[ingotInvar, <minecraft:glass>, ingotInvar], [copperCoil, <Forestry:sturdyMachine>, copperCoil], [gearInvar, <minecraft:chest>, gearInvar]]);
+
+// ====================================================================================
+// 9. ЛАЗЕРЫ BUILDCRAFT
+// ====================================================================================
+recipes.remove(<BuildCraft|Silicon:laserBlock>);
+recipes.addShaped(<BuildCraft|Silicon:laserBlock>, [
+    [plateGold,   <minecraft:quartz_block>, plateGold],
+    [copperCoil,  doubleCapacitor,          copperCoil],
+    [denseCopper, ingotInvar,               denseCopper]
+]);
+
+// Сборочный стол (meta 0)
+recipes.remove(<BuildCraft|Silicon:laserTableBlock>);
+recipes.addShaped(<BuildCraft|Silicon:laserTableBlock>, [
+    [ingotInvar, <minecraft:obsidian>,            ingotInvar],
+    [circuitIC2, gearInvar,                       circuitIC2],
+    [ingotInvar, <BuildCraft|Core:engineBlock:1>, ingotInvar]
+]);
+
+// ====================================================================================
+// 10. ЭНЕРГЕТИКА
+// ====================================================================================
+// ДВС BuildCraft (стальной вал вместо несуществующего railbed.steel)
+recipes.remove(<BuildCraft|Core:engineBlock:2>);
+recipes.addShaped(<BuildCraft|Core:engineBlock:2>, [
+    [<Railcraft:machine.beta:0>, blockInvar, <Railcraft:machine.beta:0>],
+    [<ore:nuggetPlatinum>,       <IC2:itemTurningBlanks>.onlyWithTag({state: {l0: 4, l1: 2, l2: 4, l3: 2, l4: 4}}), <ore:nuggetPlatinum>],   // kolenval + platinovye svechi zazhiganiya
+    [<IC2:itemRubber>,          circuitIC2, <IC2:itemRubber>]   // salniki i remen' GRM
+]);
+
+// Стирлинг BC
+recipes.remove(<BuildCraft|Core:engineBlock:1>);
+recipes.addShaped(<BuildCraft|Core:engineBlock:1>, [[plateCopper, piston, plateCopper], [plateCopper, copperCoil, plateCopper], [gearBronze, blastBrick, gearBronze]]);
+
+// Стирлинг EnderIO
+recipes.remove(<EnderIO:blockStirlingGenerator>);
+recipes.addShaped(<EnderIO:blockStirlingGenerator>, [[blastBrick, piston, blastBrick], [copperCoil, ironChassis, copperCoil], [basicCapacitor, <minecraft:furnace>, basicCapacitor]]);
+
+// Динамо TE (сверху катушка передачи material:2 — как в оригинале)
+recipes.remove(<ThermalExpansion:Dynamo:0>); // Паровое
+recipes.remove(<ThermalExpansion:Dynamo:1>); // Магматическое
+recipes.remove(<ThermalExpansion:Dynamo:2>); // Компрессионное
+recipes.addShaped(<ThermalExpansion:Dynamo:0>, [[null, <ThermalExpansion:material:2>, null], [copperCoil, plateBronze, copperCoil], [gearBronze, piston, gearBronze]]);
+recipes.addShaped(<ThermalExpansion:Dynamo:1>, [[null, <ThermalExpansion:material:2>, null], [ingotInvar, fusedQuartz, ingotInvar], [gearInvar, copperCoil, gearInvar]]);
+recipes.addShaped(<ThermalExpansion:Dynamo:2>, [[null, <ThermalExpansion:material:2>, null], [tankBC, ingotInvar, tankBC], [gearInvar, piston, gearInvar]]);
+
+// Генератор внутреннего сгорания EnderIO
+recipes.remove(<EnderIO:blockCombustionGenerator>);
+recipes.addShaped(<EnderIO:blockCombustionGenerator>, [[ingotInvar, fusedQuartz, ingotInvar], [tankBC, ironChassis, tankBC], [gearInvar, doubleCapacitor, gearInvar]]);
+
+// Солнечные панели IC2 и EnderIO
+recipes.remove(<IC2:blockGenerator:3>);
+recipes.addShaped(<IC2:blockGenerator:3>, [
+    [fusedQuartz,   fusedQuartz,            fusedQuartz],
+    [siliconChipBC, circuitIC2,             siliconChipBC],
+    [plateTin,      <IC2:itemCable>,        plateTin]   // фотоэлементу динамо не нужно — только вывод
+]);
+
+recipes.remove(<EnderIO:blockSolarPanel>);
+recipes.addShaped(<EnderIO:blockSolarPanel>, [
+    [fusedQuartz,   fusedQuartz,      fusedQuartz],
+    [siliconChipBC, siliconChipBC,    siliconChipBC],
+    [plateSteel,    octadicCapacitor, plateSteel]
+]);
+
+// ====================================================================================
+// 11. СЕЛИТРЯНИЦА — производство селитры из органики
+// ПОЧЕМУ: природная селитра — только в пустынях (Railcraft, у поверхности песка). Исторически
+// селитру "выращивали": компост гнил, образуя нитраты, щёлок выпаривали с поташом (древесная зола).
+// ТЕПЕРЬ: 4 компоста Forestry + зола -> индукционная плавильня (выпаривание) -> 2 селитры.
+// ====================================================================================
+mods.thermalexpansion.Smelter.addRecipe(4000, <Forestry:fertilizerBio> * 4, <Forestry:ash>, <Railcraft:dust:2> * 2);
+// Песчаник в пульверизаторе TE: без побочной селитры (если TE её даёт) — только песок
+mods.thermalexpansion.Pulverizer.removeRecipe(<minecraft:sandstone>);
+mods.thermalexpansion.Pulverizer.addRecipe(2400, <minecraft:sandstone>, <minecraft:sand> * 2);

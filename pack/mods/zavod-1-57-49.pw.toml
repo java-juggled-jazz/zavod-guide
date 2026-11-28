@@ -1,0 +1,8 @@
+name = "zavod-1.57.49"
+filename = "zavod-1.57.49.jar"
+side = "both"
+
+[download]
+url = "https://java-juggled-jazz.github.io/zavod-guide/pack/files/mods/zavod-1.57.49.jar"
+hash-format = "sha256"
+hash = "fda0a42fdb33a288d5b31a22db4ec70abf648638a160e3c0426b40a901d25fe7"

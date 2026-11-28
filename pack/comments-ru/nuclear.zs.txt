@@ -1,0 +1,44 @@
+// ====================================================================================
+// УРАН И ПЛУТОНИЙ (Zavod 1.32): как в жизни, с химией. Фтора в сборке нет — обогащение только калютроном.
+//  1. Дроблёная урановая руда + серная кислота (химреактор)   -> раствор уранилсульфата
+//  2. Уранилсульфат + аммиак (химреактор)                     -> жёлтый кек (диуранат аммония) x2
+//  3. Жёлтый кек + водород (реактор высокого давления)        -> диоксид урана природный
+//  4. Диоксид урана -> КАЛЮТРОН (EU IC2, до HV, 100 000 EU)  -> малый уран-235 + 3 урана-238 (отвал)
+//  5. Топливо IC2: 6 урана-238 + 3 малых 235 (верстак); оболочка твэла — легированная сталь (металлоформовщик).
+//  6. Отработанные стержни + азотная (ВД, PUREX)              -> плутоний + раствор уранилнитрата
+//     уранилнитрат + аммиак                                    -> уран-238 (обратно в MOX и топливо)
+//  7. Плутоний: MOX (6 урана-238 + 3 плутония, рецепт IC2) и РИТЭГ-таблетки (ниже).
+//  Термоцентрифуга IC2 урана и отработанных стержней больше не берёт.
+// ====================================================================================
+val denseCopper = <IC2:itemDensePlates:0>;
+val denseSteel  = <IC2:itemDensePlates:5>;
+val denseLead   = <IC2:itemDensePlates:6>;
+val copperCoil  = <IC2:itemRecipePart>;
+val advCasing   = <IC2:blockMachine:12>;
+val advCircuit  = <IC2:itemPartCircuitAdv>;
+val hvTrans     = <IC2:blockElectric:5>;
+val plutonium   = <IC2:itemPlutonium>;
+
+// Калютрон: электромагнит (медные катушки на плотной меди), вакуумная камера в продвинутом корпусе,
+// питание — трансформатор HV, управление пучком — продвинутые схемы.
+recipes.addShaped(<zavod:calutron>, [
+    [denseCopper, copperCoil, denseCopper],
+    [copperCoil,  advCasing,  copperCoil],
+    [advCircuit,  hvTrans,    advCircuit]
+]);
+
+// РИТЭГ-таблетка: БЫЛО 3 плутония в 6 плотных железных пластинах. ТЕПЕРЬ стальная капсула в свинцовой защите.
+recipes.remove(<IC2:itemRTGPellet>);
+recipes.addShaped(<IC2:itemRTGPellet>, [
+    [denseSteel, plutonium, denseSteel],
+    [denseLead,  plutonium, denseLead],
+    [denseSteel, plutonium, denseSteel]
+]);
+
+// Секция трека калютрона (Y-12 «рейстрек», 1.33): ещё один вакуумный бак в общем магните.
+// Ставится в ряд ЗА калютроном (до 8). Пульт, трансформатор и схемы — одни на весь трек, поэтому секция дешевле машины.
+recipes.addShaped(<zavod:calutron_section>, [
+    [copperCoil, denseCopper,      copperCoil],
+    [<ore:plateSteel>, <IC2:blockAlloyGlass>, <ore:plateSteel>],
+    [copperCoil, denseCopper,      copperCoil]
+]);

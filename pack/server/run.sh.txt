@@ -1,0 +1,20 @@
+#!/bin/bash
+# Запуск сервера в tmux (zavod.service). Порт слушается только на адресе приватной сети.
+cd /srv/zavod || exit 1
+mkdir -p logs
+exec > >(tee -a logs/run.log) 2>&1   # вывод запуска (апдейтер, ошибки) — в logs/run.log, консоль в tmux остаётся
+echo "== $(date '+%F %T') старт"
+. /opt/zavod/zavod.env
+for i in $(seq 90); do ip -4 addr show tailscale0 2>/dev/null | grep -q "inet $TSIP/" && break; sleep 2; done
+ip -4 addr show tailscale0 2>/dev/null | grep -q "inet $TSIP/" || { echo "нет адреса $TSIP на tailscale0 — наружу не запускаю"; sleep 20; exit 1; }
+python3 - "$TSIP" <<'PY'
+import sys, os
+p = "server.properties"; ip = sys.argv[1]
+lines = open(p).read().splitlines() if os.path.exists(p) else []
+lines = [l for l in lines if not l.startswith("server-ip=")] + ["server-ip=" + ip]
+open(p, "w").write("\n".join(lines) + "\n")
+PY
+JAVA="$J8" ./zavod-update.sh server || echo "!! апдейтер упал — запускаю то, что стоит"
+# -noverify: моды 1.7.10 (BiblioCraft 1.11.6 и др.) держат клиентские классы в общем коде; верификатор Java 8 тянет их
+# на сервере (GuiScreen "invalid side SERVER") ещё до выполнения. Без проверки байткода класс грузится только при вызове.
+exec "$J8" -Xms1G -Xmx"$MEM" -XX:+UseG1GC -noverify -jar "$UNI" nogui

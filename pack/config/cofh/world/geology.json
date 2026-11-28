@@ -1,0 +1,319 @@
+{
+    "iron_nickel_vein": {
+        "template": {
+            "type": "uniform",
+            "generator": "large-vein",
+            "sparse": true
+        },
+        "block": [
+            {
+                "name": "minecraft:iron_ore",
+                "weight": 80
+            },
+            {
+                "name": "zavod:ore_nickel",
+                "weight": 20
+            }
+        ],
+        "material": "minecraft:stone",
+        "clusterSize": 990,
+        "numClusters": 1,
+        "chunkChance": 60,
+        "minHeight": 12,
+        "maxHeight": 40,
+        "retrogen": false,
+        "biomeRestriction": "none",
+        "__reason__": "Ферроникелевая жила. ПОЧЕМУ: В природе глубинное и метеоритное железо всегда идет со спутником-никелем. ТЕПЕРЬ: Железо плавится на сталь и рельсы, а побочный никель (Ferrous, metadata 4) уходит на выплавку инвара. ВЫСОТА 12-40: сульфидный никель (Норильск, Садбери) - магматическая руда основных интрузий, глубже медных и свинцовых жил."
+    },
+    "copper_gold_vein": {
+        "template": {
+            "type": "uniform",
+            "generator": "large-vein",
+            "sparse": true
+        },
+        "block": [
+            {
+                "name": "IC2:blockOreCopper",
+                "weight": 85
+            },
+            {
+                "name": "minecraft:gold_ore",
+                "weight": 15
+            }
+        ],
+        "material": "minecraft:stone",
+        "clusterSize": 810,
+        "numClusters": 1,
+        "chunkChance": 60,
+        "minHeight": 35,
+        "maxHeight": 60,
+        "retrogen": false,
+        "biomeRestriction": "none",
+        "__reason__": "Медно-золотая жила (metadata 0 — медь). Обеспечивает фабрику медью для километров проводов и гидравлики, а золото идет на контакты и ЧПУ-лазеры BC. ВЫСОТА 35-60: самая неглубокая металлическая жила, но целиком в камне. При 40-75 половина жилы уходила в воздух и землю над Y 63 - меди было вдвое меньше железа."
+    },
+    "lead_silver_vein": {
+        "template": {
+            "type": "uniform",
+            "generator": "large-vein",
+            "sparse": true
+        },
+        "block": [
+            {
+                "name": "IC2:blockOreLead",
+                "weight": 70
+            },
+            {
+                "name": "zavod:ore_silver",
+                "weight": 30
+            }
+        ],
+        "material": "minecraft:stone",
+        "clusterSize": 630,
+        "numClusters": 1,
+        "chunkChance": 80,
+        "minHeight": 25,
+        "maxHeight": 50,
+        "retrogen": false,
+        "biomeRestriction": "none",
+        "__reason__": "Свинцово-серебряная жила (Галенит). Метаданные: 3 — свинец, 2 — серебро. Свинец прессуется в бронеплиты экранирования, а серебро — на продвинутые платы. ВЫСОТА 25-50: галенит - низкотемпературная гидротермальная руда (тип Миссисипи, в известняках), залегает неглубоко, выше оловянных гранитов."
+    },
+    "kimberlite_pipe": {
+        "template": {
+            "type": "uniform",
+            "generator": "large-vein",
+            "sparse": true
+        },
+        "block": [
+            {
+                "name": "Railcraft:cube",
+                "metadata": 6,
+                "weight": 70
+            },
+            {
+                "name": "minecraft:redstone_ore",
+                "weight": 20
+            },
+            {
+                "name": "minecraft:diamond_ore",
+                "weight": 10
+            }
+        ],
+        "material": "minecraft:stone",
+        "clusterSize": 585,
+        "numClusters": 1,
+        "chunkChance": 96,
+        "minHeight": 8,
+        "maxHeight": 20,
+        "retrogen": false,
+        "biomeRestriction": "none",
+        "__reason__": "Кимберлитовая трубка. ПОЧЕМУ: алмазы рождаются в мантии и выносятся наверх вулканическим кимберлитом — угля в кимберлите нет (уголь — осадочная порода, он в пластах). ТЕПЕРЬ: тёмная порода (бездонный камень Railcraft как кимберлит) + редстоун как аналог пиропа-граната (минерал-спутник алмаза, по нему геологи ищут трубки) + алмазы. ВЫСОТА 8-20: самое глубокое. Нижняя граница 8, а не 5: жила расходится на 6-8 блоков от центра, ниже 5 - бедрок, руда терялась."
+    },
+    "uranium_redstone_vein": {
+        "template": {
+            "type": "uniform",
+            "generator": "large-vein",
+            "sparse": true
+        },
+        "block": [
+            {
+                "name": "minecraft:redstone_ore",
+                "weight": 60
+            },
+            {
+                "name": "IC2:blockOreUran",
+                "weight": 25
+            },
+            {
+                "name": "IC2:blockOreLead",
+                "weight": 15
+            }
+        ],
+        "material": "minecraft:stone",
+        "clusterSize": 495,
+        "numClusters": 1,
+        "chunkChance": 160,
+        "minHeight": 10,
+        "maxHeight": 30,
+        "retrogen": false,
+        "biomeRestriction": "none",
+        "__reason__": "Радиоактивная Смоляная Жила (Pitchblende). ПОЧЕМУ: Урановая руда в природе всегда ассоциируется со свинцом (конечным продуктом распада) и редстоун-полупроводниками. ТЕПЕРЬ: Обеспечивает топливом АЭС и редингом для электронных схем. ВЫСОТА 10-30: настуран в гранитах и у подошвы осадочного чехла - глубоко, но выше кимберлита."
+    },
+    "beryl_pegmatite": {
+        "template": {
+            "type": "uniform",
+            "generator": "large-vein",
+            "sparse": true
+        },
+        "block": [
+            {
+                "name": "IC2:blockOreTin",
+                "weight": 85
+            },
+            {
+                "name": "minecraft:emerald_ore",
+                "weight": 15
+            }
+        ],
+        "material": "minecraft:stone",
+        "clusterSize": 405,
+        "numClusters": 1,
+        "chunkChance": 200,
+        "minHeight": 25,
+        "maxHeight": 50,
+        "retrogen": false,
+        "biomeRestriction": "none",
+        "__reason__": "Бериллиевый пегматит. ПОЧЕМУ: изумруд (берилл) растёт в пегматитах — крупнозернистых гранитных жилах, а их типичный рудный спутник — касситерит (оловянная руда), а не медь. ТЕПЕРЬ: олово + изумруды, Y 25–50 (выше кимберлита, чтобы жилы не смешивались)."
+    },
+    "tin_vein": {
+        "template": {
+            "type": "uniform",
+            "generator": "large-vein",
+            "sparse": true
+        },
+        "block": [
+            {
+                "name": "IC2:blockOreTin",
+                "weight": 100
+            }
+        ],
+        "material": "minecraft:stone",
+        "clusterSize": 540,
+        "numClusters": 1,
+        "chunkChance": 60,
+        "minHeight": 30,
+        "maxHeight": 60,
+        "retrogen": false,
+        "biomeRestriction": "none",
+        "__reason__": "Касситеритовая оловянная жила (metadata 1). Снабжает заводы оловом для припоя микросхем, консервной жести и экранов."
+    },
+    "coal_seam": {
+        "template": {
+            "type": "uniform",
+            "generator": "plate",
+            "height": 1,
+            "slim": true,
+            "sizeVariance": 4
+        },
+        "block": [
+            {
+                "name": "minecraft:coal_ore",
+                "weight": 65
+            },
+            {
+                "name": "minecraft:coal_block",
+                "weight": 35
+            }
+        ],
+        "material": "minecraft:stone",
+        "clusterSize": 14,
+        "numClusters": 1,
+        "chunkChance": 14,
+        "minHeight": 30,
+        "maxHeight": 60,
+        "retrogen": false,
+        "biomeRestriction": "none",
+        "__reason__": "Каменноугольный пласт. ПОЧЕМУ: уголь в природе залегает горизонтальными пластами осадочного происхождения, а не россыпью. ТЕПЕРЬ: плоский диск радиусом 6-10 блоков и толщиной 2 блока на высоте 30-60, примерно в одном чанке из шести. Нашёл пласт — топливо для коксовых батарей на недели вперёд."
+    },
+    "iron_traces": {
+        "template": "uniform",
+        "block": [
+            {
+                "name": "minecraft:iron_ore"
+            }
+        ],
+        "material": "minecraft:stone",
+        "clusterSize": 4,
+        "numClusters": 1,
+        "chunkChance": 6,
+        "minHeight": 10,
+        "maxHeight": 64,
+        "retrogen": false,
+        "biomeRestriction": "none",
+        "__reason__": "Рассеянная минерализация: мелкие гнёзда руды вне жил. Редкие — это подсказка геологу, а не источник сырья."
+    },
+    "copper_traces": {
+        "template": "uniform",
+        "block": [
+            {
+                "name": "IC2:blockOreCopper"
+            }
+        ],
+        "material": "minecraft:stone",
+        "clusterSize": 4,
+        "numClusters": 1,
+        "chunkChance": 6,
+        "minHeight": 30,
+        "maxHeight": 62,
+        "retrogen": false,
+        "biomeRestriction": "none",
+        "__reason__": "Рассеянная минерализация: мелкие гнёзда руды вне жил. Редкие — это подсказка геологу, а не источник сырья."
+    },
+    "tin_traces": {
+        "template": "uniform",
+        "block": [
+            {
+                "name": "IC2:blockOreTin"
+            }
+        ],
+        "material": "minecraft:stone",
+        "clusterSize": 4,
+        "numClusters": 1,
+        "chunkChance": 8,
+        "minHeight": 25,
+        "maxHeight": 65,
+        "retrogen": false,
+        "biomeRestriction": "none",
+        "__reason__": "Рассеянная минерализация: мелкие гнёзда руды вне жил. Редкие — это подсказка геологу, а не источник сырья."
+    },
+    "lead_traces": {
+        "template": "uniform",
+        "block": [
+            {
+                "name": "IC2:blockOreLead"
+            }
+        ],
+        "material": "minecraft:stone",
+        "clusterSize": 3,
+        "numClusters": 1,
+        "chunkChance": 10,
+        "minHeight": 20,
+        "maxHeight": 55,
+        "retrogen": false,
+        "biomeRestriction": "none",
+        "__reason__": "Рассеянная минерализация: мелкие гнёзда руды вне жил. Редкие — это подсказка геологу, а не источник сырья."
+    },
+    "gold_traces": {
+        "template": "uniform",
+        "block": [
+            {
+                "name": "minecraft:gold_ore"
+            }
+        ],
+        "material": "minecraft:stone",
+        "clusterSize": 3,
+        "numClusters": 1,
+        "chunkChance": 12,
+        "minHeight": 5,
+        "maxHeight": 40,
+        "retrogen": false,
+        "biomeRestriction": "none",
+        "__reason__": "Рассеянная минерализация: мелкие гнёзда руды вне жил. Редкие — это подсказка геологу, а не источник сырья."
+    },
+    "coal_traces": {
+        "template": "uniform",
+        "block": [
+            {
+                "name": "minecraft:coal_ore"
+            }
+        ],
+        "material": "minecraft:stone",
+        "clusterSize": 6,
+        "numClusters": 1,
+        "chunkChance": 4,
+        "minHeight": 20,
+        "maxHeight": 80,
+        "retrogen": false,
+        "biomeRestriction": "none",
+        "__reason__": "Рассеянная минерализация: мелкие гнёзда руды вне жил. Редкие — это подсказка геологу, а не источник сырья."
+    }
+}

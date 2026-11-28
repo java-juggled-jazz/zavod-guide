@@ -1,0 +1,137 @@
+{
+ "version": 1,
+ "minItems": 3,
+ "maxItems": 6,
+ "contents": [
+  {
+   "weight": 30,
+   "genMin": 4,
+   "genMax": 12,
+   "item": {
+    "id": "zavod:cartridge_pistol",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 30,
+   "genMin": 4,
+   "genMax": 12,
+   "item": {
+    "id": "zavod:cartridge_rifle",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 15,
+   "genMin": 4,
+   "genMax": 8,
+   "item": {
+    "id": "zavod:shell_shotgun",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 12,
+   "genMin": 1,
+   "genMax": 2,
+   "item": {
+    "id": "flansmod:nagantAmmo",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 10,
+   "genMin": 1,
+   "genMax": 2,
+   "item": {
+    "id": "flansmod:kar98kAmmo",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 8,
+   "genMin": 1,
+   "genMax": 2,
+   "item": {
+    "id": "flansmod:webleyAmmo",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 8,
+   "genMin": 1,
+   "genMax": 2,
+   "item": {
+    "id": "flansmod:coltAmmo",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 8,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "flansmod:trenchgunAmmo",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 5,
+   "genMin": 1,
+   "genMax": 1,
+   "item": {
+    "id": "flansmod:m1GarandAmmo",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 10,
+   "genMin": 4,
+   "genMax": 12,
+   "item": {
+    "id": "flansmod:crossbowBolt",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 8,
+   "genMin": 4,
+   "genMax": 12,
+   "item": {
+    "id": "zavod:primer",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 6,
+   "genMin": 2,
+   "genMax": 6,
+   "item": {
+    "id": "zavod:powder_smokeless",
+    "damage": 0,
+    "count": 1
+   }
+  },
+  {
+   "weight": 10,
+   "genMin": 1,
+   "genMax": 3,
+   "item": {
+    "id": "zavod:bandage",
+    "damage": 0,
+    "count": 1
+   }
+  }
+ ]
+}
